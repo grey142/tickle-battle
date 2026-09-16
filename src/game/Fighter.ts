@@ -187,6 +187,28 @@ export class Fighter {
     this.animT += dt;
     const clip = this.humanoid.clipFor(this.occupancy, this.speed, this.joinOn);
     this.humanoid.pose(clip, this.animT);
+    // Stub billboards otherwise freeze — bounce them with the combat clips.
+    const spr = this.portraitSprite;
+    if (spr) {
+      const mat = spr.material as THREE.SpriteMaterial;
+      if (clip === "tickle") {
+        const s = Math.sin(this.animT * 14);
+        const s2 = Math.sin(this.animT * 18.5);
+        spr.position.set(s * 0.08, 1.05 + Math.abs(s2) * 0.07, 0);
+        spr.scale.set(1.15 + s2 * 0.06, 1.55 + Math.abs(s) * 0.08, 1);
+        mat.rotation = s * 0.12;
+      } else if (clip === "squirm") {
+        const s = Math.sin(this.animT * 14);
+        const s2 = Math.sin(this.animT * 9.5);
+        spr.position.set(s * 0.1, 1.05 + s2 * 0.05, 0);
+        spr.scale.set(1.15 + Math.abs(s) * 0.05, 1.55 + Math.abs(s2) * 0.07, 1);
+        mat.rotation = s * 0.18;
+      } else {
+        spr.position.set(0, 1.05, 0);
+        spr.scale.set(1.15, 1.55, 1);
+        mat.rotation = 0;
+      }
+    }
   }
 
   settle() {

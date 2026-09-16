@@ -266,15 +266,24 @@ export class Humanoid {
       return;
     }
     if (clip === "tickle") {
-      const s = Math.sin(t * 28);
-      this.spine.rotation.x = 0.22;
-      this.lShoulder.rotation.set(-1.15, 0.15, 0.45 + s * 0.12);
-      this.rShoulder.rotation.set(-1.05, -0.2, -0.35 - s * 0.1);
-      this.lElbow.rotation.x = -0.35 + s * 0.25;
-      this.rElbow.rotation.x = -0.2 - s * 0.22;
-      this.head.rotation.x = 0.15;
-      this.lHip.rotation.x = 0.12;
-      this.rHip.rotation.x = -0.08;
+      // Obvious scrubbing hands + torso pump — readable at duel cam and under billboards.
+      const s = Math.sin(t * 14);
+      const s2 = Math.sin(t * 18.5);
+      const s3 = Math.sin(t * 9);
+      this.spine.rotation.set(0.28 + s3 * 0.06, s * 0.08, s2 * 0.05);
+      this.chest.rotation.set(s2 * 0.07, s * 0.1, -s * 0.04);
+      this.chest.position.y = 0.22 + Math.abs(s) * 0.04;
+      // Arms reach forward into the ticklee; alternate left/right scrub.
+      this.lShoulder.rotation.set(-1.35 + s * 0.35, 0.35 + s2 * 0.2, 0.55 + s * 0.45);
+      this.rShoulder.rotation.set(-1.25 - s * 0.32, -0.4 - s2 * 0.22, -0.5 - s * 0.4);
+      this.lElbow.rotation.set(-0.55 + s2 * 0.55, 0.15, s * 0.2);
+      this.rElbow.rotation.set(-0.45 - s2 * 0.5, -0.12, -s * 0.18);
+      this.head.rotation.set(0.22 + s3 * 0.08, s * 0.1, 0);
+      this.lHip.rotation.x = 0.18 + s * 0.06;
+      this.rHip.rotation.x = -0.12 - s * 0.05;
+      this.lKnee.rotation.x = 0.2;
+      this.rKnee.rotation.x = 0.15;
+      this.root.position.y = Math.abs(s2) * 0.035;
       return;
     }
     if (clip === "squirm") {

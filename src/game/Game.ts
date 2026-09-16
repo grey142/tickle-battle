@@ -1448,7 +1448,16 @@ export class Game {
         continue;
       }
       f.group.visible = true;
-      if (f.isPlayer) f.body.visible = viewer.occupancy === "ticklee" || viewer.occupancy === "tapped";
+      if (f.isPlayer) {
+        const showBody =
+          viewer.occupancy === "ticklee" ||
+          viewer.occupancy === "tapped" ||
+          viewer.occupancy === "tickler" ||
+          (viewer.occupancy === "nudge" && viewer.joinOn >= 0);
+        f.body.visible = showBody;
+        // FP tickler: hide skull so scrubbing arms read in-view without filling the camera.
+        f.humanoid.head.visible = viewer.occupancy === "ticklee" || viewer.occupancy === "tapped";
+      }
     }
   }
 
