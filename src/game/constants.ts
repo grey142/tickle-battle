@@ -39,7 +39,7 @@ export const REAPPEAR_FLASH = 0.4;
 
 export const BASE = { stamina: 3, struggle: 3, tickle: 3 };
 export const K_STAMINA = 28;
-export const K_DAMAGE = 2.85;
+export const K_DAMAGE = 0.95; // was 2.85; 3× harder tap-outs
 export const K_ESCAPE = 11.2;
 
 export const SOCKETS: [number, number, number][] = [
