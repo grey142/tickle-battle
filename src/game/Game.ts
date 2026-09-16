@@ -954,7 +954,8 @@ export class Game {
       p.pos.y = this.map.groundY(p.pos.x, p.pos.z);
     }
 
-    if (this.nudgeT > 0) return;
+    // Soft-nudge freezes only fighters on that pile — outsiders can still auto-start.
+    if (this.inNudgePile(p.id) || p.occupancy === "nudge") return;
     if (p.occupancy === "free") this.autoStartTickle(p);
     if (p.occupancy === "tickler" && (this.input.tickle || this.input.tickleHeld)) p.wantTickle = true;
     if (p.occupancy === "ticklee" && (this.input.escape || this.input.escapeHeld)) p.wantEscape = true;
@@ -972,8 +973,13 @@ export class Game {
     }
   }
 
+
+  private inNudgePile(id: number): boolean {
+    return this.nudgeT > 0 && this.nudgeIds.includes(id);
+  }
+
   private autoStartTickle(actor: Fighter) {
-    if (this.countdown > 0 || this.nudgeT > 0) return;
+    if (this.countdown > 0 || this.inNudgePile(actor.id)) return;
     if (actor.occupancy !== "free") return;
     let best: Fighter | null = null;
     let bestD = 1e9;
@@ -1005,7 +1011,8 @@ export class Game {
   }
 
   private startLocked(a: Fighter, b: Fighter): boolean {
-    if (this.countdown > 0 || this.nudgeT > 0) return true;
+    if (this.countdown > 0) return true;
+    if (this.inNudgePile(a.id) || this.inNudgePile(b.id)) return true;
     if (a.spawnIgnore > 0 || b.spawnIgnore > 0) return true;
     if (a.reappearIgnore > 0 || b.reappearIgnore > 0) return true;
     if (this.pairCd.has(pairKey(a.id, b.id))) return true;
@@ -1217,7 +1224,7 @@ export class Game {
   }
 
   private tapTickle(a: Fighter) {
-    if (this.nudgeT > 0) return;
+    if (this.inNudgePile(a.id) || a.occupancy === "nudge") return;
     if (a.occupancy !== "tickler") return;
     if (a.tapCd > 0) return;
     const v = this.byId(a.joinOn);
@@ -1235,7 +1242,7 @@ export class Game {
   }
 
   private tapEscape(a: Fighter) {
-    if (this.nudgeT > 0) return;
+    if (this.inNudgePile(a.id) || a.occupancy === "nudge") return;
     if (a.occupancy !== "ticklee") return;
     if (a.tapCd > 0) return;
     a.tapCd = TAP_CD;
