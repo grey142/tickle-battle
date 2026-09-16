@@ -37,7 +37,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Hub rooms on pad: D-pad / LS cursor, A confirm (Look / Skills / Shop buy-equip / Arena mode), LB/RB tabs, B plaza
 - Plaza mannequin wears the current Look still plus equipped Amateur weapon/armor
 - Loadout snapshot at Arena Start (HUD / results / spawn use the locked ids)
-- Home Look laugh preview (~2s still + plaza mannequin squirm); stills drive the shared 3D rig (not in-match billboards)
+- Home Look laugh preview (~2s still + plaza mannequin squirm); stills drive the shared 3D rig; bots also show keyed still billboards in-match
 - Soft-nudge searches 16 directions out to 2.4m for clear space, else cancel + pairwise cooldown
 
 ## Stub / missing
