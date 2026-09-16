@@ -1,0 +1,15 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Cloud-agent attachment drop (source of truth is docs/DESIGN_BIBLE.md)
+uploads/
+
+# Logs / local
+*.log
+.cache/
+node_modules/
+dist/

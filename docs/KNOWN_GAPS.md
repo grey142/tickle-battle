@@ -1,0 +1,49 @@
+# Known gaps — Amateur prototype
+
+Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
+
+## Implemented
+
+- First-person camera; ticklee presentation cam during a duel; spectate on tap-out
+- Team Quick 6v6 AI fill, one life, last active team wins (vanished counts; wipe cuts vanish)
+- Simplified map-one maze (metal kit, sight blockers, ramp + upper deck)
+- Rear contact or pack overpower at 2+ starts the tickle automatically; join list cap 6
+- Race: ticklee fills escape, ticklers drain stamina only; opener full / extra half
+- Vanish 20s map-only, stamina freeze, contact ignore; local reappear tell (12m white flash + sound); 0.85s reappear lock then leftover overlap still needs a fresh rear/pack edge; vanish clock HUD-only for the escaped player
+- Soft-nudge into clear space or cancel + pairwise cooldown
+- Flats then % (bare-hand 0%, base attire 0%; Elara 3/3/3 + 7 unspent)
+- Shared 3D humanoid clips on every fighter (procedural idle/walk/run/tickle/squirm). AI looks from Amateur 12 (metal-free). Elara Case player still with explicit metal exception. Catalog 45/45. **No metal** on AI sprites.
+- 3 / 1 coins to the player if they are opener/assist; persist level/coins
+- Xbox controller first (standard Gamepad mapping), plus laptop + phone fallbacks
+- City hub overlay: plaza doors to Home (Look / Skills / Loadout), Shop (Amateur 6+8), Arena (all four Amateur modes)
+- Skill spend UI (7 starting points, 25-block bars with 10 Amateur + 15 Pro-locked visible, permanent)
+- Amateur shop ladder with prices/% ; persist coins, level, unspent, blocks, owned/equip ids
+- Post-match 3-coin tick-start opener / 1-coin assists (team), XP to level 10, countdown bail with no reward
+- 10s spawn lock: tickles do not start, contact edges cleared at 0 (no stacked ignore), bots parked, Leave returns plaza
+- AI loadouts scale with Elara's level; bots park in spawn during the 10s countdown
+- Right-hand weapon placeholders; distinct tickle-lock / tickle / vanish / tap-out stingers
+- Same-tick escape-before-tickle global pass (ticklees resolve first)
+- 3D plaza backdrop; click Home / Shop / Arena door frames (or overlay buttons) to open rooms
+- Armor cloth overlay on the humanoid from equipped Amateur piece
+- Team Timed BR (6v6, 4 min, clean respawn, tap-out score, vanish cut at timer)
+- FFA Quick (12 solo, join cap 1, no pack, last standing) and FFA Timed (personal taps, respawn)
+- Rear-volume ground ring when Elara is behind-and-contact (amber in team, rose in FFA); cyan ring when pack 2+ is live
+- Mid-lane amber bait **spawns on the lane facing away** (not walking in from spawn B); walking into their back auto-starts the tickle; cyan cannot steal the bait for 12s
+- Countdown: FP move, tickles blocked, bots mill in spawn, contact ignore until 0, one clean lift (front overlaps keep a single edge; no stacked 5s ignore)
+- Match coins/XP write only on the results overlay; countdown bail skips that write
+- Home Look tab: Elara default plus Amateur 12 metal-free stills; look id persists; AI skips the selected slug
+- Shop hall door: buy Amateur 6 / 8, equip immediately, owned ids persist; 12-coin starter purse
+- Xbox LS/RS + WASD together; A/RT tickle, B/LT escape; plaza A/Menu Play; results B/A/Menu Return; rear or pack 2+ starts the tickle
+- Hub rooms on pad: D-pad / LS cursor, A confirm (Look / Skills / Shop buy-equip / Arena mode), LB/RB tabs, B plaza
+- Plaza mannequin wears the current Look still plus equipped Amateur weapon/armor
+- Loadout snapshot at Arena Start (HUD / results / spawn use the locked ids)
+- Home Look laugh preview (~2s still + plaza mannequin squirm); stills drive the shared 3D rig (not in-match billboards)
+- Soft-nudge searches 16 directions out to 2.4m for clear space, else cancel + pairwise cooldown
+
+## Stub / missing
+
+- Walkable 3D hub (doors open overlay rooms; you do not walk the plaza as a character)
+- Painterly four-clip production anims and blendshapes still missing.
+- Navmesh AI (steering + wall slide + mid-lane waypoint); pile cooldown is approximate
+- Audio is oscillator stingers, not licensed SFX
+- No jump (bible); ramp height is a groundY sample

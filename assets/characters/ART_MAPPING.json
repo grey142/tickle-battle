@@ -1,0 +1,712 @@
+{
+  "format": 1,
+  "rule": "No metal: jewelry, clothing hardware, cyber/synth plates or glowing metallic seams",
+  "clean_count": 45,
+  "removed_count": 15,
+  "elara_reserved": "Elara Case",
+  "playerReserved": {
+    "display": "Elara Case",
+    "slug": "ElaraCase",
+    "file": "ElaraCase.jpg",
+    "path": "assets/characters/ElaraCase.jpg",
+    "playerPath": "assets/characters/player/ElaraCase.jpg",
+    "player_metal_exception": true,
+    "inAmateur12": false,
+    "note": "KEEP despite earrings + pendant metal setting \u2014 explicit player exception for Elara Case only. AI roster still metal-free."
+  },
+  "drop": {
+    "kind": "A-pose stills",
+    "rosterCount": 45,
+    "background": "white JPEG",
+    "metal": false,
+    "idealHandoff": "transparent PNG, same FirstLast slug, still no metal"
+  },
+  "amateur12": [
+    {
+      "index": 1,
+      "sprite": "sprite_001.jpg",
+      "slug": "KoraVale",
+      "display": "Kora Vale",
+      "file": "amateur/KoraVale.jpg",
+      "path": "assets/characters/amateur/KoraVale.jpg",
+      "catalogPath": "assets/characters/KoraVale.jpg",
+      "slot": "amateur12"
+    },
+    {
+      "index": 2,
+      "sprite": "sprite_002.jpg",
+      "slug": "SableQuinn",
+      "display": "Sable Quinn",
+      "file": "amateur/SableQuinn.jpg",
+      "path": "assets/characters/amateur/SableQuinn.jpg",
+      "catalogPath": "assets/characters/SableQuinn.jpg",
+      "slot": "amateur12"
+    },
+    {
+      "index": 3,
+      "sprite": "sprite_004.jpg",
+      "slug": "RynAshford",
+      "display": "Ryn Ashford",
+      "file": "amateur/RynAshford.jpg",
+      "path": "assets/characters/amateur/RynAshford.jpg",
+      "catalogPath": "assets/characters/RynAshford.jpg",
+      "slot": "amateur12"
+    },
+    {
+      "index": 4,
+      "sprite": "sprite_005.jpg",
+      "slug": "VeshMarlowe",
+      "display": "Vesh Marlowe",
+      "file": "amateur/VeshMarlowe.jpg",
+      "path": "assets/characters/amateur/VeshMarlowe.jpg",
+      "catalogPath": "assets/characters/VeshMarlowe.jpg",
+      "slot": "amateur12"
+    },
+    {
+      "index": 5,
+      "sprite": "sprite_006.jpg",
+      "slug": "NimCortez",
+      "display": "Nim Cortez",
+      "file": "amateur/NimCortez.jpg",
+      "path": "assets/characters/amateur/NimCortez.jpg",
+      "catalogPath": "assets/characters/NimCortez.jpg",
+      "slot": "amateur12"
+    },
+    {
+      "index": 6,
+      "sprite": "sprite_007.jpg",
+      "slug": "LyraFinch",
+      "display": "Lyra Finch",
+      "file": "amateur/LyraFinch.jpg",
+      "path": "assets/characters/amateur/LyraFinch.jpg",
+      "catalogPath": "assets/characters/LyraFinch.jpg",
+      "slot": "amateur12"
+    },
+    {
+      "index": 7,
+      "sprite": "sprite_008.jpg",
+      "slug": "TorenBlake",
+      "display": "Toren Blake",
+      "file": "amateur/TorenBlake.jpg",
+      "path": "assets/characters/amateur/TorenBlake.jpg",
+      "catalogPath": "assets/characters/TorenBlake.jpg",
+      "slot": "amateur12"
+    },
+    {
+      "index": 8,
+      "sprite": "sprite_009.jpg",
+      "slug": "MiraSolis",
+      "display": "Mira Solis",
+      "file": "amateur/MiraSolis.jpg",
+      "path": "assets/characters/amateur/MiraSolis.jpg",
+      "catalogPath": "assets/characters/MiraSolis.jpg",
+      "slot": "amateur12"
+    },
+    {
+      "index": 9,
+      "sprite": "sprite_010.jpg",
+      "slug": "CassWynn",
+      "display": "Cass Wynn",
+      "file": "amateur/CassWynn.jpg",
+      "path": "assets/characters/amateur/CassWynn.jpg",
+      "catalogPath": "assets/characters/CassWynn.jpg",
+      "slot": "amateur12"
+    },
+    {
+      "index": 10,
+      "sprite": "sprite_011.jpg",
+      "slug": "JunoHale",
+      "display": "Juno Hale",
+      "file": "amateur/JunoHale.jpg",
+      "path": "assets/characters/amateur/JunoHale.jpg",
+      "catalogPath": "assets/characters/JunoHale.jpg",
+      "slot": "amateur12"
+    },
+    {
+      "index": 11,
+      "sprite": "sprite_012.jpg",
+      "slug": "BriarKnox",
+      "display": "Briar Knox",
+      "file": "amateur/BriarKnox.jpg",
+      "path": "assets/characters/amateur/BriarKnox.jpg",
+      "catalogPath": "assets/characters/BriarKnox.jpg",
+      "slot": "amateur12"
+    },
+    {
+      "index": 12,
+      "sprite": "sprite_013.jpg",
+      "slug": "EmberLang",
+      "display": "Ember Lang",
+      "file": "amateur/EmberLang.jpg",
+      "path": "assets/characters/amateur/EmberLang.jpg",
+      "catalogPath": "assets/characters/EmberLang.jpg",
+      "slot": "amateur12"
+    }
+  ],
+  "roster": [
+    {
+      "index": 1,
+      "sprite": "sprite_001.jpg",
+      "name": "Kora Vale",
+      "file": "KoraVale.jpg",
+      "slot": "amateur12",
+      "path": "assets/characters/KoraVale.jpg",
+      "slug": "KoraVale",
+      "display": "Kora Vale",
+      "amateurPath": "assets/characters/amateur/KoraVale.jpg"
+    },
+    {
+      "index": 2,
+      "sprite": "sprite_002.jpg",
+      "name": "Sable Quinn",
+      "file": "SableQuinn.jpg",
+      "slot": "amateur12",
+      "path": "assets/characters/SableQuinn.jpg",
+      "slug": "SableQuinn",
+      "display": "Sable Quinn",
+      "amateurPath": "assets/characters/amateur/SableQuinn.jpg"
+    },
+    {
+      "index": 3,
+      "sprite": "sprite_004.jpg",
+      "name": "Ryn Ashford",
+      "file": "RynAshford.jpg",
+      "slot": "amateur12",
+      "path": "assets/characters/RynAshford.jpg",
+      "slug": "RynAshford",
+      "display": "Ryn Ashford",
+      "amateurPath": "assets/characters/amateur/RynAshford.jpg"
+    },
+    {
+      "index": 4,
+      "sprite": "sprite_005.jpg",
+      "name": "Vesh Marlowe",
+      "file": "VeshMarlowe.jpg",
+      "slot": "amateur12",
+      "path": "assets/characters/VeshMarlowe.jpg",
+      "slug": "VeshMarlowe",
+      "display": "Vesh Marlowe",
+      "amateurPath": "assets/characters/amateur/VeshMarlowe.jpg"
+    },
+    {
+      "index": 5,
+      "sprite": "sprite_006.jpg",
+      "name": "Nim Cortez",
+      "file": "NimCortez.jpg",
+      "slot": "amateur12",
+      "path": "assets/characters/NimCortez.jpg",
+      "slug": "NimCortez",
+      "display": "Nim Cortez",
+      "amateurPath": "assets/characters/amateur/NimCortez.jpg"
+    },
+    {
+      "index": 6,
+      "sprite": "sprite_007.jpg",
+      "name": "Lyra Finch",
+      "file": "LyraFinch.jpg",
+      "slot": "amateur12",
+      "path": "assets/characters/LyraFinch.jpg",
+      "slug": "LyraFinch",
+      "display": "Lyra Finch",
+      "amateurPath": "assets/characters/amateur/LyraFinch.jpg"
+    },
+    {
+      "index": 7,
+      "sprite": "sprite_008.jpg",
+      "name": "Toren Blake",
+      "file": "TorenBlake.jpg",
+      "slot": "amateur12",
+      "path": "assets/characters/TorenBlake.jpg",
+      "slug": "TorenBlake",
+      "display": "Toren Blake",
+      "amateurPath": "assets/characters/amateur/TorenBlake.jpg"
+    },
+    {
+      "index": 8,
+      "sprite": "sprite_009.jpg",
+      "name": "Mira Solis",
+      "file": "MiraSolis.jpg",
+      "slot": "amateur12",
+      "path": "assets/characters/MiraSolis.jpg",
+      "slug": "MiraSolis",
+      "display": "Mira Solis",
+      "amateurPath": "assets/characters/amateur/MiraSolis.jpg"
+    },
+    {
+      "index": 9,
+      "sprite": "sprite_010.jpg",
+      "name": "Cass Wynn",
+      "file": "CassWynn.jpg",
+      "slot": "amateur12",
+      "path": "assets/characters/CassWynn.jpg",
+      "slug": "CassWynn",
+      "display": "Cass Wynn",
+      "amateurPath": "assets/characters/amateur/CassWynn.jpg"
+    },
+    {
+      "index": 10,
+      "sprite": "sprite_011.jpg",
+      "name": "Juno Hale",
+      "file": "JunoHale.jpg",
+      "slot": "amateur12",
+      "path": "assets/characters/JunoHale.jpg",
+      "slug": "JunoHale",
+      "display": "Juno Hale",
+      "amateurPath": "assets/characters/amateur/JunoHale.jpg"
+    },
+    {
+      "index": 11,
+      "sprite": "sprite_012.jpg",
+      "name": "Briar Knox",
+      "file": "BriarKnox.jpg",
+      "slot": "amateur12",
+      "path": "assets/characters/BriarKnox.jpg",
+      "slug": "BriarKnox",
+      "display": "Briar Knox",
+      "amateurPath": "assets/characters/amateur/BriarKnox.jpg"
+    },
+    {
+      "index": 12,
+      "sprite": "sprite_013.jpg",
+      "name": "Ember Lang",
+      "file": "EmberLang.jpg",
+      "slot": "amateur12",
+      "path": "assets/characters/EmberLang.jpg",
+      "slug": "EmberLang",
+      "display": "Ember Lang",
+      "amateurPath": "assets/characters/amateur/EmberLang.jpg"
+    },
+    {
+      "index": 13,
+      "sprite": "sprite_014.jpg",
+      "name": "Nyx Calder",
+      "file": "NyxCalder.jpg",
+      "slot": "roster",
+      "path": "assets/characters/NyxCalder.jpg",
+      "slug": "NyxCalder",
+      "display": "Nyx Calder"
+    },
+    {
+      "index": 14,
+      "sprite": "sprite_015.jpg",
+      "name": "Vera Soto",
+      "file": "VeraSoto.jpg",
+      "slot": "roster",
+      "path": "assets/characters/VeraSoto.jpg",
+      "slug": "VeraSoto",
+      "display": "Vera Soto"
+    },
+    {
+      "index": 15,
+      "sprite": "sprite_016.jpg",
+      "name": "Quinn Adler",
+      "file": "QuinnAdler.jpg",
+      "slot": "roster",
+      "path": "assets/characters/QuinnAdler.jpg",
+      "slug": "QuinnAdler",
+      "display": "Quinn Adler"
+    },
+    {
+      "index": 16,
+      "sprite": "sprite_018.jpg",
+      "name": "Petra Voss",
+      "file": "PetraVoss.jpg",
+      "slot": "roster",
+      "path": "assets/characters/PetraVoss.jpg",
+      "slug": "PetraVoss",
+      "display": "Petra Voss"
+    },
+    {
+      "index": 17,
+      "sprite": "sprite_019.jpg",
+      "name": "Isla Ren",
+      "file": "IslaRen.jpg",
+      "slot": "roster",
+      "path": "assets/characters/IslaRen.jpg",
+      "slug": "IslaRen",
+      "display": "Isla Ren"
+    },
+    {
+      "index": 18,
+      "sprite": "sprite_020.jpg",
+      "name": "Dove Mercer",
+      "file": "DoveMercer.jpg",
+      "slot": "roster",
+      "path": "assets/characters/DoveMercer.jpg",
+      "slug": "DoveMercer",
+      "display": "Dove Mercer"
+    },
+    {
+      "index": 19,
+      "sprite": "sprite_021.jpg",
+      "name": "Wren Ashcroft",
+      "file": "WrenAshcroft.jpg",
+      "slot": "roster",
+      "path": "assets/characters/WrenAshcroft.jpg",
+      "slug": "WrenAshcroft",
+      "display": "Wren Ashcroft"
+    },
+    {
+      "index": 20,
+      "sprite": "sprite_022.jpg",
+      "name": "Lux Abram",
+      "file": "LuxAbram.jpg",
+      "slot": "roster",
+      "path": "assets/characters/LuxAbram.jpg",
+      "slug": "LuxAbram",
+      "display": "Lux Abram"
+    },
+    {
+      "index": 21,
+      "sprite": "sprite_023.jpg",
+      "name": "Talia Orth",
+      "file": "TaliaOrth.jpg",
+      "slot": "roster",
+      "path": "assets/characters/TaliaOrth.jpg",
+      "slug": "TaliaOrth",
+      "display": "Talia Orth"
+    },
+    {
+      "index": 22,
+      "sprite": "sprite_025.jpg",
+      "name": "Remy Cruz",
+      "file": "RemyCruz.jpg",
+      "slot": "roster",
+      "path": "assets/characters/RemyCruz.jpg",
+      "slug": "RemyCruz",
+      "display": "Remy Cruz"
+    },
+    {
+      "index": 23,
+      "sprite": "sprite_026.jpg",
+      "name": "Skye Binder",
+      "file": "SkyeBinder.jpg",
+      "slot": "roster",
+      "path": "assets/characters/SkyeBinder.jpg",
+      "slug": "SkyeBinder",
+      "display": "Skye Binder"
+    },
+    {
+      "index": 24,
+      "sprite": "sprite_027.jpg",
+      "name": "Opal Reeve",
+      "file": "OpalReeve.jpg",
+      "slot": "roster",
+      "path": "assets/characters/OpalReeve.jpg",
+      "slug": "OpalReeve",
+      "display": "Opal Reeve"
+    },
+    {
+      "index": 25,
+      "sprite": "sprite_028.jpg",
+      "name": "Faye Dray",
+      "file": "FayeDray.jpg",
+      "slot": "roster",
+      "path": "assets/characters/FayeDray.jpg",
+      "slug": "FayeDray",
+      "display": "Faye Dray"
+    },
+    {
+      "index": 26,
+      "sprite": "sprite_029.jpg",
+      "name": "Cinder Holt",
+      "file": "CinderHolt.jpg",
+      "slot": "roster",
+      "path": "assets/characters/CinderHolt.jpg",
+      "slug": "CinderHolt",
+      "display": "Cinder Holt"
+    },
+    {
+      "index": 27,
+      "sprite": "sprite_030.jpg",
+      "name": "Nora Venn",
+      "file": "NoraVenn.jpg",
+      "slot": "roster",
+      "path": "assets/characters/NoraVenn.jpg",
+      "slug": "NoraVenn",
+      "display": "Nora Venn"
+    },
+    {
+      "index": 28,
+      "sprite": "sprite_031.jpg",
+      "name": "Aria Kade",
+      "file": "AriaKade.jpg",
+      "slot": "roster",
+      "path": "assets/characters/AriaKade.jpg",
+      "slug": "AriaKade",
+      "display": "Aria Kade"
+    },
+    {
+      "index": 29,
+      "sprite": "sprite_032.jpg",
+      "name": "Lumen Pryce",
+      "file": "LumenPryce.jpg",
+      "slot": "roster",
+      "path": "assets/characters/LumenPryce.jpg",
+      "slug": "LumenPryce",
+      "display": "Lumen Pryce"
+    },
+    {
+      "index": 30,
+      "sprite": "sprite_033.jpg",
+      "name": "Sage Orin",
+      "file": "SageOrin.jpg",
+      "slot": "roster",
+      "path": "assets/characters/SageOrin.jpg",
+      "slug": "SageOrin",
+      "display": "Sage Orin"
+    },
+    {
+      "index": 31,
+      "sprite": "sprite_034.jpg",
+      "name": "Raven Quill",
+      "file": "RavenQuill.jpg",
+      "slot": "roster",
+      "path": "assets/characters/RavenQuill.jpg",
+      "slug": "RavenQuill",
+      "display": "Raven Quill"
+    },
+    {
+      "index": 32,
+      "sprite": "sprite_035.jpg",
+      "name": "Ivy Maren",
+      "file": "IvyMaren.jpg",
+      "slot": "roster",
+      "path": "assets/characters/IvyMaren.jpg",
+      "slug": "IvyMaren",
+      "display": "Ivy Maren"
+    },
+    {
+      "index": 33,
+      "sprite": "sprite_036.jpg",
+      "name": "Zora Beck",
+      "file": "ZoraBeck.jpg",
+      "slot": "roster",
+      "path": "assets/characters/ZoraBeck.jpg",
+      "slug": "ZoraBeck",
+      "display": "Zora Beck"
+    },
+    {
+      "index": 34,
+      "sprite": "sprite_037.jpg",
+      "name": "Harlow Finn",
+      "file": "HarlowFinn.jpg",
+      "slot": "roster",
+      "path": "assets/characters/HarlowFinn.jpg",
+      "slug": "HarlowFinn",
+      "display": "Harlow Finn"
+    },
+    {
+      "index": 35,
+      "sprite": "sprite_038.jpg",
+      "name": "Dell Ashby",
+      "file": "DellAshby.jpg",
+      "slot": "roster",
+      "path": "assets/characters/DellAshby.jpg",
+      "slug": "DellAshby",
+      "display": "Dell Ashby"
+    },
+    {
+      "index": 36,
+      "sprite": "sprite_039.jpg",
+      "name": "Piper Langley",
+      "file": "PiperLangley.jpg",
+      "slot": "roster",
+      "path": "assets/characters/PiperLangley.jpg",
+      "slug": "PiperLangley",
+      "display": "Piper Langley"
+    },
+    {
+      "index": 37,
+      "sprite": "sprite_040.jpg",
+      "name": "Callie Rhodes",
+      "file": "CallieRhodes.jpg",
+      "slot": "roster",
+      "path": "assets/characters/CallieRhodes.jpg",
+      "slug": "CallieRhodes",
+      "display": "Callie Rhodes"
+    },
+    {
+      "index": 38,
+      "sprite": "sprite_042.jpg",
+      "name": "Noa Ellery",
+      "file": "NoaEllery.jpg",
+      "slot": "roster",
+      "path": "assets/characters/NoaEllery.jpg",
+      "slug": "NoaEllery",
+      "display": "Noa Ellery"
+    },
+    {
+      "index": 39,
+      "sprite": "sprite_046.jpg",
+      "name": "Vesper Cain",
+      "file": "VesperCain.jpg",
+      "slot": "roster",
+      "path": "assets/characters/VesperCain.jpg",
+      "slug": "VesperCain",
+      "display": "Vesper Cain",
+      "metalCheck": "pass"
+    },
+    {
+      "index": 40,
+      "sprite": "sprite_047.jpg",
+      "name": "Juniper Frost",
+      "file": "JuniperFrost.jpg",
+      "slot": "roster",
+      "path": "assets/characters/JuniperFrost.jpg",
+      "slug": "JuniperFrost",
+      "display": "Juniper Frost",
+      "metalCheck": "pass"
+    },
+    {
+      "index": 41,
+      "sprite": "sprite_048.jpg",
+      "name": "Rhea Dalton",
+      "file": "RheaDalton.jpg",
+      "slot": "roster",
+      "path": "assets/characters/RheaDalton.jpg",
+      "slug": "RheaDalton",
+      "display": "Rhea Dalton",
+      "metalCheck": "pass"
+    },
+    {
+      "index": 42,
+      "sprite": "sprite_049.jpg",
+      "name": "Storme Keller",
+      "file": "StormeKeller.jpg",
+      "slot": "roster",
+      "path": "assets/characters/StormeKeller.jpg",
+      "slug": "StormeKeller",
+      "display": "Storme Keller",
+      "metalCheck": "pass"
+    },
+    {
+      "index": 43,
+      "sprite": "sprite_050.jpg",
+      "name": "Eden Cross",
+      "file": "EdenCross.jpg",
+      "slot": "roster",
+      "path": "assets/characters/EdenCross.jpg",
+      "slug": "EdenCross",
+      "display": "Eden Cross",
+      "metalCheck": "pass",
+      "note": "Pearlescent/alien skin is sheen, not metal"
+    },
+    {
+      "index": 44,
+      "sprite": "sprite_051.jpg",
+      "name": "Maris Odell",
+      "file": "MarisOdell.jpg",
+      "slot": "roster",
+      "path": "assets/characters/MarisOdell.jpg",
+      "slug": "MarisOdell",
+      "display": "Maris Odell",
+      "metalCheck": "pass"
+    },
+    {
+      "index": 45,
+      "sprite": "sprite_052.jpg",
+      "name": "Solene Ward",
+      "file": "SoleneWard.jpg",
+      "slot": "roster",
+      "path": "assets/characters/SoleneWard.jpg",
+      "slug": "SoleneWard",
+      "display": "Solene Ward",
+      "metalCheck": "pass",
+      "note": "Pearlescent/alien skin is sheen, not metal"
+    }
+  ],
+  "removed": [
+    {
+      "sprite": "sprite_003.jpg",
+      "reason": "stud earrings",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_017.jpg",
+      "reason": "gold aglets",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_024.jpg",
+      "reason": "silver bikini clasp",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_041.jpg",
+      "reason": "gold earrings",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_043.jpg",
+      "reason": "cyber seams/implants",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_044.jpg",
+      "reason": "cyber plates",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_045.jpg",
+      "reason": "chrome arms",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_053.jpg",
+      "reason": "cyber seams",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_054.jpg",
+      "reason": "synth seams + earring",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_055.jpg",
+      "reason": "synth seams",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_056.jpg",
+      "reason": "cyber seams",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_057.jpg",
+      "reason": "synth seams",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_058.jpg",
+      "reason": "synth seams",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_059.jpg",
+      "reason": "cyber seams",
+      "slot": "removed"
+    },
+    {
+      "sprite": "sprite_060.jpg",
+      "reason": "cyber seams",
+      "slot": "removed"
+    }
+  ],
+  "unassigned_names": [],
+  "variants": {
+    "directory": "assets/characters/variants/",
+    "status": "held",
+    "attachedThisPass": false,
+    "note": "Old metal sprite_046\u2013052 replaced by clean roster stills. sprite_053\u2013060 remain removed."
+  },
+  "lobby": {
+    "portraits": "Amateur 12 (metal-free) plus Elara player still",
+    "player": "Elara Case (ElaraCase.jpg, player_metal_exception)",
+    "aiPool": "amateur12 only \u2014 Elara is not in this pool"
+  },
+  "gaps": [
+    "White-bg JPEG vs transparent PNG handoff ideal",
+    "A-pose stills are not the four-clip shared rig"
+  ]
+}
