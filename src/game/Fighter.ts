@@ -8,6 +8,11 @@ import { weaponById, armorById } from "./gear";
 
 let uid = 0;
 
+/** Full-body still billboard size (meters). Readable as the women at mid range. */
+const BILL_W = 1.35;
+const BILL_H = 2.1;
+const BILL_Y = 1.12;
+
 export class Fighter {
   id = uid++;
   team: number;
@@ -95,35 +100,15 @@ export class Fighter {
     this.group.add(this.rim);
     if (!this.isPlayer) {
       const spr = makeNameSprite(this.name, tint);
-      spr.position.y = 2.15;
+      spr.position.y = 2.4;
       this.group.add(spr);
+      if (this.portraitUrl) this.body.visible = false;
     }
     if (this.portraitUrl) {
       lookFromStill(this.portraitUrl).then((kit) => {
         this.keyedPortrait = kit.keyedUrl;
         this.humanoid.applyLook(kit);
-        // Stub-art billboard: bots show keyed still facing the camera.
-        if (!this.isPlayer && !this.portraitSprite) {
-          const tex = new THREE.TextureLoader().load(kit.keyedUrl);
-          tex.colorSpace = THREE.SRGBColorSpace;
-          const mat = new THREE.SpriteMaterial({
-            map: tex,
-            transparent: true,
-            depthTest: true,
-            alphaTest: 0.15,
-          });
-          const bill = new THREE.Sprite(mat);
-          bill.scale.set(1.15, 1.55, 1);
-          bill.position.set(0, 1.05, 0);
-          this.group.add(bill);
-          this.portraitSprite = bill;
-        } else if (this.portraitSprite) {
-          const mat = this.portraitSprite.material as THREE.SpriteMaterial;
-          const tex = new THREE.TextureLoader().load(kit.keyedUrl);
-          tex.colorSpace = THREE.SRGBColorSpace;
-          mat.map = tex;
-          mat.needsUpdate = true;
-        }
+        this.ensureStillBillboard(kit.keyedUrl);
       });
     }
     this.applyGear(opts.weapon ?? 0, opts.armor ?? 0);
@@ -149,11 +134,45 @@ export class Fighter {
     const url = stillUrlFor(slug);
     this.portraitUrl = url;
     if (!url) return;
+    if (!this.isPlayer) this.body.visible = false;
     lookFromStill(url).then((kit) => {
       if (this.slug !== slug) return;
       this.keyedPortrait = kit.keyedUrl;
       this.humanoid.applyLook(kit);
+      this.ensureStillBillboard(kit.keyedUrl);
     });
+  }
+
+  /**
+   * Full-body Amateur still as a camera-facing billboard (AI only).
+   * Hides the capsule humanoid so bots read as the women. Player keeps 3D body
+   * (plaza / ticklee cam); keyed still still drives HUD + face via lookFromStill.
+   */
+  ensureStillBillboard(keyedUrl: string) {
+    if (this.isPlayer) return;
+    const tex = new THREE.TextureLoader().load(keyedUrl);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    if (!this.portraitSprite) {
+      const mat = new THREE.SpriteMaterial({
+        map: tex,
+        transparent: true,
+        depthTest: true,
+        alphaTest: 0.12,
+      });
+      const bill = new THREE.Sprite(mat);
+      bill.scale.set(BILL_W, BILL_H, 1);
+      bill.position.set(0, BILL_Y, 0);
+      bill.renderOrder = 1;
+      this.group.add(bill);
+      this.portraitSprite = bill;
+    } else {
+      const mat = this.portraitSprite.material as THREE.SpriteMaterial;
+      mat.map = tex;
+      mat.needsUpdate = true;
+      this.portraitSprite.scale.set(BILL_W, BILL_H, 1);
+      this.portraitSprite.position.set(0, BILL_Y, 0);
+    }
+    this.body.visible = false;
   }
 
   recalc() {
@@ -187,6 +206,47 @@ export class Fighter {
     this.animT += dt;
     const clip = this.humanoid.clipFor(this.occupancy, this.speed, this.joinOn);
     this.humanoid.pose(clip, this.animT);
+    this.tickBillboardAnim();
+  }
+
+  /** Procedural billboard feedback: tickler wag + ticklee laugh shake. */
+  private tickBillboardAnim() {
+    const bill = this.portraitSprite;
+    if (!bill) return;
+    const mat = bill.material as THREE.SpriteMaterial;
+    const t = this.animT;
+    let w = BILL_W;
+    let h = BILL_H;
+    let x = 0;
+    let y = BILL_Y;
+    let rot = 0;
+    if (this.occupancy === "tickler" || this.occupancy === "nudge") {
+      const s = Math.sin(t * 26);
+      const s2 = Math.sin(t * 41);
+      w = BILL_W * (1 + s * 0.05);
+      h = BILL_H * (1 + s2 * 0.04);
+      x = s2 * 0.05;
+      y = BILL_Y + Math.abs(s) * 0.07;
+      rot = s * 0.06;
+    } else if (this.occupancy === "ticklee") {
+      const s = Math.sin(t * 16);
+      const s2 = Math.sin(t * 11);
+      w = BILL_W * (1 + s * 0.07);
+      h = BILL_H * (1 - s * 0.03);
+      x = s * 0.1;
+      y = BILL_Y + Math.abs(s2) * 0.05;
+      rot = s2 * 0.08;
+    } else if (this.occupancy === "tapped") {
+      h = BILL_H * 0.72;
+      y = BILL_Y * 0.55;
+      rot = 0.35;
+    } else {
+      const b = Math.sin(t * 2.2) * 0.02;
+      y = BILL_Y + b;
+    }
+    bill.scale.set(w, h, 1);
+    bill.position.set(x, y, 0);
+    mat.rotation = rot;
   }
 
   settle() {
@@ -198,6 +258,7 @@ export class Fighter {
     this.body.rotation.y = this.yaw;
     this.body.rotation.x = 0;
     this.body.rotation.z = 0;
+    if (!this.isPlayer && this.portraitSprite) this.body.visible = false;
   }
 
   eyeWorld(): THREE.Vector3 {
@@ -209,6 +270,7 @@ export class Fighter {
     this.group.visible = !h && this.occupancy !== "vanished" && this.occupancy !== "tapped";
     if (this.occupancy === "tapped") this.group.visible = true;
     if (this.occupancy === "vanished") this.group.visible = false;
+    if (!this.isPlayer && this.portraitSprite) this.body.visible = false;
   }
 }
 

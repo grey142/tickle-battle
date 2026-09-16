@@ -266,15 +266,19 @@ export class Humanoid {
       return;
     }
     if (clip === "tickle") {
+      // Obvious wag — body-visible cases (player ticklee cam / plaza); AI uses billboard shake.
       const s = Math.sin(t * 28);
-      this.spine.rotation.x = 0.22;
-      this.lShoulder.rotation.set(-1.15, 0.15, 0.45 + s * 0.12);
-      this.rShoulder.rotation.set(-1.05, -0.2, -0.35 - s * 0.1);
-      this.lElbow.rotation.x = -0.35 + s * 0.25;
-      this.rElbow.rotation.x = -0.2 - s * 0.22;
-      this.head.rotation.x = 0.15;
+      const s2 = Math.sin(t * 37);
+      this.spine.rotation.x = 0.28 + s * 0.04;
+      this.chest.rotation.y = s2 * 0.08;
+      this.lShoulder.rotation.set(-1.25, 0.2, 0.55 + s * 0.22);
+      this.rShoulder.rotation.set(-1.15, -0.25, -0.45 - s * 0.2);
+      this.lElbow.rotation.x = -0.45 + s * 0.4;
+      this.rElbow.rotation.x = -0.3 - s * 0.38;
+      this.head.rotation.x = 0.2;
       this.lHip.rotation.x = 0.12;
       this.rHip.rotation.x = -0.08;
+      if (this.weaponMesh) this.weaponMesh.rotation.z = s * 0.45;
       return;
     }
     if (clip === "squirm") {

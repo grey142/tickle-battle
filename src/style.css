@@ -415,3 +415,24 @@ button.hub-item { pointer-events: auto; }
   .arena-catalog { grid-template-columns: 1fr; }
   .look-grid { grid-template-columns: repeat(4, 1fr); }
 }
+
+
+/* First-person tickle feedback — rose vignette pulses while you are the tickler. */
+#tickle-flash {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 42%, rgba(196, 92, 120, 0.22) 100%);
+  mix-blend-mode: screen;
+  z-index: 3;
+}
+#tickle-flash.on {
+  display: block;
+  animation: tickle-pulse 0.45s ease-in-out infinite;
+}
+@keyframes tickle-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}

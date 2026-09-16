@@ -99,6 +99,8 @@ export class Game {
   liveT = 0;
   private hudEls: Record<string, HTMLElement> = {};
   private rearCue: THREE.Mesh;
+  private fpArms: THREE.Group;
+  private fpArmT = 0;
   private wallPrev = performance.now();
 
   constructor(root: HTMLElement) {
@@ -147,6 +149,11 @@ export class Game {
     this.rearCue.rotation.x = -Math.PI / 2;
     this.rearCue.visible = false;
     this.scene.add(this.rearCue);
+    this.fpArms = buildFpArms();
+    // Camera must be in the scene graph so children (FP arms) render.
+    this.scene.add(this.camera);
+    this.camera.add(this.fpArms);
+    this.fpArms.visible = false;
     this.bindUi();
     window.addEventListener("resize", () => this.resize());
     this.resize();
@@ -181,6 +188,7 @@ export class Game {
       "pad-status",
       "again-hint",
       "btn-leave",
+      "tickle-flash",
     ]) {
       const el = this.overlay.querySelector("#" + id);
       if (el) this.hudEls[id] = el as HTMLElement;
@@ -1448,7 +1456,11 @@ export class Game {
         continue;
       }
       f.group.visible = true;
-      if (f.isPlayer) f.body.visible = viewer.occupancy === "ticklee" || viewer.occupancy === "tapped";
+      if (f.isPlayer) {
+        f.body.visible = viewer.occupancy === "ticklee" || viewer.occupancy === "tapped";
+      } else if (f.portraitSprite) {
+        f.body.visible = false;
+      }
     }
   }
 
@@ -1484,8 +1496,46 @@ export class Game {
     this.camera.rotation.x = p.pitch;
   }
 
+  /** First-person tickle arms + rose flash while the player is the active tickler. */
+  private updateFpTickle(dt: number) {
+    const p = this.player;
+    const tickling =
+      this.mode === "play" && (p.occupancy === "tickler" || p.occupancy === "nudge");
+    const flash = this.hudEls["tickle-flash"];
+    if (flash) flash.classList.toggle("on", tickling);
+    if (!this.fpArms) return;
+    const fpOk =
+      tickling &&
+      p.occupancy !== "spectate" &&
+      p.occupancy !== "tapped" &&
+      p.occupancy !== "ticklee";
+    this.fpArms.visible = !!fpOk;
+    if (!fpOk) return;
+    this.fpArmT += dt;
+    const s = Math.sin(this.fpArmT * 28);
+    const s2 = Math.sin(this.fpArmT * 36);
+    const left = this.fpArms.getObjectByName("fp-left");
+    const right = this.fpArms.getObjectByName("fp-right");
+    if (left) {
+      left.rotation.x = -0.35 + s * 0.22;
+      left.rotation.z = 0.25 + s2 * 0.12;
+      left.position.y = -0.28 + Math.abs(s) * 0.04;
+    }
+    if (right) {
+      right.rotation.x = -0.28 - s * 0.2;
+      right.rotation.z = -0.22 - s2 * 0.1;
+      right.position.y = -0.3 + Math.abs(s2) * 0.035;
+    }
+    const prop = this.fpArms.getObjectByName("fp-weapon");
+    if (prop) {
+      prop.rotation.z = s * 0.35;
+      prop.position.y = -0.02 + s2 * 0.02;
+    }
+  }
+
   private updateHud(dt = 0.016) {
     const p = this.player;
+    this.updateFpTickle(dt);
     const stam = this.hudEls["stamina-fill"];
     const esc = this.hudEls["escape-fill"];
     const focus =
@@ -1902,6 +1952,57 @@ function yawToward(from: THREE.Vector3, to: THREE.Vector3): number {
   return Math.atan2(-dx, -dz);
 }
 
+function buildFpArms(): THREE.Group {
+  const root = new THREE.Group();
+  root.name = "fp-arms";
+  const skin = new THREE.MeshStandardMaterial({
+    color: 0xc4a090,
+    roughness: 0.55,
+    metalness: 0,
+  });
+  const cloth = new THREE.MeshStandardMaterial({
+    color: 0x3a2e38,
+    roughness: 0.75,
+    metalness: 0,
+  });
+
+  const makeArm = (name: string, side: number) => {
+    const g = new THREE.Group();
+    g.name = name;
+    const upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.045, 0.22, 3, 6), skin);
+    upper.rotation.x = Math.PI / 2;
+    upper.position.set(0, 0, -0.14);
+    const forearm = new THREE.Mesh(new THREE.CapsuleGeometry(0.038, 0.2, 3, 6), skin);
+    forearm.rotation.x = Math.PI / 2;
+    forearm.position.set(0, -0.02, -0.36);
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.055, 8, 6), skin);
+    hand.position.set(0, -0.02, -0.5);
+    const sleeve = new THREE.Mesh(new THREE.CapsuleGeometry(0.05, 0.08, 2, 6), cloth);
+    sleeve.rotation.x = Math.PI / 2;
+    sleeve.position.set(0, 0.02, -0.06);
+    g.add(upper, forearm, hand, sleeve);
+    g.position.set(side * 0.28, -0.32, -0.45);
+    g.rotation.x = -0.3;
+    g.rotation.z = -side * 0.2;
+    return g;
+  };
+
+  root.add(makeArm("fp-left", -1));
+  root.add(makeArm("fp-right", 1));
+
+  const weapon = new THREE.Group();
+  weapon.name = "fp-weapon";
+  const mitt = new THREE.Mesh(
+    new THREE.BoxGeometry(0.1, 0.04, 0.12),
+    new THREE.MeshStandardMaterial({ color: 0x6a4a3a, roughness: 0.85, metalness: 0 }),
+  );
+  mitt.position.set(0.28, -0.34, -0.52);
+  weapon.add(mitt);
+  root.add(weapon);
+
+  return root;
+}
+
 function overlayHtml(): string {
   return `
   <div id="boot">
@@ -1922,6 +2023,7 @@ function overlayHtml(): string {
   </div>
   <div id="countdown"></div>
   <div id="crosshair"></div>
+  <div id="tickle-flash" aria-hidden="true"></div>
   <div id="radar"><span class="needle">▲</span><span id="radar-copy"></span></div>
   <div id="toast"></div>
   <div id="face"><img id="face-still" alt="" /><div class="head"><span class="eye" style="left:18px"></span><span class="eye" style="right:18px"></span><span class="mouth"></span></div></div>

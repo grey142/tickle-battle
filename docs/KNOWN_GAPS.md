@@ -39,6 +39,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Loadout snapshot at Arena Start (HUD / results / spawn use the locked ids)
 - Home Look laugh preview (~2s still + plaza mannequin squirm); stills drive the shared 3D rig; bots also show keyed still billboards in-match
 - Soft-nudge searches 16 directions out to 2.4m for clear space, else cancel + pairwise cooldown
+- AI fighters use full-body Amateur still billboards (capsule humanoid hidden); `K_DAMAGE = 0.95` (1/3 of prior 2.85) for ~3× harder tap-outs; FP tickle arms + billboard wag while tickling
 
 ## Stub / missing
 
