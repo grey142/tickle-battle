@@ -181,6 +181,13 @@ export class MapWorld {
     return p.x > 14 && Math.abs(p.z) < 7.2;
   }
 
+  /** Keep a fighter inside their pre-match spawn pocket (same bounds as inSpawnPocket). */
+  clampSpawnPocket(x: number, z: number, team: number): { x: number; z: number } {
+    const pz = THREE.MathUtils.clamp(z, -7.19, 7.19);
+    if (team === 0) return { x: Math.min(x, -14.01), z: pz };
+    return { x: Math.max(x, 14.01), z: pz };
+  }
+
   resolve(x: number, z: number, y: number, radius = CAPSULE_R): { x: number; z: number } {
     let px = x;
     let pz = z;

@@ -949,8 +949,16 @@ export class Game {
       const dx = (lx * mv.z + rx * mv.x) * sp * dt;
       const dz = (lz * mv.z + rz * mv.x) * sp * dt;
       const r = this.map.resolve(p.pos.x + dx, p.pos.z + dz, p.pos.y);
-      p.pos.x = r.x;
-      p.pos.z = r.z;
+      let nx = r.x;
+      let nz = r.z;
+      // Pre-match: player stays in spawn pocket (bots already park via millSpawn).
+      if (this.countdown > 0) {
+        const c = this.map.clampSpawnPocket(nx, nz, p.team);
+        nx = c.x;
+        nz = c.z;
+      }
+      p.pos.x = nx;
+      p.pos.z = nz;
       p.pos.y = this.map.groundY(p.pos.x, p.pos.z);
     }
 
