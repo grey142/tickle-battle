@@ -1,8 +1,29 @@
 /** Amateur Team Quick SFX — short sample pack + oscillator fallbacks. */
 
-type CueId = "tickle-lock" | "tickle" | "vanish" | "tap-out";
+type CueId =
+  | "tickle-lock"
+  | "tickle"
+  | "vanish"
+  | "tap-out"
+  | "reappear"
+  | "escape"
+  | "win"
+  | "lose"
+  | "buy"
+  | "spend";
 
-const SAMPLE_CUES: CueId[] = ["tickle-lock", "tickle", "vanish", "tap-out"];
+const SAMPLE_CUES: CueId[] = [
+  "tickle-lock",
+  "tickle",
+  "vanish",
+  "tap-out",
+  "reappear",
+  "escape",
+  "win",
+  "lose",
+  "buy",
+  "spend",
+];
 
 function ctx(): AudioContext | null {
   try {
@@ -136,10 +157,12 @@ export function stingStart() {
   playCue("tickle-lock", 0.75, () => sting(155, 0.09, "square", 0.06));
 }
 
-/** Nearby reappear tell — white ping, not vanish/rose. */
+/** Nearby reappear tell — white ping (`public/sfx/reappear`). */
 export function stingReappear() {
-  sting(880, 0.1, "sine", 0.045);
-  sting(1320, 0.12, "triangle", 0.03, 0.04);
+  playCue("reappear", 0.65, () => {
+    sting(880, 0.1, "sine", 0.045);
+    sting(1320, 0.12, "triangle", 0.03, 0.04);
+  });
 }
 
 /** Rapid high flutter — tickle tap (`public/sfx/tickle`, loop-safe). */
@@ -150,9 +173,9 @@ export function stingTickle() {
   });
 }
 
-/** Rising whoosh — escape fill. */
+/** Soft rising tick — escape fill (`public/sfx/escape`). */
 export function stingEscape() {
-  sting(180, 0.2, "sawtooth", 0.05, 0, 430);
+  playCue("escape", 0.55, () => sting(180, 0.2, "sawtooth", 0.05, 0, 430));
 }
 
 /** Falling whoosh-out — vanish (`public/sfx/vanish`). */
@@ -171,27 +194,33 @@ export function stingTapOut() {
   });
 }
 
-/** Rising major triad — win. */
+/** Rising major triad — win (`public/sfx/win`). */
 export function stingWin() {
-  sting(392, 0.14, "sine", 0.05);
-  sting(523, 0.16, "sine", 0.05, 0.1);
-  sting(659, 0.22, "triangle", 0.055, 0.2);
+  playCue("win", 0.7, () => {
+    sting(392, 0.14, "sine", 0.05);
+    sting(523, 0.16, "sine", 0.05, 0.1);
+    sting(659, 0.22, "triangle", 0.055, 0.2);
+  });
 }
 
-/** Falling minor — lose. */
+/** Falling minor — lose (`public/sfx/lose`). */
 export function stingLose() {
-  sting(277, 0.16, "triangle", 0.055);
-  sting(208, 0.18, "triangle", 0.05, 0.12);
-  sting(131, 0.28, "sawtooth", 0.045, 0.24, 90);
+  playCue("lose", 0.68, () => {
+    sting(277, 0.16, "triangle", 0.055);
+    sting(208, 0.18, "triangle", 0.05, 0.12);
+    sting(131, 0.28, "sawtooth", 0.045, 0.24, 90);
+  });
 }
 
-/** Bright coin ding — buy. */
+/** Bright coin ding — buy (`public/sfx/buy`). */
 export function stingBuy() {
-  sting(988, 0.12, "sine", 0.06);
-  sting(1480, 0.08, "triangle", 0.03, 0.02);
+  playCue("buy", 0.7, () => {
+    sting(988, 0.12, "sine", 0.06);
+    sting(1480, 0.08, "triangle", 0.03, 0.02);
+  });
 }
 
-/** Muted down-chime — spend. */
+/** Muted down-chime — spend (`public/sfx/spend`). */
 export function stingSpend() {
-  sting(392, 0.14, "triangle", 0.05, 0, 196);
+  playCue("spend", 0.62, () => sting(392, 0.14, "triangle", 0.05, 0, 196));
 }
