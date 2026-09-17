@@ -1716,9 +1716,11 @@ export class Game {
       const ticklingHud =
         p.occupancy === "tickler" || (p.occupancy === "nudge" && p.joinOn >= 0);
       const laughingHud = p.occupancy === "ticklee";
+      const locoNow = p.locomotionClip();
       const url =
         (ticklingHud && p.tickleFramePortrait) ||
         (laughingHud && p.laughFramePortrait) ||
+        ((locoNow === "run" || locoNow === "walk") && p.runFramePortrait) ||
         p.keyedPortrait ||
         p.portraitUrl;
       const img = this.hudEls["player-portrait"] as HTMLImageElement;

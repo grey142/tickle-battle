@@ -19,5 +19,11 @@
     "billRate": 12.74
   },
   "runSpeed": 4.4,
-  "walkSpeed": 0.4
+  "walkSpeed": 0.4,
+  "frames": [
+    "frames/EmberLang_f0.jpg",
+    "frames/EmberLang_f1.jpg",
+    "frames/EmberLang_f2.jpg",
+    "frames/EmberLang_f3.jpg"
+  ]
 }

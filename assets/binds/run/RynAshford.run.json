@@ -19,5 +19,11 @@
     "billRate": 13.13
   },
   "runSpeed": 4.4,
-  "walkSpeed": 0.4
+  "walkSpeed": 0.4,
+  "frames": [
+    "frames/RynAshford_f0.jpg",
+    "frames/RynAshford_f1.jpg",
+    "frames/RynAshford_f2.jpg",
+    "frames/RynAshford_f3.jpg"
+  ]
 }

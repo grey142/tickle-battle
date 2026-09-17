@@ -19,5 +19,11 @@
     "billRate": 12.74
   },
   "runSpeed": 4.4,
-  "walkSpeed": 0.4
+  "walkSpeed": 0.4,
+  "frames": [
+    "frames/SableQuinn_f0.jpg",
+    "frames/SableQuinn_f1.jpg",
+    "frames/SableQuinn_f2.jpg",
+    "frames/SableQuinn_f3.jpg"
+  ]
 }

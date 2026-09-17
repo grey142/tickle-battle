@@ -19,5 +19,11 @@
     "billRate": 12.35
   },
   "runSpeed": 4.4,
-  "walkSpeed": 0.4
+  "walkSpeed": 0.4,
+  "frames": [
+    "frames/KoraVale_f0.jpg",
+    "frames/KoraVale_f1.jpg",
+    "frames/KoraVale_f2.jpg",
+    "frames/KoraVale_f3.jpg"
+  ]
 }

@@ -19,5 +19,11 @@
     "billRate": 11.96
   },
   "runSpeed": 4.4,
-  "walkSpeed": 0.4
+  "walkSpeed": 0.4,
+  "frames": [
+    "frames/JunoHale_f0.jpg",
+    "frames/JunoHale_f1.jpg",
+    "frames/JunoHale_f2.jpg",
+    "frames/JunoHale_f3.jpg"
+  ]
 }

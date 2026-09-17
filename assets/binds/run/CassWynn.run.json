@@ -19,5 +19,11 @@
     "billRate": 13.52
   },
   "runSpeed": 4.4,
-  "walkSpeed": 0.4
+  "walkSpeed": 0.4,
+  "frames": [
+    "frames/CassWynn_f0.jpg",
+    "frames/CassWynn_f1.jpg",
+    "frames/CassWynn_f2.jpg",
+    "frames/CassWynn_f3.jpg"
+  ]
 }
