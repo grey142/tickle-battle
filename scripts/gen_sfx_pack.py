@@ -308,6 +308,22 @@ def make_spend(rng: np.random.Generator) -> np.ndarray:
     return out * 0.55
 
 
+def make_countdown_tick(rng: np.random.Generator) -> np.ndarray:
+    """Soft countdown beat — short muted tick for last ~3s / leave bail."""
+    dur = 0.11
+    n = int(SR * dur)
+    # Soft sine tick with tiny noise tip (not a harsh beep)
+    body = soft_clip(tone(n, 660) * 0.55 + tone(n, 990) * 0.22)
+    body *= env_adsr(n, 0.002, 0.02, 0.015, 0.07, 0.25)
+    tip = bandpass(noise(n, rng), 1800, 6500) * 0.18
+    tip *= env_adsr(n, 0.001, 0.012, 0.008, 0.04, 0.15)
+    out = soft_clip(one_pole_lp(body * 0.9 + tip, 7200) * 0.95)
+    edge = int(0.004 * SR)
+    out[:edge] *= np.linspace(0, 1, edge)
+    out[-edge:] *= np.linspace(1, 0, edge)
+    return out * 0.52
+
+
 def encode_web(name: str) -> None:
     import subprocess
 
@@ -339,6 +355,7 @@ def main() -> None:
         "lose": make_lose(rng),
         "buy": make_buy(rng),
         "spend": make_spend(rng),
+        "countdown-tick": make_countdown_tick(rng),
     }
     OUT.mkdir(parents=True, exist_ok=True)
     for name, samples in cues.items():

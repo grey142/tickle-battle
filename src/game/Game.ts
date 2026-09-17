@@ -35,6 +35,7 @@ import { stillUrlFor, lookById } from "./stills";
 import { lookFromStill } from "./lookFromStill";
 import {
   blip,
+  bindAudioUnlock,
   resumeAudio,
   stingStart,
   stingReappear,
@@ -44,6 +45,7 @@ import {
   stingTapOut,
   stingWin,
   stingLose,
+  stingCountdownTick,
 } from "./sfx";
 import { tickleBindForSlug } from "./tickleBind";
 import { Hub } from "./Hub";
@@ -105,6 +107,9 @@ export class Game {
   toast = "";
   lookPitch = 0;
   combatAnnounced = false;
+  /** Last ceil that played a countdown-tick (spawn or vanish HUD). */
+  private countdownTickCeil = -1;
+  private vanishTickCeil = -1;
   liveT = 0;
   private hudEls: Record<string, HTMLElement> = {};
   private rearCue: THREE.Mesh;
@@ -205,6 +210,7 @@ export class Game {
   }
 
   private bindUi() {
+    bindAudioUnlock(document);
     this.overlay.querySelector("#again")?.addEventListener("click", () => this.showHub());
     this.overlay.querySelector("#btn-leave")?.addEventListener("click", () => this.bailCountdown());
     this.renderer.domElement.addEventListener("click", (e) => {
@@ -275,8 +281,33 @@ export class Game {
     this.syncPlazaPreview();
   }
 
+
+  /** Soft ticks on spawn countdown last 3s, leave already handled in bail; player vanish last 3s. */
+  private tickCountdownAudio() {
+    if (this.countdown > 0) {
+      const ceil = Math.ceil(this.countdown);
+      if (ceil <= 3 && ceil >= 1 && ceil !== this.countdownTickCeil) {
+        this.countdownTickCeil = ceil;
+        // Slightly louder as it approaches 1.
+        const gain = ceil === 1 ? 0.58 : ceil === 2 ? 0.5 : 0.44;
+        stingCountdownTick(gain);
+      }
+    }
+    const p = this.player;
+    if (p && p.occupancy === "vanished" && p.vanishLeft > 0) {
+      const vCeil = Math.ceil(p.vanishLeft);
+      if (vCeil <= 3 && vCeil >= 1 && vCeil !== this.vanishTickCeil) {
+        this.vanishTickCeil = vCeil;
+        stingCountdownTick(vCeil === 1 ? 0.5 : 0.4);
+      }
+    } else {
+      this.vanishTickCeil = -1;
+    }
+  }
+
   private bailCountdown() {
     if (this.mode !== "play" || this.countdown <= 0) return;
+    stingCountdownTick(0.42);
     this.clearFighters();
     this.say("Left during countdown — no coins, no XP");
     this.showHub();
@@ -453,6 +484,8 @@ export class Game {
     this.contactHold.clear();
     this.nudgeT = 0;
     this.combatAnnounced = false;
+    this.countdownTickCeil = -1;
+    this.vanishTickCeil = -1;
     this.liveT = 0;
     this.wallPrev = performance.now();
     this.clearFighters();
@@ -708,6 +741,7 @@ export class Game {
 
     const combatLive = this.countdown <= 0;
     this.countdown = Math.max(0, this.countdown - wallDt);
+    this.tickCountdownAudio();
     if (this.countdown <= 0) this.liveT += wallDt;
     if (
       (this.arenaMode === "team-timed" || this.arenaMode === "ffa-timed") &&

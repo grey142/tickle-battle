@@ -10,7 +10,8 @@ type CueId =
   | "win"
   | "lose"
   | "buy"
-  | "spend";
+  | "spend"
+  | "countdown-tick";
 
 const SAMPLE_CUES: CueId[] = [
   "tickle-lock",
@@ -23,6 +24,7 @@ const SAMPLE_CUES: CueId[] = [
   "lose",
   "buy",
   "spend",
+  "countdown-tick",
 ];
 
 function ctx(): AudioContext | null {
@@ -85,11 +87,14 @@ function playBuffer(id: CueId, gain = 0.7): boolean {
     if (a.state === "suspended") void a.resume();
     const src = a.createBufferSource();
     const g = a.createGain();
+    const t0 = a.currentTime;
     src.buffer = buf;
-    g.gain.value = gain;
+    // Soft attack envelope so sample stingers don't click on start.
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0001, gain), t0 + 0.008);
     src.connect(g);
     g.connect(a.destination);
-    src.start();
+    src.start(t0);
     return true;
   } catch {
     return false;
@@ -148,8 +153,20 @@ function sting(
 
 export function resumeAudio() {
   if (!ac) ac = ctx();
-  ac?.resume();
+  if (ac?.state === "suspended") void ac.resume();
   void ensureSamplesLoaded();
+}
+
+let unlockBound = false;
+
+/** Unlock AudioContext + preload samples on first user gesture (autoplay policy). */
+export function bindAudioUnlock(target: Document | HTMLElement = document) {
+  if (unlockBound) return;
+  unlockBound = true;
+  const kick = () => resumeAudio();
+  target.addEventListener("pointerdown", kick, { passive: true });
+  target.addEventListener("keydown", kick);
+  target.addEventListener("touchstart", kick, { passive: true });
 }
 
 /** Short grab/attach — tickle lock (`public/sfx/tickle-lock`). */
@@ -159,7 +176,7 @@ export function stingStart() {
 
 /** Nearby reappear tell — white ping (`public/sfx/reappear`). */
 export function stingReappear() {
-  playCue("reappear", 0.65, () => {
+  playCue("reappear", 0.68, () => {
     sting(880, 0.1, "sine", 0.045);
     sting(1320, 0.12, "triangle", 0.03, 0.04);
   });
@@ -180,10 +197,15 @@ export function stingEscape() {
 
 /** Falling whoosh-out — vanish (`public/sfx/vanish`). */
 export function stingVanish() {
-  playCue("vanish", 0.7, () => {
+  playCue("vanish", 0.72, () => {
     sting(640, 0.32, "sine", 0.05, 0, 88);
     sting(420, 0.22, "triangle", 0.03, 0.04, 70);
   });
+}
+
+/** Soft countdown beat — last ~3s spawn / leave / vanish clock (`public/sfx/countdown-tick`). */
+export function stingCountdownTick(gain = 0.48) {
+  playCue("countdown-tick", gain, () => sting(660, 0.07, "sine", Math.min(0.05, gain * 0.09)));
 }
 
 /** Grim sport buzzer — tap-out (`public/sfx/tap-out`). */
