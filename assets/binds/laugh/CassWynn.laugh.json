@@ -1,0 +1,42 @@
+{
+  "clip": "laugh_squirm",
+  "slug": "CassWynn",
+  "display": "Cass Wynn",
+  "playerOnly": false,
+  "metalException": false,
+  "stages": {
+    "s0": {
+      "staminaMin": 70,
+      "rate": 8.277500000000002,
+      "amp": 0.0477,
+      "lean": 0.06,
+      "billShake": 0.027999999999999997,
+      "billRate": 11.899999999999999
+    },
+    "s1": {
+      "staminaMin": 40,
+      "rate": 12.040000000000001,
+      "amp": 0.0795,
+      "lean": 0.105,
+      "billShake": 0.055999999999999994,
+      "billRate": 15.3
+    },
+    "s2": {
+      "staminaMin": 15,
+      "rate": 15.05,
+      "amp": 0.106,
+      "lean": 0.15,
+      "billShake": 0.08,
+      "billRate": 17
+    },
+    "s3": {
+      "staminaMin": 0,
+      "rate": 17.3075,
+      "amp": 0.1325,
+      "lean": 0.18,
+      "billShake": 0.10800000000000001,
+      "billRate": 20.4
+    }
+  },
+  "hubPreviewMs": 2000
+}

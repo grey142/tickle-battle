@@ -1,0 +1,42 @@
+{
+  "clip": "laugh_squirm",
+  "slug": "ElaraCase",
+  "display": "Elara Case",
+  "playerOnly": true,
+  "metalException": true,
+  "stages": {
+    "s0": {
+      "staminaMin": 70,
+      "rate": 8.47,
+      "amp": 0.0405,
+      "lean": 0.054000000000000006,
+      "billShake": 0.0315,
+      "billRate": 10.5
+    },
+    "s1": {
+      "staminaMin": 40,
+      "rate": 12.32,
+      "amp": 0.0675,
+      "lean": 0.0945,
+      "billShake": 0.063,
+      "billRate": 13.5
+    },
+    "s2": {
+      "staminaMin": 15,
+      "rate": 15.4,
+      "amp": 0.09,
+      "lean": 0.135,
+      "billShake": 0.09,
+      "billRate": 15
+    },
+    "s3": {
+      "staminaMin": 0,
+      "rate": 17.709999999999997,
+      "amp": 0.11249999999999999,
+      "lean": 0.162,
+      "billShake": 0.1215,
+      "billRate": 18.0
+    }
+  },
+  "hubPreviewMs": 2000
+}
