@@ -293,7 +293,12 @@ export class Fighter {
 
 
   /** Cycle AI billboard (and FP portrait URL) through laugh frames while ticklee. */
-  private syncLaughFrameBillboard(clip: string, bind?: LaughBind, stageParams?: { billRate: number }) {
+  private syncLaughFrameBillboard(
+    clip: string,
+    bind?: LaughBind,
+    stageParams?: { billRate: number },
+    staminaPct?: number,
+  ) {
     const laughing =
       clip === "squirm" ||
       this.occupancy === "ticklee" ||
@@ -308,8 +313,27 @@ export class Fighter {
     }
     const urls = laughFrameUrls(bind);
     if (urls.length < 2) return false;
-    const fps = Math.max(6, Math.round((stageParams?.billRate || 14) * 0.5));
-    const idx = Math.floor(this.animT * fps) % urls.length;
+    // Stamina-weighted window: low stamina favors harder laugh frames (f2/f3).
+    const pct = Math.max(0, Math.min(100, staminaPct ?? 100));
+    const n = urls.length;
+    let lo = 0;
+    let hi = n - 1;
+    if (pct >= 70) {
+      lo = 0;
+      hi = Math.min(1, n - 1);
+    } else if (pct >= 40) {
+      lo = 0;
+      hi = Math.min(2, n - 1);
+    } else if (pct >= 15) {
+      lo = Math.min(1, n - 1);
+      hi = n - 1;
+    } else {
+      lo = Math.min(2, n - 1);
+      hi = n - 1;
+    }
+    const span = Math.max(1, hi - lo + 1);
+    const fps = Math.max(7, Math.round((stageParams?.billRate || 14) * (0.55 + (100 - pct) * 0.004)));
+    const idx = lo + (Math.floor(this.animT * fps) % span);
     if (idx === this.laughFrameApplied && this.laughFramePortrait) return true;
     const want = idx;
     const token = ++this.laughFrameLoadToken;
@@ -480,7 +504,8 @@ export class Fighter {
           ? laughBindForSlug(this.slug)
           : laughBindForLook(this.look)
         : undefined;
-    if (!this.syncLaughFrameBillboard(clip, laughBind, laugh)) {
+    const stamPct = (this.stamina / Math.max(1, this.maxStamina)) * 100;
+    if (!this.syncLaughFrameBillboard(clip, laughBind, laugh, stamPct)) {
       this.syncLaughStageBillboard(clip);
     }
     this.syncTickleFrameBillboard(clip, tickle);

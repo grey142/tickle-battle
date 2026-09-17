@@ -52,7 +52,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - No jump (bible); ramp height is a groundY sample
 
 ## Laugh production clips (Support)
-Painterly s0–s3 stage stills plus multi-frame cycle (`assets/binds/laugh/frames/` f0–f3) for Amateur 12 + Elara. Ticklee billboards cycle frames; stamina drives rate/amp/lean plus face-card blend weights (jaw/cheek/eye/brow) on the FP/plaza humanoid. Remaining: true morph-target mesh blendshapes if a non-capsule head ships later.
+Painterly s0–s3 stage stills plus multi-frame cycle (`assets/binds/laugh/frames/` f0–f3) for Amateur 12 + Elara. Ticklee billboards cycle frames with stamina-weighted windows (low stamina favors f2/f3); stamina drives rate/amp/lean plus face-card blend weights (jaw/cheek/eye/brow) on the FP/plaza humanoid. Remaining: true morph-target mesh blendshapes if a non-capsule head ships later.
 
 ## Tickle production polish (Support 4)
 Four-frame tickle cycles for Amateur 12 + Elara under `assets/binds/tickle/frames/` (f0 = A-pose still; f1–f3 lean/reach/bob adaptations). AI tickler billboards + FP portrait cycle frames; FP arms use `tickleBind` rate/amps (no hardcoded `sin(t*28)`); Humanoid tickle motion strengthened. Deferred: true painterly tickle stage stills/blendshapes beyond A-pose adaptations.
