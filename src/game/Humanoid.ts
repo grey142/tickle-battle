@@ -281,27 +281,31 @@ export class Humanoid {
       return;
     }
     if (clip === "tickle") {
-      // Per-look bind keeps the shared four-clip rig while making tickler motion readable.
+      // Per-look bind + stronger readable tickler motion (production polish).
       const tickle = mods as TicklePoseParams | undefined;
       const rate = tickle?.rate ?? 28;
       const twistRate = tickle?.twistRate ?? 37;
       const spineBase = tickle?.spineBase ?? 0.28;
-      const spineAmp = tickle?.spineAmp ?? 0.04;
-      const chestAmp = tickle?.chestAmp ?? 0.08;
-      const shoulderAmp = tickle?.shoulderAmp ?? 0.22;
-      const elbowAmp = tickle?.elbowAmp ?? 0.4;
+      const spineAmp = tickle?.spineAmp ?? 0.046;
+      const chestAmp = tickle?.chestAmp ?? 0.088;
+      const shoulderAmp = tickle?.shoulderAmp ?? 0.246;
+      const elbowAmp = tickle?.elbowAmp ?? 0.44;
       const s = Math.sin(t * rate);
       const s2 = Math.sin(t * twistRate);
+      const s3 = Math.sin(t * rate * 1.37);
       this.spine.rotation.x = spineBase + s * spineAmp;
+      this.spine.rotation.z = s3 * spineAmp * 0.55;
       this.chest.rotation.y = s2 * chestAmp;
-      this.lShoulder.rotation.set(-1.25, 0.2, 0.55 + s * shoulderAmp);
-      this.rShoulder.rotation.set(-1.15, -0.25, -0.45 - s * shoulderAmp);
-      this.lElbow.rotation.x = -0.45 + s * elbowAmp;
-      this.rElbow.rotation.x = -0.3 - s * elbowAmp * 0.95;
-      this.head.rotation.x = 0.2;
-      this.lHip.rotation.x = 0.12;
-      this.rHip.rotation.x = -0.08;
-      if (this.weaponMesh) this.weaponMesh.rotation.z = s * (tickle?.weaponWag ?? 0.45);
+      this.chest.rotation.x = Math.abs(s) * chestAmp * 0.35;
+      this.lShoulder.rotation.set(-1.28, 0.22 + s2 * 0.08, 0.58 + s * shoulderAmp);
+      this.rShoulder.rotation.set(-1.18, -0.28 - s2 * 0.08, -0.48 - s * shoulderAmp);
+      this.lElbow.rotation.x = -0.48 + s * elbowAmp;
+      this.rElbow.rotation.x = -0.32 - s * elbowAmp * 0.95;
+      this.head.rotation.x = 0.22 + Math.abs(s2) * 0.04;
+      this.head.rotation.y = s3 * 0.05;
+      this.lHip.rotation.x = 0.14 + s * 0.03;
+      this.rHip.rotation.x = -0.1 - s * 0.025;
+      if (this.weaponMesh) this.weaponMesh.rotation.z = s * (tickle?.weaponWag ?? 0.49);
       return;
     }
     if (clip === "squirm") {

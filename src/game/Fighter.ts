@@ -15,7 +15,7 @@ import {
   type LaughBind,
   type LaughStageId,
 } from "./laughBind";
-import { tickleBindForSlug } from "./tickleBind";
+import { tickleBindForSlug, tickleFrameUrls, type TickleBind } from "./tickleBind";
 import { idleBindForSlug } from "./idleBind";
 import { weaponById, armorById } from "./gear";
 
@@ -90,6 +90,12 @@ export class Fighter {
   private laughFrameKeyed: string[] = [];
   /** Keyed (or raw) URL for current laugh frame — FP portrait / HUD. */
   laughFramePortrait?: string;
+  /** Active tickle-cycle frame index on billboard / FP portrait (-1 = base still). */
+  private tickleFrameApplied = -1;
+  private tickleFrameLoadToken = 0;
+  private tickleFrameKeyed: string[] = [];
+  /** Keyed (or raw) URL for current tickle frame — FP portrait / HUD. */
+  tickleFramePortrait?: string;
 
   constructor(opts: {
     team: number;
@@ -298,6 +304,52 @@ export class Fighter {
       });
   }
 
+/** Cycle AI billboard (and FP portrait URL) through tickle frames while tickling. */
+  private syncTickleFrameBillboard(clip: string, tickle?: TickleBind) {
+    const tickling =
+      clip === "tickle" ||
+      this.occupancy === "tickler" ||
+      (this.occupancy === "nudge" && this.joinOn >= 0);
+    if (!tickling || !tickle) {
+      if (this.tickleFrameApplied !== -1) {
+        if (!this.isPlayer && this.keyedPortrait) this.ensureStillBillboard(this.keyedPortrait);
+        this.tickleFrameApplied = -1;
+        this.tickleFramePortrait = undefined;
+      }
+      return;
+    }
+    const urls = tickleFrameUrls(tickle);
+    if (urls.length < 2) return;
+    // FPS from billRate (scaled) so frame cycle reads; wag still uses full billRate.
+    const fps = Math.max(8, Math.round((tickle.billRate || 26) * 0.45));
+    const idx = Math.floor(this.animT * fps) % urls.length;
+    if (idx === this.tickleFrameApplied && this.tickleFramePortrait) return;
+    const want = idx;
+    const token = ++this.tickleFrameLoadToken;
+    const raw = urls[want];
+    const cached = this.tickleFrameKeyed[want];
+    if (cached) {
+      if (!this.isPlayer) this.ensureStillBillboard(cached);
+      this.tickleFrameApplied = want;
+      this.tickleFramePortrait = cached;
+      return;
+    }
+    lookFromStill(raw)
+      .then((kit) => {
+        if (token !== this.tickleFrameLoadToken) return;
+        this.tickleFrameKeyed[want] = kit.keyedUrl;
+        if (!this.isPlayer) this.ensureStillBillboard(kit.keyedUrl);
+        this.tickleFrameApplied = want;
+        this.tickleFramePortrait = kit.keyedUrl;
+      })
+      .catch(() => {
+        if (token !== this.tickleFrameLoadToken) return;
+        this.tickleFrameApplied = want;
+        this.tickleFramePortrait = raw;
+      });
+  }
+
+
   tickAnim(dt: number) {
     const dist = this.pos.distanceTo(this.prevPos);
     this.speed = dt > 1e-4 ? dist / dt : 0;
@@ -326,6 +378,7 @@ export class Fighter {
     if (!this.syncLaughFrameBillboard(clip, laughBind, laugh)) {
       this.syncLaughStageBillboard(clip);
     }
+    this.syncTickleFrameBillboard(clip, tickle);
   }
 
   /** Current free locomotion clip for HUD / debug. */
