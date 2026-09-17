@@ -14,10 +14,10 @@
       "billRate": 13.299999999999999,
       "still": "stages/TorenBlake_s0.jpg",
       "blend": {
-        "jaw": 0.226,
-        "cheek": 0.123,
-        "eye": 0.185,
-        "brow": 0.082
+        "jaw": 0.267,
+        "cheek": 0.145,
+        "eye": 0.218,
+        "brow": 0.097
       }
     },
     "s1": {
@@ -29,10 +29,10 @@
       "billRate": 17.1,
       "still": "stages/TorenBlake_s1.jpg",
       "blend": {
-        "jaw": 0.396,
-        "cheek": 0.264,
-        "eye": 0.359,
-        "brow": 0.151
+        "jaw": 0.483,
+        "cheek": 0.322,
+        "eye": 0.438,
+        "brow": 0.184
       }
     },
     "s2": {
@@ -44,10 +44,10 @@
       "billRate": 19,
       "still": "stages/TorenBlake_s2.jpg",
       "blend": {
-        "jaw": 0.646,
-        "cheek": 0.456,
-        "eye": 0.589,
-        "brow": 0.266
+        "jaw": 0.807,
+        "cheek": 0.57,
+        "eye": 0.736,
+        "brow": 0.333
       }
     },
     "s3": {
@@ -59,10 +59,10 @@
       "billRate": 22.8,
       "still": "stages/TorenBlake_s3.jpg",
       "blend": {
-        "jaw": 0.851,
-        "cheek": 0.666,
-        "eye": 0.814,
-        "brow": 0.388
+        "jaw": 1.0,
+        "cheek": 0.852,
+        "eye": 1.0,
+        "brow": 0.497
       }
     }
   },

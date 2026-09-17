@@ -14,10 +14,10 @@
       "billRate": 11.899999999999999,
       "still": "stages/CassWynn_s0.jpg",
       "blend": {
-        "jaw": 0.222,
-        "cheek": 0.121,
-        "eye": 0.182,
-        "brow": 0.081
+        "jaw": 0.262,
+        "cheek": 0.143,
+        "eye": 0.215,
+        "brow": 0.096
       }
     },
     "s1": {
@@ -29,10 +29,10 @@
       "billRate": 15.3,
       "still": "stages/CassWynn_s1.jpg",
       "blend": {
-        "jaw": 0.387,
-        "cheek": 0.258,
-        "eye": 0.35,
-        "brow": 0.147
+        "jaw": 0.472,
+        "cheek": 0.315,
+        "eye": 0.427,
+        "brow": 0.179
       }
     },
     "s2": {
@@ -44,10 +44,10 @@
       "billRate": 17,
       "still": "stages/CassWynn_s2.jpg",
       "blend": {
-        "jaw": 0.627,
-        "cheek": 0.443,
-        "eye": 0.572,
-        "brow": 0.258
+        "jaw": 0.784,
+        "cheek": 0.554,
+        "eye": 0.715,
+        "brow": 0.323
       }
     },
     "s3": {
@@ -59,10 +59,10 @@
       "billRate": 20.4,
       "still": "stages/CassWynn_s3.jpg",
       "blend": {
-        "jaw": 0.931,
-        "cheek": 0.729,
-        "eye": 0.891,
-        "brow": 0.425
+        "jaw": 1.0,
+        "cheek": 0.933,
+        "eye": 1.0,
+        "brow": 0.544
       }
     }
   },
