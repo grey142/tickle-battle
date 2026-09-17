@@ -6,6 +6,7 @@ import { lookFromStill } from "./lookFromStill";
 import { runBindForSlug, runParamsForClip } from "./runBind";
 import { Humanoid } from "./Humanoid";
 import { laughBindForLook, laughBindForSlug, laughParams } from "./laughBind";
+import { tickleBindForSlug } from "./tickleBind";
 import { weaponById, armorById } from "./gear";
 
 let uid = 0;
@@ -217,8 +218,9 @@ export class Fighter {
     const runBind = runBindForSlug(this.slug);
     const loco =
       clip === "walk" || clip === "run" ? runParamsForClip(runBind, clip) : undefined;
-    this.humanoid.pose(clip, this.animT, laugh ?? loco);
-    this.tickBillboardAnim(clip, runBind, laugh);
+    const tickle = clip === "tickle" ? tickleBindForSlug(this.slug) : undefined;
+    this.humanoid.pose(clip, this.animT, tickle ?? laugh ?? loco);
+    this.tickBillboardAnim(clip, runBind, laugh, tickle);
   }
 
   /** Current free locomotion clip for HUD / debug. */
@@ -228,11 +230,12 @@ export class Fighter {
     return c === "run" || c === "walk" || c === "idle" ? c : "busy";
   }
 
-  /** Procedural billboard feedback: tickler wag + ticklee laugh shake + run bob. */
+  /** Procedural billboard: tickler wag + ticklee laugh shake + run bob. */
   private tickBillboardAnim(
     clip?: string,
     runBind?: ReturnType<typeof runBindForSlug>,
     laugh?: { billShake: number; billRate: number },
+    tickle?: { billWag: number; billRate: number },
   ) {
     const bill = this.portraitSprite;
     if (!bill) return;
@@ -244,13 +247,15 @@ export class Fighter {
     let y = BILL_Y;
     let rot = 0;
     if (this.occupancy === "tickler" || (this.occupancy === "nudge" && this.joinOn >= 0)) {
-      const s = Math.sin(t * 26);
-      const s2 = Math.sin(t * 41);
-      w = BILL_W * (1 + s * 0.05);
-      h = BILL_H * (1 + s2 * 0.04);
-      x = s2 * 0.05;
-      y = BILL_Y + Math.abs(s) * 0.07;
-      rot = s * 0.06;
+      const wag = tickle?.billWag ?? 0.05;
+      const rate = tickle?.billRate ?? 26;
+      const s = Math.sin(t * rate);
+      const s2 = Math.sin(t * rate * 1.58);
+      w = BILL_W * (1 + s * wag);
+      h = BILL_H * (1 + s2 * wag * 0.8);
+      x = s2 * wag;
+      y = BILL_Y + Math.abs(s) * wag * 1.4;
+      rot = s * wag * 1.15;
     } else if (this.occupancy === "ticklee" || (this.occupancy === "nudge" && this.joinOn < 0)) {
       const shake = laugh?.billShake ?? 0.09;
       const rate = laugh?.billRate ?? 16;

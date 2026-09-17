@@ -1,0 +1,17 @@
+{
+  "clip": "tickle",
+  "slug": "ElaraCase",
+  "display": "Elara Case",
+  "playerOnly": true,
+  "metalException": true,
+  "rate": 29.2,
+  "twistRate": 38.5,
+  "spineBase": 0.29,
+  "spineAmp": 0.046,
+  "chestAmp": 0.087,
+  "shoulderAmp": 0.23,
+  "elbowAmp": 0.43,
+  "weaponWag": 0.5,
+  "billWag": 0.064,
+  "billRate": 27.2
+}

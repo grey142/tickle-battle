@@ -1,0 +1,17 @@
+{
+  "clip": "tickle",
+  "slug": "TorenBlake",
+  "display": "Toren Blake",
+  "playerOnly": false,
+  "metalException": false,
+  "rate": 26.5,
+  "twistRate": 35.1,
+  "spineBase": 0.265,
+  "spineAmp": 0.038,
+  "chestAmp": 0.069,
+  "shoulderAmp": 0.201,
+  "elbowAmp": 0.37,
+  "weaponWag": 0.41,
+  "billWag": 0.047,
+  "billRate": 24.8
+}

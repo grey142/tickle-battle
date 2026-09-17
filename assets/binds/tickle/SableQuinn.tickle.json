@@ -1,0 +1,17 @@
+{
+  "clip": "tickle",
+  "slug": "SableQuinn",
+  "display": "Sable Quinn",
+  "playerOnly": false,
+  "metalException": false,
+  "rate": 28.3,
+  "twistRate": 37.4,
+  "spineBase": 0.282,
+  "spineAmp": 0.043,
+  "chestAmp": 0.079,
+  "shoulderAmp": 0.22,
+  "elbowAmp": 0.405,
+  "weaponWag": 0.46,
+  "billWag": 0.057,
+  "billRate": 26.1
+}

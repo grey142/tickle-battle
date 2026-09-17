@@ -1,0 +1,17 @@
+{
+  "clip": "tickle",
+  "slug": "EmberLang",
+  "display": "Ember Lang",
+  "playerOnly": false,
+  "metalException": false,
+  "rate": 26.8,
+  "twistRate": 35.4,
+  "spineBase": 0.268,
+  "spineAmp": 0.041,
+  "chestAmp": 0.071,
+  "shoulderAmp": 0.205,
+  "elbowAmp": 0.38,
+  "weaponWag": 0.42,
+  "billWag": 0.049,
+  "billRate": 25.0
+}

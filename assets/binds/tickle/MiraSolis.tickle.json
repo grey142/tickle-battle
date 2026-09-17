@@ -1,0 +1,17 @@
+{
+  "clip": "tickle",
+  "slug": "MiraSolis",
+  "display": "Mira Solis",
+  "playerOnly": false,
+  "metalException": false,
+  "rate": 28.8,
+  "twistRate": 37.9,
+  "spineBase": 0.286,
+  "spineAmp": 0.045,
+  "chestAmp": 0.081,
+  "shoulderAmp": 0.224,
+  "elbowAmp": 0.415,
+  "weaponWag": 0.47,
+  "billWag": 0.059,
+  "billRate": 26.6
+}
