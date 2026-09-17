@@ -8,5 +8,8 @@
   "breatheRate": 2.13,
   "breatheAmp": 0.031,
   "sway": 0.014,
-  "scalePulse": 0.021
+  "scalePulse": 0.021,
+  "frames": 8,
+  "sheetLayout": "horizontal",
+  "fps": 7
 }

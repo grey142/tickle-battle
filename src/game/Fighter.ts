@@ -16,7 +16,7 @@ import {
   type LaughStageId,
 } from "./laughBind";
 import { tickleBindForSlug, tickleFrameUrls, type TickleBind } from "./tickleBind";
-import { idleBindForSlug } from "./idleBind";
+import { idleBindForSlug, idleSheetUrlForSlug } from "./idleBind";
 import { weaponById, armorById } from "./gear";
 
 let uid = 0;
@@ -75,6 +75,11 @@ export class Fighter {
   portraitUrl?: string;
   keyedPortrait?: string;
   portraitSprite?: THREE.Sprite;
+  /** Horizontal multi-frame idle sheet (A-pose breathe), AI billboard. */
+  idleSheetTex?: THREE.Texture;
+  idleStillTex?: THREE.Texture;
+  idleFrame = 0;
+  private idleFrameAcc = 0;
   headMat: THREE.MeshStandardMaterial;
   skinMat: THREE.MeshStandardMaterial;
   rim: THREE.PointLight;
@@ -186,6 +191,7 @@ export class Fighter {
     if (this.isPlayer) return;
     const tex = new THREE.TextureLoader().load(keyedUrl);
     tex.colorSpace = THREE.SRGBColorSpace;
+    this.idleStillTex = tex;
     if (!this.portraitSprite) {
       const mat = new THREE.SpriteMaterial({
         map: tex,
@@ -207,6 +213,56 @@ export class Fighter {
       this.portraitSprite.position.set(0, BILL_Y, 0);
     }
     this.body.visible = false;
+    this.loadIdleSheet(this.slug);
+  }
+
+  /** Load 8-frame A-pose breathe sheet for smoother idle beyond a single keyed still. */
+  loadIdleSheet(slug?: string) {
+    if (this.isPlayer) return;
+    const url = idleSheetUrlForSlug(slug);
+    if (!url) return;
+    const bind = idleBindForSlug(slug);
+    const frames = Math.max(1, bind.frames ?? 8);
+    new THREE.TextureLoader().load(url, (tex) => {
+      if (this.slug && slug && this.slug !== slug) return;
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.wrapS = THREE.ClampToEdgeWrapping;
+      tex.wrapT = THREE.ClampToEdgeWrapping;
+      tex.repeat.set(1 / frames, 1);
+      tex.offset.set(0, 0);
+      tex.needsUpdate = true;
+      this.idleSheetTex = tex;
+      this.idleFrame = 0;
+      this.idleFrameAcc = 0;
+    });
+  }
+
+  private applyIdleSheetFrame(dt: number, playing: boolean) {
+    const bill = this.portraitSprite;
+    const sheet = this.idleSheetTex;
+    if (!bill) return;
+    const mat = bill.material as THREE.SpriteMaterial;
+    if (!playing || !sheet) {
+      if (this.idleStillTex && mat.map !== this.idleStillTex) {
+        mat.map = this.idleStillTex;
+        mat.needsUpdate = true;
+      }
+      return;
+    }
+    const bind = idleBindForSlug(this.slug);
+    const frames = Math.max(1, bind.frames ?? 8);
+    const fps = Math.max(4, bind.fps ?? 8);
+    this.idleFrameAcc += dt * fps;
+    while (this.idleFrameAcc >= 1) {
+      this.idleFrameAcc -= 1;
+      this.idleFrame = (this.idleFrame + 1) % frames;
+    }
+    sheet.repeat.set(1 / frames, 1);
+    sheet.offset.set(this.idleFrame / frames, 0);
+    if (mat.map !== sheet) {
+      mat.map = sheet;
+      mat.needsUpdate = true;
+    }
   }
 
   recalc() {
@@ -417,7 +473,7 @@ export class Fighter {
       clip === "walk" || clip === "run" ? runParamsForClip(runBind, clip) : undefined;
     const tickle = clip === "tickle" ? tickleBindForSlug(this.slug) : undefined;
     this.humanoid.pose(clip, this.animT, tickle ?? laugh ?? loco);
-    this.tickBillboardAnim(clip, runBind, laugh, tickle);
+    this.tickBillboardAnim(dt, clip, runBind, laugh, tickle);
     const laughBind =
       clip === "squirm" || this.occupancy === "ticklee"
         ? this.slug
@@ -440,6 +496,7 @@ export class Fighter {
 
   /** Procedural billboard: tickler wag + ticklee laugh shake + run bob. */
   private tickBillboardAnim(
+    dt: number,
     clip?: string,
     runBind?: ReturnType<typeof runBindForSlug>,
     laugh?: { billShake: number; billRate: number },
@@ -489,16 +546,22 @@ export class Fighter {
       y = BILL_Y + Math.abs(s) * bob;
       rot = s * bob * 0.5;
     } else {
-      // A-pose idle bind — per-look breathe / sway (free, vanish reappear, spawn, etc.)
+      // Multi-frame A-pose sheet + light bind breathe (beyond single keyed still).
+      this.applyIdleSheetFrame(dt, true);
       const idle = idleBindForSlug(this.slug);
-      const b = Math.sin(t * idle.breatheRate) * idle.breatheAmp;
-      const s = Math.sin(t * idle.breatheRate * 0.65) * idle.sway;
-      w = BILL_W * (1 + Math.sin(t * idle.breatheRate) * idle.scalePulse);
+      const b = Math.sin(t * idle.breatheRate) * idle.breatheAmp * 0.55;
+      const s = Math.sin(t * idle.breatheRate * 0.65) * idle.sway * 0.55;
+      w = BILL_W * (1 + Math.sin(t * idle.breatheRate) * idle.scalePulse * 0.55);
       h = BILL_H * (1 + b * 0.5);
       x = s;
       y = BILL_Y + b;
-      rot = s * 0.4;
+      rot = s * 0.35;
+      bill.scale.set(w, h, 1);
+      bill.position.set(x, y, 0);
+      mat.rotation = rot;
+      return;
     }
+    this.applyIdleSheetFrame(dt, false);
     bill.scale.set(w, h, 1);
     bill.position.set(x, y, 0);
     mat.rotation = rot;
