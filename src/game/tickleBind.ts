@@ -17,6 +17,8 @@ export interface TickleBind {
   weaponWag: number;
   billWag: number;
   billRate: number;
+  /** Optional relative paths under assets/binds/tickle/ (e.g. frames/Slug_f0.jpg). */
+  frames?: string[];
 }
 
 const mods = import.meta.glob("../../assets/binds/tickle/*.tickle.json", {
@@ -39,12 +41,12 @@ const FALLBACK: TickleBind = {
   rate: 28,
   twistRate: 37,
   spineBase: 0.28,
-  spineAmp: 0.04,
-  chestAmp: 0.08,
-  shoulderAmp: 0.22,
-  elbowAmp: 0.4,
-  weaponWag: 0.45,
-  billWag: 0.05,
+  spineAmp: 0.046,
+  chestAmp: 0.088,
+  shoulderAmp: 0.246,
+  elbowAmp: 0.44,
+  weaponWag: 0.49,
+  billWag: 0.058,
   billRate: 26,
 };
 
@@ -56,6 +58,33 @@ export function tickleBindForSlug(slug?: string): TickleBind {
 export function tickleBindForLook(lookId: number): TickleBind {
   const look: LookDef = lookById(lookId);
   return tickleBindForSlug(look.slug);
+}
+
+const frameStillMods = import.meta.glob("../../assets/binds/tickle/frames/*.jpg", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
+
+const frameStillByFile: Record<string, string> = {};
+for (const [path, url] of Object.entries(frameStillMods)) {
+  const file = path.split("/").pop();
+  if (!file) continue;
+  frameStillByFile[file] = url;
+}
+
+/** Resolve tickle-cycle frame URLs from bind.frames (basename or frames/Name.jpg). */
+export function tickleFrameUrls(bind: TickleBind): string[] {
+  const rels = bind.frames;
+  if (!rels?.length) return [];
+  const out: string[] = [];
+  for (const rel of rels) {
+    const file = rel.split("/").pop();
+    if (!file) continue;
+    const url = frameStillByFile[file];
+    if (url) out.push(url);
+  }
+  return out;
 }
 
 export function listedTickleSlugs(): string[] {

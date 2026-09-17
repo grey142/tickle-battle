@@ -7,11 +7,17 @@
   "rate": 28.8,
   "twistRate": 37.9,
   "spineBase": 0.286,
-  "spineAmp": 0.045,
-  "chestAmp": 0.081,
-  "shoulderAmp": 0.224,
-  "elbowAmp": 0.415,
-  "weaponWag": 0.47,
-  "billWag": 0.059,
-  "billRate": 26.6
+  "spineAmp": 0.0517,
+  "chestAmp": 0.0891,
+  "shoulderAmp": 0.2509,
+  "elbowAmp": 0.4565,
+  "weaponWag": 0.5076,
+  "billWag": 0.0678,
+  "billRate": 26.6,
+  "frames": [
+    "frames/MiraSolis_f0.jpg",
+    "frames/MiraSolis_f1.jpg",
+    "frames/MiraSolis_f2.jpg",
+    "frames/MiraSolis_f3.jpg"
+  ]
 }

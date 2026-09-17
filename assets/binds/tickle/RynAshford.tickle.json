@@ -7,11 +7,17 @@
   "rate": 29.4,
   "twistRate": 38.9,
   "spineBase": 0.292,
-  "spineAmp": 0.048,
-  "chestAmp": 0.089,
-  "shoulderAmp": 0.234,
-  "elbowAmp": 0.44,
-  "weaponWag": 0.51,
-  "billWag": 0.066,
-  "billRate": 27.5
+  "spineAmp": 0.0552,
+  "chestAmp": 0.0979,
+  "shoulderAmp": 0.2621,
+  "elbowAmp": 0.484,
+  "weaponWag": 0.5508,
+  "billWag": 0.0759,
+  "billRate": 27.5,
+  "frames": [
+    "frames/RynAshford_f0.jpg",
+    "frames/RynAshford_f1.jpg",
+    "frames/RynAshford_f2.jpg",
+    "frames/RynAshford_f3.jpg"
+  ]
 }

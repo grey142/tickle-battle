@@ -7,11 +7,17 @@
   "rate": 28.3,
   "twistRate": 37.4,
   "spineBase": 0.282,
-  "spineAmp": 0.043,
-  "chestAmp": 0.079,
-  "shoulderAmp": 0.22,
-  "elbowAmp": 0.405,
-  "weaponWag": 0.46,
-  "billWag": 0.057,
-  "billRate": 26.1
+  "spineAmp": 0.0494,
+  "chestAmp": 0.0869,
+  "shoulderAmp": 0.2464,
+  "elbowAmp": 0.4455,
+  "weaponWag": 0.4968,
+  "billWag": 0.0655,
+  "billRate": 26.1,
+  "frames": [
+    "frames/SableQuinn_f0.jpg",
+    "frames/SableQuinn_f1.jpg",
+    "frames/SableQuinn_f2.jpg",
+    "frames/SableQuinn_f3.jpg"
+  ]
 }

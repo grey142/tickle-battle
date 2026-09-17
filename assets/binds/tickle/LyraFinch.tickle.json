@@ -7,11 +7,17 @@
   "rate": 27.7,
   "twistRate": 36.6,
   "spineBase": 0.278,
-  "spineAmp": 0.04,
-  "chestAmp": 0.076,
-  "shoulderAmp": 0.212,
-  "elbowAmp": 0.4,
-  "weaponWag": 0.44,
-  "billWag": 0.053,
-  "billRate": 25.7
+  "spineAmp": 0.046,
+  "chestAmp": 0.0836,
+  "shoulderAmp": 0.2374,
+  "elbowAmp": 0.44,
+  "weaponWag": 0.4752,
+  "billWag": 0.0609,
+  "billRate": 25.7,
+  "frames": [
+    "frames/LyraFinch_f0.jpg",
+    "frames/LyraFinch_f1.jpg",
+    "frames/LyraFinch_f2.jpg",
+    "frames/LyraFinch_f3.jpg"
+  ]
 }

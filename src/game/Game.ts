@@ -45,6 +45,7 @@ import {
   stingWin,
   stingLose,
 } from "./sfx";
+import { tickleBindForSlug } from "./tickleBind";
 import { Hub } from "./Hub";
 import { HubPlaza } from "./HubPlaza";
 import { rollBotKit } from "./botLoadout";
@@ -1547,23 +1548,30 @@ export class Game {
     this.fpArms.visible = !!fpOk;
     if (!fpOk) return;
     this.fpArmT += dt;
-    const s = Math.sin(this.fpArmT * 28);
-    const s2 = Math.sin(this.fpArmT * 36);
+    // Wire FP arms to per-look tickleBind (closes hardcoded sin(t*28) gap).
+    const bind = tickleBindForSlug(p.slug);
+    const rate = bind.rate;
+    const twist = bind.twistRate;
+    const shoulder = bind.shoulderAmp;
+    const elbow = bind.elbowAmp;
+    const wag = bind.weaponWag;
+    const s = Math.sin(this.fpArmT * rate);
+    const s2 = Math.sin(this.fpArmT * twist);
     const left = this.fpArms.getObjectByName("fp-left");
     const right = this.fpArms.getObjectByName("fp-right");
     if (left) {
-      left.rotation.x = -0.35 + s * 0.22;
-      left.rotation.z = 0.25 + s2 * 0.12;
+      left.rotation.x = -0.35 + s * shoulder;
+      left.rotation.z = 0.25 + s2 * (elbow * 0.28);
       left.position.y = -0.28 + Math.abs(s) * 0.04;
     }
     if (right) {
-      right.rotation.x = -0.28 - s * 0.2;
-      right.rotation.z = -0.22 - s2 * 0.1;
+      right.rotation.x = -0.28 - s * (shoulder * 0.9);
+      right.rotation.z = -0.22 - s2 * (elbow * 0.24);
       right.position.y = -0.3 + Math.abs(s2) * 0.035;
     }
     const prop = this.fpArms.getObjectByName("fp-weapon");
     if (prop) {
-      prop.rotation.z = s * 0.35;
+      prop.rotation.z = s * wag * 0.7;
       prop.position.y = -0.02 + s2 * 0.02;
     }
   }
@@ -1588,6 +1596,10 @@ export class Game {
       img.dataset.clip = loco;
       img.classList.toggle("running", loco === "run");
       img.classList.toggle("walking", loco === "walk");
+      img.classList.toggle(
+        "tickling",
+        p.occupancy === "tickler" || (p.occupancy === "nudge" && p.joinOn >= 0),
+      );
     }
     this.hudEls["top-left"].textContent =
       this.countdown > 0
@@ -1701,8 +1713,12 @@ export class Game {
     t.textContent = pad ? "Tickle  A" : "Tickle";
     e.textContent = pad ? "Escape  B" : "Escape";
     if (this.hudEls["player-portrait"]) {
+      const ticklingHud =
+        p.occupancy === "tickler" || (p.occupancy === "nudge" && p.joinOn >= 0);
+      const laughingHud = p.occupancy === "ticklee";
       const url =
-        (p.occupancy === "ticklee" && p.laughFramePortrait) ||
+        (ticklingHud && p.tickleFramePortrait) ||
+        (laughingHud && p.laughFramePortrait) ||
         p.keyedPortrait ||
         p.portraitUrl;
       const img = this.hudEls["player-portrait"] as HTMLImageElement;
@@ -1712,6 +1728,7 @@ export class Game {
       } else {
         img.style.display = "none";
       }
+      img.classList.toggle("tickling", !!ticklingHud);
     }
     if (this.hudEls.crosshair) {
       this.hudEls.crosshair.style.display =

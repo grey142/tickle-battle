@@ -7,11 +7,17 @@
   "rate": 29.7,
   "twistRate": 39.3,
   "spineBase": 0.295,
-  "spineAmp": 0.049,
-  "chestAmp": 0.092,
-  "shoulderAmp": 0.238,
-  "elbowAmp": 0.45,
-  "weaponWag": 0.53,
-  "billWag": 0.068,
-  "billRate": 27.8
+  "spineAmp": 0.0563,
+  "chestAmp": 0.1012,
+  "shoulderAmp": 0.2666,
+  "elbowAmp": 0.495,
+  "weaponWag": 0.5724,
+  "billWag": 0.0782,
+  "billRate": 27.8,
+  "frames": [
+    "frames/VeshMarlowe_f0.jpg",
+    "frames/VeshMarlowe_f1.jpg",
+    "frames/VeshMarlowe_f2.jpg",
+    "frames/VeshMarlowe_f3.jpg"
+  ]
 }

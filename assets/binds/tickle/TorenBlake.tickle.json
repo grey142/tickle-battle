@@ -7,11 +7,17 @@
   "rate": 26.5,
   "twistRate": 35.1,
   "spineBase": 0.265,
-  "spineAmp": 0.038,
-  "chestAmp": 0.069,
-  "shoulderAmp": 0.201,
-  "elbowAmp": 0.37,
-  "weaponWag": 0.41,
-  "billWag": 0.047,
-  "billRate": 24.8
+  "spineAmp": 0.0437,
+  "chestAmp": 0.0759,
+  "shoulderAmp": 0.2251,
+  "elbowAmp": 0.407,
+  "weaponWag": 0.4428,
+  "billWag": 0.054,
+  "billRate": 24.8,
+  "frames": [
+    "frames/TorenBlake_f0.jpg",
+    "frames/TorenBlake_f1.jpg",
+    "frames/TorenBlake_f2.jpg",
+    "frames/TorenBlake_f3.jpg"
+  ]
 }

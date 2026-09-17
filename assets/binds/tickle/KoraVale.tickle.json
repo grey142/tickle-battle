@@ -7,11 +7,17 @@
   "rate": 29.0,
   "twistRate": 38.2,
   "spineBase": 0.288,
-  "spineAmp": 0.047,
-  "chestAmp": 0.084,
-  "shoulderAmp": 0.228,
-  "elbowAmp": 0.42,
-  "weaponWag": 0.48,
-  "billWag": 0.061,
-  "billRate": 26.8
+  "spineAmp": 0.054,
+  "chestAmp": 0.0924,
+  "shoulderAmp": 0.2554,
+  "elbowAmp": 0.462,
+  "weaponWag": 0.5184,
+  "billWag": 0.0701,
+  "billRate": 26.8,
+  "frames": [
+    "frames/KoraVale_f0.jpg",
+    "frames/KoraVale_f1.jpg",
+    "frames/KoraVale_f2.jpg",
+    "frames/KoraVale_f3.jpg"
+  ]
 }

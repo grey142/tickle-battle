@@ -7,11 +7,17 @@
   "rate": 28.1,
   "twistRate": 37.1,
   "spineBase": 0.28,
-  "spineAmp": 0.044,
-  "chestAmp": 0.078,
-  "shoulderAmp": 0.218,
-  "elbowAmp": 0.4,
-  "weaponWag": 0.45,
-  "billWag": 0.055,
-  "billRate": 25.9
+  "spineAmp": 0.0506,
+  "chestAmp": 0.0858,
+  "shoulderAmp": 0.2442,
+  "elbowAmp": 0.44,
+  "weaponWag": 0.486,
+  "billWag": 0.0633,
+  "billRate": 25.9,
+  "frames": [
+    "frames/JunoHale_f0.jpg",
+    "frames/JunoHale_f1.jpg",
+    "frames/JunoHale_f2.jpg",
+    "frames/JunoHale_f3.jpg"
+  ]
 }

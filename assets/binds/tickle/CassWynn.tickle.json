@@ -7,11 +7,17 @@
   "rate": 28.6,
   "twistRate": 37.8,
   "spineBase": 0.285,
-  "spineAmp": 0.039,
-  "chestAmp": 0.082,
-  "shoulderAmp": 0.225,
-  "elbowAmp": 0.41,
-  "weaponWag": 0.47,
-  "billWag": 0.058,
-  "billRate": 26.4
+  "spineAmp": 0.0448,
+  "chestAmp": 0.0902,
+  "shoulderAmp": 0.252,
+  "elbowAmp": 0.451,
+  "weaponWag": 0.5076,
+  "billWag": 0.0667,
+  "billRate": 26.4,
+  "frames": [
+    "frames/CassWynn_f0.jpg",
+    "frames/CassWynn_f1.jpg",
+    "frames/CassWynn_f2.jpg",
+    "frames/CassWynn_f3.jpg"
+  ]
 }
