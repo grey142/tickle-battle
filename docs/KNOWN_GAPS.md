@@ -39,12 +39,13 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Loadout snapshot at Arena Start (HUD / results / spawn use the locked ids)
 - Home Look laugh preview (~2s still + plaza mannequin squirm); stills drive the shared 3D rig; bots also show keyed still billboards in-match
 - Soft-nudge searches 16 directions out to `NUDGE_CAP` 1.5m for clear space, else cancel + pairwise cooldown; freeze is pile-local
+- AI pile-join cooldown: `PILE_CD` 2.75s (sticky 1.35s) on successful join and on drop/peel — no sticky bypass
 - AI fighters use full-body Amateur still billboards (capsule humanoid hidden); `K_DAMAGE = 0.95` (1/3 of prior 2.85) for ~3× harder tap-outs; FP tickle arms + billboard wag while tickling
 
 ## Stub / missing
 
 - Walkable 3D hub (doors open overlay rooms; you do not walk the plaza as a character)
 - Painterly four-clip production anims and blendshapes still missing.
-- Navmesh AI mid-lane waypoints + wall-slide shipped on support3/navmesh-ai (PR #9); pile cooldown is still approximate
+- Navmesh AI mid-lane waypoints + wall-slide shipped; pile join cooldown is exact (`PILE_CD` 2.75s / sticky 1.35s, armed on join + drop)
 - Audio is oscillator stingers, not licensed SFX
 - No jump (bible); ramp height is a groundY sample

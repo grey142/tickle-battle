@@ -26,7 +26,10 @@ export const COUNTDOWN = 10;
 export const TIMED_T = 240;
 export const RESPAWN_IGNORE = 5;
 export const JOIN_MAX = 6;
-export const PILE_CD = 5;
+/** Seconds before an AI may join another pile (or re-join the same ticklee). */
+export const PILE_CD = 2.75;
+/** Sticky roles still gated, but shorter so packs form without hive-mind spam. */
+export const PILE_CD_STICKY = 1.35;
 export const FLASH_T = 1;
 export const REGEN_DELAY = 3;
 export const REGEN_PS = 6;
