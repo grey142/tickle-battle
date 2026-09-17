@@ -36,7 +36,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Shop hall door: buy Amateur 6 / 8, equip immediately, owned ids persist; 12-coin starter purse
 - Xbox LS/RS + WASD together; A/RT tickle, B/LT escape; plaza A/Menu Play; results B/A/Menu Return; rear or pack 2+ starts the tickle
 - Hub rooms on pad: D-pad / LS cursor, A confirm (Look / Skills / Shop buy-equip / Arena mode), LB/RB tabs, B plaza
-- Plaza mannequin wears the current Look still plus equipped Amateur weapon/armor
+- Plaza mannequin wears the current Look still / multi-frame idle sheet plus equipped Amateur weapon/armor (third-person in the walkable hall)
 - Loadout snapshot at Arena Start (HUD / results / spawn use the locked ids)
 - Home Look laugh preview (~2s still + plaza mannequin squirm); stills drive the shared 3D rig; bots also show keyed still billboards in-match
 - Soft-nudge searches 16 directions out to `NUDGE_CAP` 1.5m for clear space, else cancel + pairwise cooldown; freeze is pile-local
@@ -45,7 +45,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 
 ## Stub / missing
 
-- Walkable plaza ships; remaining hub polish (third-person avatar, richer door VFX) still TBD
+- Walkable plaza ships with over-shoulder third-person mannequin on multi-frame idle sheets; remaining hub polish (richer door VFX) still TBD
 - Painterly four-clip production anims and blendshapes still missing (tickle and run four-frame A-pose adaptations plus laugh stage/multi-frame stills ship; full painterly anims TBD).
 - Navmesh AI mid-lane waypoints + wall-slide shipped; pile join cooldown is exact (`PILE_CD` 2.75s / sticky 1.35s, armed on join + drop)
 - Full licensed SFX library still TBD; remaining oscillator-only cues are gone for Team Quick UI/combat stingers (samples + oscillator fallbacks)
