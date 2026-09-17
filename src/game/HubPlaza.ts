@@ -29,7 +29,11 @@ export class HubPlaza {
   private ray = new THREE.Raycaster();
   private ndc = new THREE.Vector2();
   private hover: PlazaDoor | null = null;
+  /** Walk-up proximity (drives soft door pulse when not mouse-hovering). */
+  private near: PlazaDoor | null = null;
   private doorGroups = new Map<PlazaDoor, THREE.Group>();
+  /** Soft point lights on each door — pulse when near/hover. */
+  private doorLights = new Map<PlazaDoor, THREE.PointLight>();
   /** Simple XZ blockers for walkable plaza (walls, columns, low props). */
   private walls: Box[] = [];
 
@@ -159,29 +163,35 @@ export class HubPlaza {
     return best;
   }
 
-  /** Capsule slide against plaza walls + outer bounds (flat floor y=0). */
+  /**
+   * Capsule slide against plaza walls + outer bounds (flat floor y=0).
+   * Axis-separated push so door-frame / wall corners slide instead of stick.
+   */
   resolve(x: number, z: number, radius = CAPSULE_R): { x: number; z: number } {
     let px = x;
     let pz = z;
-    for (let i = 0; i < 4; i++) {
+    // Two passes: X then Z (then again) — classic AABB slide, no corner trap.
+    for (let pass = 0; pass < 2; pass++) {
       for (const w of this.walls) {
-        const insideX = px > w.minx - radius && px < w.maxx + radius;
-        const insideZ = pz > w.minz - radius && pz < w.maxz + radius;
-        if (insideX && insideZ) {
+        if (pz <= w.minz - radius || pz >= w.maxz + radius) continue;
+        if (px > w.minx - radius && px < w.maxx + radius) {
           const left = px - (w.minx - radius);
           const right = w.maxx + radius - px;
+          px = left < right ? w.minx - radius - 0.002 : w.maxx + radius + 0.002;
+        }
+      }
+      for (const w of this.walls) {
+        if (px <= w.minx - radius || px >= w.maxx + radius) continue;
+        if (pz > w.minz - radius && pz < w.maxz + radius) {
           const down = pz - (w.minz - radius);
           const up = w.maxz + radius - pz;
-          const m = Math.min(left, right, down, up);
-          if (m === left) px = w.minx - radius - 0.001;
-          else if (m === right) px = w.maxx + radius + 0.001;
-          else if (m === down) pz = w.minz - radius - 0.001;
-          else pz = w.maxz + radius + 0.001;
+          pz = down < up ? w.minz - radius - 0.002 : w.maxz + radius + 0.002;
         }
       }
     }
-    px = THREE.MathUtils.clamp(px, -13.2, 13.2);
-    pz = THREE.MathUtils.clamp(pz, -10.2, 10.2);
+    // Keep player inside the hall; door centers sit on these bounds for interact.
+    px = THREE.MathUtils.clamp(px, -13.15, 13.15);
+    pz = THREE.MathUtils.clamp(pz, -10.15, 10.15);
     return { x: px, z: pz };
   }
 
@@ -203,13 +213,14 @@ export class HubPlaza {
     const frontLen = halfW - half;
     const sideLen = halfD - half;
 
+    const jamb = 0.1; // pull wall AABBs back from door openings — less frame stick
     this.addWall(-halfW, halfW, zBack - thick / 2, zBack + thick / 2);
-    this.addWall(-(half + frontLen), -half, zFront - thick / 2, zFront + thick / 2);
-    this.addWall(half, half + frontLen, zFront - thick / 2, zFront + thick / 2);
-    this.addWall(xLeft - thick / 2, xLeft + thick / 2, -(half + sideLen), -half);
-    this.addWall(xLeft - thick / 2, xLeft + thick / 2, half, half + sideLen);
-    this.addWall(xRight - thick / 2, xRight + thick / 2, -(half + sideLen), -half);
-    this.addWall(xRight - thick / 2, xRight + thick / 2, half, half + sideLen);
+    this.addWall(-(half + frontLen), -half - jamb, zFront - thick / 2, zFront + thick / 2);
+    this.addWall(half + jamb, half + frontLen, zFront - thick / 2, zFront + thick / 2);
+    this.addWall(xLeft - thick / 2, xLeft + thick / 2, -(half + sideLen), -half - jamb);
+    this.addWall(xLeft - thick / 2, xLeft + thick / 2, half + jamb, half + sideLen);
+    this.addWall(xRight - thick / 2, xRight + thick / 2, -(half + sideLen), -half - jamb);
+    this.addWall(xRight - thick / 2, xRight + thick / 2, half + jamb, half + sideLen);
     for (const [x, z] of [
       [-6.2, -5.2],
       [6.2, -5.2],
@@ -273,14 +284,39 @@ export class HubPlaza {
   setHover(room: PlazaDoor | null) {
     if (this.hover === room) return;
     this.hover = room;
+    this.applyDoorGlow(0);
+  }
+
+  /** Walk-up proximity — soft pulse on the nearest door (Arena strongest). */
+  setNear(room: PlazaDoor | null) {
+    if (this.near === room) return;
+    this.near = room;
+    this.applyDoorGlow(0);
+  }
+
+  /** Call each plaza frame for soft pulse / door light. */
+  updateDoorFx(elapsed: number) {
+    this.applyDoorGlow(elapsed);
+  }
+
+  private applyDoorGlow(elapsed: number) {
+    const pulse = 0.5 + 0.5 * Math.sin(elapsed * 4.2);
     for (const [id, g] of this.doorGroups) {
+      const active = this.hover === id || this.near === id;
+      const arenaBoost = id === "arena" && active ? 0.18 : 0;
+      const boost = this.hover === id ? 0.55 + pulse * 0.22 : this.near === id ? 0.32 + pulse * 0.28 : 0;
       g.traverse((obj) => {
         const mesh = obj as THREE.Mesh;
         const mat = mesh.material as THREE.MeshStandardMaterial | undefined;
         if (!mat?.userData.doorGlow) return;
         if (mat.userData.baseEmissive == null) mat.userData.baseEmissive = mat.emissiveIntensity;
-        mat.emissiveIntensity = id === room ? mat.userData.baseEmissive + 0.55 : mat.userData.baseEmissive;
+        mat.emissiveIntensity = mat.userData.baseEmissive + boost + arenaBoost;
       });
+      const light = this.doorLights.get(id);
+      if (light) {
+        const base = id === "arena" ? 1.15 : 0.7;
+        light.intensity = active ? base + pulse * (id === "arena" ? 1.6 : 0.9) : base * 0.35;
+      }
     }
   }
 
@@ -334,6 +370,12 @@ export class HubPlaza {
     hit.userData.hubRoom = room;
 
     frame.add(left, right, lintel, trimH, trimL, trimR, back, sign, hit);
+    // Soft door glow light (no new assets) — pulses when near/hover.
+    const lamp = new THREE.PointLight(tint, room === "arena" ? 0.4 : 0.25, 6.5, 2);
+    lamp.position.set(0, doorH * 0.72, 0.55);
+    frame.add(lamp);
+    this.doorLights.set(room, lamp);
+
     frame.position.copy(center);
     frame.position.y = 0;
     frame.rotation.y = rotY;
