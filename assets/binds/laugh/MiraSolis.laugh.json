@@ -11,7 +11,8 @@
       "amp": 0.0405,
       "lean": 0.06599999999999999,
       "billShake": 0.0385,
-      "billRate": 10.5
+      "billRate": 10.5,
+      "still": "stages/MiraSolis_s0.jpg"
     },
     "s1": {
       "staminaMin": 40,
@@ -19,7 +20,8 @@
       "amp": 0.0675,
       "lean": 0.11549999999999998,
       "billShake": 0.077,
-      "billRate": 13.5
+      "billRate": 13.5,
+      "still": "stages/MiraSolis_s1.jpg"
     },
     "s2": {
       "staminaMin": 15,
@@ -27,7 +29,8 @@
       "amp": 0.09,
       "lean": 0.16499999999999998,
       "billShake": 0.11,
-      "billRate": 15
+      "billRate": 15,
+      "still": "stages/MiraSolis_s2.jpg"
     },
     "s3": {
       "staminaMin": 0,
@@ -35,7 +38,8 @@
       "amp": 0.11249999999999999,
       "lean": 0.19799999999999998,
       "billShake": 0.14850000000000002,
-      "billRate": 18.0
+      "billRate": 18.0,
+      "still": "stages/MiraSolis_s3.jpg"
     }
   },
   "hubPreviewMs": 2000

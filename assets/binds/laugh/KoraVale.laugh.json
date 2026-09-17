@@ -11,7 +11,8 @@
       "amp": 0.0549,
       "lean": 0.054000000000000006,
       "billShake": 0.0385,
-      "billRate": 13.299999999999999
+      "billRate": 13.299999999999999,
+      "still": "stages/KoraVale_s0.jpg"
     },
     "s1": {
       "staminaMin": 40,
@@ -19,7 +20,8 @@
       "amp": 0.0915,
       "lean": 0.0945,
       "billShake": 0.077,
-      "billRate": 17.1
+      "billRate": 17.1,
+      "still": "stages/KoraVale_s1.jpg"
     },
     "s2": {
       "staminaMin": 15,
@@ -27,7 +29,8 @@
       "amp": 0.122,
       "lean": 0.135,
       "billShake": 0.11,
-      "billRate": 19
+      "billRate": 19,
+      "still": "stages/KoraVale_s2.jpg"
     },
     "s3": {
       "staminaMin": 0,
@@ -35,7 +38,8 @@
       "amp": 0.1525,
       "lean": 0.162,
       "billShake": 0.14850000000000002,
-      "billRate": 22.8
+      "billRate": 22.8,
+      "still": "stages/KoraVale_s3.jpg"
     }
   },
   "hubPreviewMs": 2000
