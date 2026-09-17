@@ -177,6 +177,10 @@ export class Fighter {
     this.look = lookIdx;
     const url = stillUrlFor(slug);
     this.portraitUrl = url;
+    // Drop prior idle sheet so Look swaps don't keep the old slug cycling.
+    this.idleSheetTex = undefined;
+    this.idleFrame = 0;
+    this.idleFrameAcc = 0;
     if (!url) return;
     if (!this.isPlayer) this.body.visible = false;
     lookFromStill(url).then((kit) => {
