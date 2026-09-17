@@ -14,10 +14,10 @@
       "billRate": 11.2,
       "still": "stages/LyraFinch_s0.jpg",
       "blend": {
-        "jaw": 0.217,
-        "cheek": 0.119,
-        "eye": 0.178,
-        "brow": 0.079
+        "jaw": 0.256,
+        "cheek": 0.14,
+        "eye": 0.21,
+        "brow": 0.093
       }
     },
     "s1": {
@@ -29,10 +29,10 @@
       "billRate": 14.4,
       "still": "stages/LyraFinch_s1.jpg",
       "blend": {
-        "jaw": 0.423,
-        "cheek": 0.282,
-        "eye": 0.383,
-        "brow": 0.161
+        "jaw": 0.516,
+        "cheek": 0.344,
+        "eye": 0.467,
+        "brow": 0.196
       }
     },
     "s2": {
@@ -44,10 +44,10 @@
       "billRate": 16,
       "still": "stages/LyraFinch_s2.jpg",
       "blend": {
-        "jaw": 0.68,
-        "cheek": 0.48,
-        "eye": 0.62,
-        "brow": 0.28
+        "jaw": 0.85,
+        "cheek": 0.6,
+        "eye": 0.775,
+        "brow": 0.35
       }
     },
     "s3": {
@@ -59,10 +59,10 @@
       "billRate": 19.2,
       "still": "stages/LyraFinch_s3.jpg",
       "blend": {
-        "jaw": 0.887,
-        "cheek": 0.694,
-        "eye": 0.848,
-        "brow": 0.405
+        "jaw": 1.0,
+        "cheek": 0.888,
+        "eye": 1.0,
+        "brow": 0.518
       }
     }
   },
