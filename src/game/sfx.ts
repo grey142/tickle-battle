@@ -1,3 +1,9 @@
+/** Amateur Team Quick SFX — short sample pack + oscillator fallbacks. */
+
+type CueId = "tickle-lock" | "tickle" | "vanish" | "tap-out";
+
+const SAMPLE_CUES: CueId[] = ["tickle-lock", "tickle", "vanish", "tap-out"];
+
 function ctx(): AudioContext | null {
   try {
     return new AudioContext();
@@ -7,10 +13,73 @@ function ctx(): AudioContext | null {
 }
 
 let ac: AudioContext | null = null;
+const buffers = new Map<CueId, AudioBuffer>();
+let loadPromise: Promise<void> | null = null;
 
 function ensure(): AudioContext | null {
   if (!ac) ac = ctx();
   return ac;
+}
+
+/** Resolve a public/sfx asset URL (Vite `base: "./"` friendly). */
+function cueUrl(id: CueId, ext: "ogg" | "mp3"): string {
+  const base = import.meta.env.BASE_URL || "./";
+  const root = base.endsWith("/") ? base : `${base}/`;
+  return `${root}sfx/${id}.${ext}`;
+}
+
+async function fetchDecode(a: AudioContext, url: string): Promise<AudioBuffer | null> {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const raw = await res.arrayBuffer();
+    return await a.decodeAudioData(raw.slice(0));
+  } catch {
+    return null;
+  }
+}
+
+async function loadCue(a: AudioContext, id: CueId): Promise<void> {
+  // Prefer ogg (small); fall back to mp3 for Safari / older WebKit.
+  const buf =
+    (await fetchDecode(a, cueUrl(id, "ogg"))) ?? (await fetchDecode(a, cueUrl(id, "mp3")));
+  if (buf) buffers.set(id, buf);
+}
+
+function ensureSamplesLoaded(): Promise<void> {
+  const a = ensure();
+  if (!a) return Promise.resolve();
+  if (loadPromise) return loadPromise;
+  loadPromise = (async () => {
+    await Promise.all(SAMPLE_CUES.map((id) => loadCue(a, id)));
+  })();
+  return loadPromise;
+}
+
+function playBuffer(id: CueId, gain = 0.7): boolean {
+  const a = ensure();
+  const buf = buffers.get(id);
+  if (!a || !buf) return false;
+  try {
+    if (a.state === "suspended") void a.resume();
+    const src = a.createBufferSource();
+    const g = a.createGain();
+    src.buffer = buf;
+    g.gain.value = gain;
+    src.connect(g);
+    g.connect(a.destination);
+    src.start();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Play sample if loaded; otherwise oscillator fallback. Always kick preload. */
+function playCue(id: CueId, gain: number, fallback: () => void) {
+  void ensureSamplesLoaded();
+  if (playBuffer(id, gain)) return;
+  fallback();
 }
 
 export function blip(freq: number, dur = 0.08, type: OscillatorType = "triangle", gain = 0.05) {
@@ -59,11 +128,12 @@ function sting(
 export function resumeAudio() {
   if (!ac) ac = ctx();
   ac?.resume();
+  void ensureSamplesLoaded();
 }
 
-/** Short square thump — tickle lock. */
+/** Short grab/attach — tickle lock (`public/sfx/tickle-lock`). */
 export function stingStart() {
-  sting(155, 0.09, "square", 0.06);
+  playCue("tickle-lock", 0.75, () => sting(155, 0.09, "square", 0.06));
 }
 
 /** Nearby reappear tell — white ping, not vanish/rose. */
@@ -72,10 +142,12 @@ export function stingReappear() {
   sting(1320, 0.12, "triangle", 0.03, 0.04);
 }
 
-/** Rapid high flutter — tickle tap. */
+/** Rapid high flutter — tickle tap (`public/sfx/tickle`, loop-safe). */
 export function stingTickle() {
-  sting(720, 0.045, "triangle", 0.045);
-  sting(960, 0.05, "triangle", 0.04, 0.04);
+  playCue("tickle", 0.62, () => {
+    sting(720, 0.045, "triangle", 0.045);
+    sting(960, 0.05, "triangle", 0.04, 0.04);
+  });
 }
 
 /** Rising whoosh — escape fill. */
@@ -83,16 +155,20 @@ export function stingEscape() {
   sting(180, 0.2, "sawtooth", 0.05, 0, 430);
 }
 
-/** Falling whoosh-out — vanish. */
+/** Falling whoosh-out — vanish (`public/sfx/vanish`). */
 export function stingVanish() {
-  sting(640, 0.32, "sine", 0.05, 0, 88);
-  sting(420, 0.22, "triangle", 0.03, 0.04, 70);
+  playCue("vanish", 0.7, () => {
+    sting(640, 0.32, "sine", 0.05, 0, 88);
+    sting(420, 0.22, "triangle", 0.03, 0.04, 70);
+  });
 }
 
-/** Grim sport buzzer — tap-out. */
+/** Grim sport buzzer — tap-out (`public/sfx/tap-out`). */
 export function stingTapOut() {
-  sting(148, 0.18, "sawtooth", 0.07);
-  sting(92, 0.16, "square", 0.055, 0.14);
+  playCue("tap-out", 0.72, () => {
+    sting(148, 0.18, "sawtooth", 0.07);
+    sting(92, 0.16, "square", 0.055, 0.14);
+  });
 }
 
 /** Rising major triad — win. */
