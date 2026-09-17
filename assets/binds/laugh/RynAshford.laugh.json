@@ -42,5 +42,11 @@
       "still": "stages/RynAshford_s3.jpg"
     }
   },
-  "hubPreviewMs": 2000
+  "hubPreviewMs": 2000,
+  "frames": [
+    "frames/RynAshford_f0.jpg",
+    "frames/RynAshford_f1.jpg",
+    "frames/RynAshford_f2.jpg",
+    "frames/RynAshford_f3.jpg"
+  ]
 }

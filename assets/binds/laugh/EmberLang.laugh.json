@@ -42,5 +42,11 @@
       "still": "stages/EmberLang_s3.jpg"
     }
   },
-  "hubPreviewMs": 2000
+  "hubPreviewMs": 2000,
+  "frames": [
+    "frames/EmberLang_f0.jpg",
+    "frames/EmberLang_f1.jpg",
+    "frames/EmberLang_f2.jpg",
+    "frames/EmberLang_f3.jpg"
+  ]
 }

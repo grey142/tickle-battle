@@ -42,5 +42,11 @@
       "still": "stages/ElaraCase_s3.jpg"
     }
   },
-  "hubPreviewMs": 2000
+  "hubPreviewMs": 2000,
+  "frames": [
+    "frames/ElaraCase_f0.jpg",
+    "frames/ElaraCase_f1.jpg",
+    "frames/ElaraCase_f2.jpg",
+    "frames/ElaraCase_f3.jpg"
+  ]
 }

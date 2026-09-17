@@ -42,5 +42,11 @@
       "still": "stages/MiraSolis_s3.jpg"
     }
   },
-  "hubPreviewMs": 2000
+  "hubPreviewMs": 2000,
+  "frames": [
+    "frames/MiraSolis_f0.jpg",
+    "frames/MiraSolis_f1.jpg",
+    "frames/MiraSolis_f2.jpg",
+    "frames/MiraSolis_f3.jpg"
+  ]
 }

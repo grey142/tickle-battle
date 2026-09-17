@@ -42,5 +42,11 @@
       "still": "stages/NimCortez_s3.jpg"
     }
   },
-  "hubPreviewMs": 2000
+  "hubPreviewMs": 2000,
+  "frames": [
+    "frames/NimCortez_f0.jpg",
+    "frames/NimCortez_f1.jpg",
+    "frames/NimCortez_f2.jpg",
+    "frames/NimCortez_f3.jpg"
+  ]
 }

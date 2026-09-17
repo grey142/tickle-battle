@@ -42,5 +42,11 @@
       "still": "stages/TorenBlake_s3.jpg"
     }
   },
-  "hubPreviewMs": 2000
+  "hubPreviewMs": 2000,
+  "frames": [
+    "frames/TorenBlake_f0.jpg",
+    "frames/TorenBlake_f1.jpg",
+    "frames/TorenBlake_f2.jpg",
+    "frames/TorenBlake_f3.jpg"
+  ]
 }

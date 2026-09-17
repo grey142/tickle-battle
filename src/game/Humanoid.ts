@@ -305,24 +305,33 @@ export class Humanoid {
       return;
     }
     if (clip === "squirm") {
+      // Production laugh/squirm: stamina-driven bind + stronger readable blendshape-like motion.
       const loco = mods as { rate: number; amp: number; lean: number } | undefined;
       const rate = loco?.rate ?? 14;
-      const amp = loco?.amp ?? 0.1;
-      const lean = loco?.lean ?? 0.12;
+      const amp = (loco?.amp ?? 0.1) * 1.35;
+      const lean = (loco?.lean ?? 0.12) * 1.25;
       const s = Math.sin(t * rate);
       const s2 = Math.sin(t * rate * 0.68);
-      this.hips.rotation.z = s * amp;
-      this.spine.rotation.set(0.18 + s2 * lean * 0.67, 0, s * lean * 1.15);
-      this.chest.rotation.z = -s * amp * 0.8;
-      this.head.rotation.set(0.25 + s2 * lean * 0.83, s * lean, 0);
-      this.lShoulder.rotation.set(-0.4, 0, 0.55 + s * amp * 2);
-      this.rShoulder.rotation.set(-0.35, 0, -0.55 - s * amp * 2);
-      this.lElbow.rotation.x = 0.6;
-      this.rElbow.rotation.x = 0.55;
-      this.lHip.rotation.x = 0.2 + s * amp * 0.8;
-      this.rHip.rotation.x = 0.15 - s * amp * 0.8;
-      this.lKnee.rotation.x = 0.45;
-      this.rKnee.rotation.x = 0.4;
+      const s3 = Math.sin(t * rate * 1.41);
+      const s4 = Math.sin(t * rate * 2.15);
+      this.hips.rotation.z = s * amp * 1.15;
+      this.hips.rotation.y = s3 * amp * 0.45;
+      this.spine.rotation.set(0.22 + s2 * lean * 0.85, s3 * lean * 0.35, s * lean * 1.35);
+      this.chest.rotation.z = -s * amp * 1.05;
+      this.chest.rotation.x = Math.abs(s2) * lean * 0.4;
+      this.chest.rotation.y = s4 * amp * 0.55;
+      // Head/neck as stand-in blendshapes: laugh bob + side squirm.
+      this.neck.rotation.set(s2 * lean * 0.4, s * lean * 0.55, s3 * amp * 0.7);
+      this.head.rotation.set(0.32 + s2 * lean * 1.05 + Math.abs(s4) * 0.06, s * lean * 1.15, s3 * lean * 0.45);
+      this.lShoulder.rotation.set(-0.48 + s2 * amp * 0.8, 0.08, 0.62 + s * amp * 2.4);
+      this.rShoulder.rotation.set(-0.42 - s2 * amp * 0.8, -0.08, -0.62 - s * amp * 2.4);
+      this.lElbow.rotation.x = 0.72 + s * amp * 0.9;
+      this.rElbow.rotation.x = 0.68 - s * amp * 0.9;
+      this.lHip.rotation.x = 0.28 + s * amp * 1.1;
+      this.rHip.rotation.x = 0.22 - s * amp * 1.1;
+      this.lKnee.rotation.x = 0.55 + Math.abs(s) * amp * 0.8;
+      this.rKnee.rotation.x = 0.5 + Math.abs(s2) * amp * 0.8;
+      this.root.position.y = Math.abs(s2) * amp * 0.35;
       void z;
       return;
     }

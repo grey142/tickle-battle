@@ -20,6 +20,8 @@ export interface LaughBind {
   playerOnly?: boolean;
   metalException?: boolean;
   stages: Record<LaughStageId, LaughStageParams>;
+  /** Optional production clip frames under assets/binds/laugh/ (e.g. frames/Slug_f0.jpg). */
+  frames?: string[];
   hubPreviewMs: number;
 }
 
@@ -80,6 +82,34 @@ export function laughStageStillUrl(params: LaughStageParams): string | undefined
   const file = rel.split("/").pop();
   if (!file) return undefined;
   return stageStillByFile[file];
+}
+
+
+const frameStillMods = import.meta.glob("../../assets/binds/laugh/frames/*.jpg", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
+
+const frameStillByFile: Record<string, string> = {};
+for (const [path, url] of Object.entries(frameStillMods)) {
+  const file = path.split("/").pop();
+  if (!file) continue;
+  frameStillByFile[file] = url;
+}
+
+/** Resolve laugh-cycle frame URLs from bind.frames (basename or frames/Name.jpg). */
+export function laughFrameUrls(bind: LaughBind): string[] {
+  const rels = bind.frames;
+  if (!rels?.length) return [];
+  const out: string[] = [];
+  for (const rel of rels) {
+    const file = rel.split("/").pop();
+    if (!file) continue;
+    const url = frameStillByFile[file];
+    if (url) out.push(url);
+  }
+  return out;
 }
 
 export function laughStageForStamina(bind: LaughBind, staminaPct: number): LaughStageId {
