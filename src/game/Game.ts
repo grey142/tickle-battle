@@ -422,7 +422,14 @@ export class Game {
   }
 
   private aimHubWalkCamera() {
-    this.camera.position.copy(this.hubPos).add(new THREE.Vector3(0, EYE, 0));
+    // Over-shoulder third person so the plaza mannequin (idle sheets) stays visible.
+    const back = 2.55;
+    const camY = 1.62;
+    this.camera.position.set(
+      this.hubPos.x + Math.sin(this.hubYaw) * back,
+      this.hubPos.y + camY,
+      this.hubPos.z + Math.cos(this.hubYaw) * back,
+    );
     this.camera.rotation.order = "YXZ";
     this.camera.rotation.y = this.hubYaw;
     this.camera.rotation.x = this.hubPitch;
@@ -633,15 +640,16 @@ export class Game {
   private syncPlazaPreview() {
     const def = lookById(this.save.look);
     const palette = this.lookPalette(def.id);
-    const show =
-      this.mode !== "play" &&
-      !(this.mode === "hub" && this.hub.room === "plaza");
+    const inPlaza = this.mode === "hub" && this.hub.room === "plaza";
+    // Visible in plaza (third-person) and Home/Shop/Arena halls + results.
+    const show = this.mode !== "play";
     if (!this.plazaPreview) {
+      // Mannequin (not combat player): still billboard + multi-frame idle sheets.
       this.plazaPreview = new Fighter({
         team: TEAM.CYAN,
-        isPlayer: true,
+        isPlayer: false,
         look: palette,
-        name: "Elara Case",
+        name: def.display,
         slug: def.slug,
         role: null,
         blocks: { ...this.save.blocks },
@@ -656,8 +664,16 @@ export class Game {
     } else {
       this.plazaPreview.applyGear(this.save.weapon, this.save.armor);
       if (this.plazaPreview.slug !== def.slug || this.plazaPreview.look !== palette) {
+        this.plazaPreview.name = def.display;
         this.plazaPreview.applyLookSlug(def.slug, palette);
       }
+    }
+    if (inPlaza) {
+      this.plazaPreview.pos.copy(this.hubPos);
+      this.plazaPreview.yaw = this.hubYaw;
+    } else if (this.mode === "hub" || this.mode === "results") {
+      this.plazaPreview.pos.set(0, 0, 1.35);
+      this.plazaPreview.yaw = Math.PI * 0.92;
     }
     this.plazaPreview.group.visible = show;
   }
