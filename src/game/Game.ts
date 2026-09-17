@@ -1701,7 +1701,10 @@ export class Game {
     t.textContent = pad ? "Tickle  A" : "Tickle";
     e.textContent = pad ? "Escape  B" : "Escape";
     if (this.hudEls["player-portrait"]) {
-      const url = p.keyedPortrait || p.portraitUrl;
+      const url =
+        (p.occupancy === "ticklee" && p.laughFramePortrait) ||
+        p.keyedPortrait ||
+        p.portraitUrl;
       const img = this.hudEls["player-portrait"] as HTMLImageElement;
       if (url) {
         img.src = url;

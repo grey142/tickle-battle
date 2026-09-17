@@ -42,5 +42,11 @@
       "still": "stages/JunoHale_s3.jpg"
     }
   },
-  "hubPreviewMs": 2000
+  "hubPreviewMs": 2000,
+  "frames": [
+    "frames/JunoHale_f0.jpg",
+    "frames/JunoHale_f1.jpg",
+    "frames/JunoHale_f2.jpg",
+    "frames/JunoHale_f3.jpg"
+  ]
 }

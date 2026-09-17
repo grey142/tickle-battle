@@ -42,5 +42,11 @@
       "still": "stages/SableQuinn_s3.jpg"
     }
   },
-  "hubPreviewMs": 2000
+  "hubPreviewMs": 2000,
+  "frames": [
+    "frames/SableQuinn_f0.jpg",
+    "frames/SableQuinn_f1.jpg",
+    "frames/SableQuinn_f2.jpg",
+    "frames/SableQuinn_f3.jpg"
+  ]
 }

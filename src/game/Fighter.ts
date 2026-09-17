@@ -8,9 +8,11 @@ import { Humanoid } from "./Humanoid";
 import {
   laughBindForLook,
   laughBindForSlug,
+  laughFrameUrls,
   laughParams,
   laughStageForStamina,
   laughStageStillUrl,
+  type LaughBind,
   type LaughStageId,
 } from "./laughBind";
 import { tickleBindForSlug } from "./tickleBind";
@@ -82,6 +84,12 @@ export class Fighter {
   /** Active laugh stage still on billboard (AI ticklee). */
   private laughStageApplied: LaughStageId | null = null;
   private laughStageLoadToken = 0;
+  /** Active laugh multi-frame index on billboard / FP portrait (-1 = base still). */
+  private laughFrameApplied = -1;
+  private laughFrameLoadToken = 0;
+  private laughFrameKeyed: string[] = [];
+  /** Keyed (or raw) URL for current laugh frame — FP portrait / HUD. */
+  laughFramePortrait?: string;
 
   constructor(opts: {
     team: number;
@@ -214,6 +222,52 @@ export class Fighter {
   }
 
 
+
+  /** Cycle AI billboard (and FP portrait URL) through laugh frames while ticklee. */
+  private syncLaughFrameBillboard(clip: string, bind?: LaughBind, stageParams?: { billRate: number }) {
+    const laughing =
+      clip === "squirm" ||
+      this.occupancy === "ticklee" ||
+      (this.occupancy === "nudge" && this.joinOn < 0);
+    if (!laughing || !bind) {
+      if (this.laughFrameApplied !== -1) {
+        if (!this.isPlayer && this.keyedPortrait) this.ensureStillBillboard(this.keyedPortrait);
+        this.laughFrameApplied = -1;
+        this.laughFramePortrait = undefined;
+      }
+      return false;
+    }
+    const urls = laughFrameUrls(bind);
+    if (urls.length < 2) return false;
+    const fps = Math.max(6, Math.round((stageParams?.billRate || 14) * 0.5));
+    const idx = Math.floor(this.animT * fps) % urls.length;
+    if (idx === this.laughFrameApplied && this.laughFramePortrait) return true;
+    const want = idx;
+    const token = ++this.laughFrameLoadToken;
+    const raw = urls[want];
+    const cached = this.laughFrameKeyed[want];
+    if (cached) {
+      if (!this.isPlayer) this.ensureStillBillboard(cached);
+      this.laughFrameApplied = want;
+      this.laughFramePortrait = cached;
+      return true;
+    }
+    lookFromStill(raw)
+      .then((kit) => {
+        if (token !== this.laughFrameLoadToken) return;
+        this.laughFrameKeyed[want] = kit.keyedUrl;
+        if (!this.isPlayer) this.ensureStillBillboard(kit.keyedUrl);
+        this.laughFrameApplied = want;
+        this.laughFramePortrait = kit.keyedUrl;
+      })
+      .catch(() => {
+        if (token !== this.laughFrameLoadToken) return;
+        this.laughFrameApplied = want;
+        this.laughFramePortrait = raw;
+      });
+    return true;
+  }
+
   /** Swap AI billboard to laugh stage still by stamina; restore base when not ticklee. */
   private syncLaughStageBillboard(clip: string) {
     if (this.isPlayer || !this.portraitSprite) return;
@@ -263,7 +317,15 @@ export class Fighter {
     const tickle = clip === "tickle" ? tickleBindForSlug(this.slug) : undefined;
     this.humanoid.pose(clip, this.animT, tickle ?? laugh ?? loco);
     this.tickBillboardAnim(clip, runBind, laugh, tickle);
-    this.syncLaughStageBillboard(clip);
+    const laughBind =
+      clip === "squirm" || this.occupancy === "ticklee"
+        ? this.slug
+          ? laughBindForSlug(this.slug)
+          : laughBindForLook(this.look)
+        : undefined;
+    if (!this.syncLaughFrameBillboard(clip, laughBind, laugh)) {
+      this.syncLaughStageBillboard(clip);
+    }
   }
 
   /** Current free locomotion clip for HUD / debug. */

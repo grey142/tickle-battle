@@ -50,5 +50,5 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Remaining UI/result cues (reappear, escape fill, win/lose, shop) are still oscillator stingers, not a full licensed library
 - No jump (bible); ramp height is a groundY sample
 
-## Laugh stage stills (Support)
-Painterly s0–s3 stills for Amateur 12 + Elara now ship under `assets/binds/laugh/stages/`; AI ticklee billboards swap by stamina. Remaining: true four-clip production anims/blendshapes beyond still swaps.
+## Laugh production clips (Support)
+Painterly s0–s3 stage stills plus multi-frame production cycle (`assets/binds/laugh/frames/` f0–f3) for Amateur 12 + Elara. Ticklee billboards cycle frames; stamina still drives humanoid rate/amp/lean with stronger squirm blendshape-like motion. Remaining: true licensed blendshape meshes beyond procedural joints.

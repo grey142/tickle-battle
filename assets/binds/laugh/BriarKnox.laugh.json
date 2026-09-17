@@ -42,5 +42,11 @@
       "still": "stages/BriarKnox_s3.jpg"
     }
   },
-  "hubPreviewMs": 2000
+  "hubPreviewMs": 2000,
+  "frames": [
+    "frames/BriarKnox_f0.jpg",
+    "frames/BriarKnox_f1.jpg",
+    "frames/BriarKnox_f2.jpg",
+    "frames/BriarKnox_f3.jpg"
+  ]
 }

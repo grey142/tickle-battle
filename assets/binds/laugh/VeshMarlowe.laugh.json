@@ -42,5 +42,11 @@
       "still": "stages/VeshMarlowe_s3.jpg"
     }
   },
-  "hubPreviewMs": 2000
+  "hubPreviewMs": 2000,
+  "frames": [
+    "frames/VeshMarlowe_f0.jpg",
+    "frames/VeshMarlowe_f1.jpg",
+    "frames/VeshMarlowe_f2.jpg",
+    "frames/VeshMarlowe_f3.jpg"
+  ]
 }
