@@ -12,8 +12,8 @@
   "shoulderAmp": 0.2666,
   "elbowAmp": 0.495,
   "weaponWag": 0.5724,
-  "billWag": 0.0782,
-  "billRate": 27.8,
+  "billWag": 0.0845,
+  "billRate": 29.47,
   "frames": [
     "frames/VeshMarlowe_f0.jpg",
     "frames/VeshMarlowe_f1.jpg",

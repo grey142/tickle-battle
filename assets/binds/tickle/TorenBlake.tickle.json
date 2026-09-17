@@ -12,8 +12,8 @@
   "shoulderAmp": 0.2251,
   "elbowAmp": 0.407,
   "weaponWag": 0.4428,
-  "billWag": 0.054,
-  "billRate": 24.8,
+  "billWag": 0.0583,
+  "billRate": 26.29,
   "frames": [
     "frames/TorenBlake_f0.jpg",
     "frames/TorenBlake_f1.jpg",

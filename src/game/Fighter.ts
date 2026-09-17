@@ -101,6 +101,11 @@ export class Fighter {
   private tickleFrameKeyed: string[] = [];
   /** Keyed (or raw) URL for current tickle frame — FP portrait / HUD. */
   tickleFramePortrait?: string;
+  /**
+   * 0–100 tickle intensity for frame window pick (Game sets from victim stamina:
+   * low victim stam → high intensity → harder f2/f3). Fallback uses weapon/skill.
+   */
+  tickleIntensity = 0;
   /** Active run-cycle frame index on billboard / FP portrait (-1 = base still). */
   private runFrameApplied = -1;
   private runFrameLoadToken = 0;
@@ -407,9 +412,36 @@ export class Fighter {
     }
     const urls = tickleFrameUrls(tickle);
     if (urls.length < 2) return;
-    // FPS from billRate (scaled) so frame cycle reads; wag still uses full billRate.
-    const fps = Math.max(8, Math.round((tickle.billRate || 26) * 0.45));
-    const idx = Math.floor(this.animT * fps) % urls.length;
+    // Intensity-weighted window (mirrors laugh #23 stamina windows): harder tickle → f2/f3.
+    let intensity = this.tickleIntensity;
+    if (intensity <= 0) {
+      // Fallback when Game has not stamped victim-based intensity yet.
+      intensity = Math.min(
+        100,
+        this.weaponPct * 200 + this.blocks.tickle * 8 + Math.min(25, this.pileTimer * 5),
+      );
+    }
+    const pct = Math.max(0, Math.min(100, intensity));
+    const n = urls.length;
+    let lo = 0;
+    let hi = n - 1;
+    if (pct < 30) {
+      lo = 0;
+      hi = Math.min(1, n - 1);
+    } else if (pct < 55) {
+      lo = 0;
+      hi = Math.min(2, n - 1);
+    } else if (pct < 80) {
+      lo = Math.min(1, n - 1);
+      hi = n - 1;
+    } else {
+      lo = Math.min(2, n - 1);
+      hi = n - 1;
+    }
+    const span = Math.max(1, hi - lo + 1);
+    // FPS from billRate; higher intensity cycles faster so hard frames land more often.
+    const fps = Math.max(8, Math.round((tickle.billRate || 26) * (0.42 + pct * 0.0045)));
+    const idx = lo + (Math.floor(this.animT * fps) % span);
     if (idx === this.tickleFrameApplied && this.tickleFramePortrait) return;
     const want = idx;
     const token = ++this.tickleFrameLoadToken;

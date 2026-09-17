@@ -12,8 +12,8 @@
   "shoulderAmp": 0.2509,
   "elbowAmp": 0.4565,
   "weaponWag": 0.5076,
-  "billWag": 0.0678,
-  "billRate": 26.6,
+  "billWag": 0.0732,
+  "billRate": 28.2,
   "frames": [
     "frames/MiraSolis_f0.jpg",
     "frames/MiraSolis_f1.jpg",

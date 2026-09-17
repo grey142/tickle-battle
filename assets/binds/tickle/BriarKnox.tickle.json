@@ -12,8 +12,8 @@
   "shoulderAmp": 0.2408,
   "elbowAmp": 0.429,
   "weaponWag": 0.4752,
-  "billWag": 0.0598,
-  "billRate": 25.6,
+  "billWag": 0.0646,
+  "billRate": 27.14,
   "frames": [
     "frames/BriarKnox_f0.jpg",
     "frames/BriarKnox_f1.jpg",

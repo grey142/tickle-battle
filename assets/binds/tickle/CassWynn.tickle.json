@@ -12,8 +12,8 @@
   "shoulderAmp": 0.252,
   "elbowAmp": 0.451,
   "weaponWag": 0.5076,
-  "billWag": 0.0667,
-  "billRate": 26.4,
+  "billWag": 0.072,
+  "billRate": 27.98,
   "frames": [
     "frames/CassWynn_f0.jpg",
     "frames/CassWynn_f1.jpg",

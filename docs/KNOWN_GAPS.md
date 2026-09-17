@@ -46,7 +46,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 ## Stub / missing
 
 - Walkable plaza ships with over-shoulder third-person mannequin on multi-frame idle sheets; remaining hub polish (richer door VFX) still TBD
-- Painterly four-clip production anims and blendshapes still missing (tickle and run four-frame A-pose adaptations plus laugh stage/multi-frame stills ship; full painterly anims TBD).
+- Painterly four-clip production anims and blendshapes still missing (tickle four-frame deepened A-pose cycle + intensity pick, run four-frame adaptations, laugh stage/multi-frame stills ship; full painterly anims TBD).
 - Navmesh AI mid-lane waypoints + wall-slide shipped; pile join cooldown is exact (`PILE_CD` 2.75s / sticky 1.35s, armed on join + drop)
 - Full licensed SFX library still TBD; remaining oscillator-only cues are gone for Team Quick UI/combat stingers (samples + oscillator fallbacks)
 - No jump (bible); ramp height is a groundY sample
@@ -55,7 +55,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 Painterly s0–s3 stage stills plus multi-frame cycle (`assets/binds/laugh/frames/` f0–f3) for Amateur 12 + Elara. Ticklee billboards cycle frames with stamina-weighted windows (low stamina favors f2/f3); stamina drives rate/amp/lean plus face-card blend weights (jaw/cheek/eye/brow) on the FP/plaza humanoid. Remaining: true morph-target mesh blendshapes if a non-capsule head ships later.
 
 ## Tickle production polish (Support 4)
-Four-frame tickle cycles for Amateur 12 + Elara under `assets/binds/tickle/frames/` (f0 = A-pose still; f1–f3 lean/reach/bob adaptations). AI tickler billboards + FP portrait cycle frames; FP arms use `tickleBind` rate/amps (no hardcoded `sin(t*28)`); Humanoid tickle motion strengthened. Deferred: true painterly tickle stage stills/blendshapes beyond A-pose adaptations.
+Four-frame tickle cycles for Amateur 12 + Elara under `assets/binds/tickle/frames/` (f0 = A-pose still; f1–f3 deepened lean/reach/bob with stronger transforms + warm grade). AI tickler billboards + FP portrait use **intensity-weighted** frame windows (victim stamina → harder f2/f3, like laugh #23); FP arms use `tickleBind` rate/amps (no hardcoded `sin(t*28)`); Humanoid tickle motion strengthened. Deferred: true painterly tickle stage stills/blendshapes beyond A-pose adaptations.
 
 ## Run production frames (Support 3)
 Painterly four-frame run cycles for Amateur 12 + Elara now ship under `assets/binds/run/frames/` (f0 = A-pose still; f1–f3 bob/sway/squash). AI billboards + FP portrait cycle at `bind.run.billRate` while walk/run. Remaining: true four-clip production anims/blendshapes beyond still swaps.
