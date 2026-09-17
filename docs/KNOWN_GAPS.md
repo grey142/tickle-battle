@@ -10,7 +10,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Rear contact or pack overpower at 2+ starts the tickle automatically; join list cap 6
 - Race: ticklee fills escape, ticklers drain stamina only; opener full / extra half
 - Vanish 20s map-only, stamina freeze, contact ignore; local reappear tell (12m white flash + sound); 0.85s reappear lock then leftover overlap still needs a fresh rear/pack edge; vanish clock HUD-only for the escaped player
-- Soft-nudge into clear space or cancel + pairwise cooldown
+- Soft-nudge into clear space (`NUDGE_CAP` 1.5m) or cancel + pairwise cooldown; pile-local freeze
 - Flats then % (bare-hand 0%, base attire 0%; Elara 3/3/3 + 7 unspent)
 - Shared 3D humanoid clips on every fighter (procedural idle/walk/run/tickle/squirm). AI looks from Amateur 12 (metal-free). Elara Case player still with explicit metal exception. Catalog 45/45. **No metal** on AI sprites.
 - 3 / 1 coins to the player if they are opener/assist; persist level/coins
@@ -38,13 +38,13 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Plaza mannequin wears the current Look still plus equipped Amateur weapon/armor
 - Loadout snapshot at Arena Start (HUD / results / spawn use the locked ids)
 - Home Look laugh preview (~2s still + plaza mannequin squirm); stills drive the shared 3D rig; bots also show keyed still billboards in-match
-- Soft-nudge searches 16 directions out to 2.4m for clear space, else cancel + pairwise cooldown
+- Soft-nudge searches 16 directions out to `NUDGE_CAP` 1.5m for clear space, else cancel + pairwise cooldown; freeze is pile-local
 - AI fighters use full-body Amateur still billboards (capsule humanoid hidden); `K_DAMAGE = 0.95` (1/3 of prior 2.85) for ~3× harder tap-outs; FP tickle arms + billboard wag while tickling
 
 ## Stub / missing
 
 - Walkable 3D hub (doors open overlay rooms; you do not walk the plaza as a character)
 - Painterly four-clip production anims and blendshapes still missing.
-- Navmesh AI (steering + wall slide + mid-lane waypoint); pile cooldown is approximate
+- Navmesh AI mid-lane waypoints + wall-slide shipped on support3/navmesh-ai (PR #9); pile cooldown is still approximate
 - Audio is oscillator stingers, not licensed SFX
 - No jump (bible); ramp height is a groundY sample
