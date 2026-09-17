@@ -1,0 +1,12 @@
+{
+  "clip": "idle",
+  "slug": "JunoHale",
+  "display": "Juno Hale",
+  "playerOnly": false,
+  "metalException": false,
+  "pose": "a_pose",
+  "breatheRate": 2.1,
+  "breatheAmp": 0.025,
+  "sway": 0.013,
+  "scalePulse": 0.021
+}

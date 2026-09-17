@@ -1,0 +1,12 @@
+{
+  "clip": "idle",
+  "slug": "MiraSolis",
+  "display": "Mira Solis",
+  "playerOnly": false,
+  "metalException": false,
+  "pose": "a_pose",
+  "breatheRate": 2.24,
+  "breatheAmp": 0.033,
+  "sway": 0.023,
+  "scalePulse": 0.019
+}

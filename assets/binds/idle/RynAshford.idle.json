@@ -1,0 +1,12 @@
+{
+  "clip": "idle",
+  "slug": "RynAshford",
+  "display": "Ryn Ashford",
+  "playerOnly": false,
+  "metalException": false,
+  "pose": "a_pose",
+  "breatheRate": 2.39,
+  "breatheAmp": 0.025,
+  "sway": 0.016,
+  "scalePulse": 0.016
+}

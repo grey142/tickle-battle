@@ -14,6 +14,8 @@ export type ArenaMode = "team-quick" | "team-timed" | "ffa-timed" | "ffa-quick";
 export interface SaveData {
   coins: number;
   level: number;
+  /** Progress toward next Amateur level (flat after 10). */
+  xp: number;
   unspent: number;
   blocks: { stamina: number; struggle: number; tickle: number };
   look: number;
@@ -27,6 +29,7 @@ export function defaultSave(): SaveData {
   return {
     coins: 12,
     level: 1,
+    xp: 0,
     unspent: 7,
     blocks: { stamina: 0, struggle: 0, tickle: 0 },
     look: 0,
@@ -46,6 +49,7 @@ export function normalizeSave(raw: Partial<SaveData> | null | undefined): SaveDa
   return {
     coins: Math.max(0, Number(raw.coins) || 0),
     level: clampInt(raw.level ?? 1, 1, 10),
+    xp: Math.max(0, Number(raw.xp) || 0),
     unspent: Math.max(0, Number(raw.unspent) || 0),
     blocks: {
       stamina: clampInt(blocks.stamina ?? 0, 0, 10),

@@ -1,0 +1,12 @@
+{
+  "clip": "idle",
+  "slug": "KoraVale",
+  "display": "Kora Vale",
+  "playerOnly": false,
+  "metalException": false,
+  "pose": "a_pose",
+  "breatheRate": 2.25,
+  "breatheAmp": 0.033,
+  "sway": 0.013,
+  "scalePulse": 0.022
+}

@@ -1,0 +1,12 @@
+{
+  "clip": "idle",
+  "slug": "CassWynn",
+  "display": "Cass Wynn",
+  "playerOnly": false,
+  "metalException": false,
+  "pose": "a_pose",
+  "breatheRate": 2.0,
+  "breatheAmp": 0.023,
+  "sway": 0.024,
+  "scalePulse": 0.021
+}
