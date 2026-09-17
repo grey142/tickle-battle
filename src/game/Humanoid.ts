@@ -221,7 +221,7 @@ export class Humanoid {
     });
   }
 
-  pose(clip: Clip, t: number) {
+  pose(clip: Clip, t: number, squirm?: { rate: number; amp: number; lean: number }) {
     const z = 0;
     this.hips.rotation.set(0, 0, 0);
     this.spine.rotation.set(0, 0, 0);
@@ -282,18 +282,21 @@ export class Humanoid {
       return;
     }
     if (clip === "squirm") {
-      const s = Math.sin(t * 14);
-      const s2 = Math.sin(t * 9.5);
-      this.hips.rotation.z = s * 0.1;
-      this.spine.rotation.set(0.18 + s2 * 0.08, 0, s * 0.14);
-      this.chest.rotation.z = -s * 0.08;
-      this.head.rotation.set(0.25 + s2 * 0.1, s * 0.12, 0);
-      this.lShoulder.rotation.set(-0.4, 0, 0.55 + s * 0.2);
-      this.rShoulder.rotation.set(-0.35, 0, -0.55 - s * 0.2);
+      const rate = squirm?.rate ?? 14;
+      const amp = squirm?.amp ?? 0.1;
+      const lean = squirm?.lean ?? 0.12;
+      const s = Math.sin(t * rate);
+      const s2 = Math.sin(t * rate * 0.68);
+      this.hips.rotation.z = s * amp;
+      this.spine.rotation.set(0.18 + s2 * lean * 0.67, 0, s * lean * 1.15);
+      this.chest.rotation.z = -s * amp * 0.8;
+      this.head.rotation.set(0.25 + s2 * lean * 0.83, s * lean, 0);
+      this.lShoulder.rotation.set(-0.4, 0, 0.55 + s * amp * 2);
+      this.rShoulder.rotation.set(-0.35, 0, -0.55 - s * amp * 2);
       this.lElbow.rotation.x = 0.6;
       this.rElbow.rotation.x = 0.55;
-      this.lHip.rotation.x = 0.2 + s * 0.08;
-      this.rHip.rotation.x = 0.15 - s * 0.08;
+      this.lHip.rotation.x = 0.2 + s * amp * 0.8;
+      this.rHip.rotation.x = 0.15 - s * amp * 0.8;
       this.lKnee.rotation.x = 0.45;
       this.rKnee.rotation.x = 0.4;
       void z;

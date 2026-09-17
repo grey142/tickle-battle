@@ -3,6 +3,7 @@ import type { ArenaMode, SaveData } from "./types";
 import { BASE } from "./constants";
 import { stingBuy, stingSpend } from "./sfx";
 import { stillUrlFor, LOOK_DEFS, lookById } from "./stills";
+import { laughBindForLook } from "./laughBind";
 import { lookFromStill } from "./lookFromStill";
 import {
   AMATEUR_BLOCK_CAP,
@@ -472,10 +473,13 @@ export class Hub {
   private previewLaugh(): void {
     const el = this.root?.querySelector("#look-preview");
     if (!el) return;
+    const save = this.getSave();
+    const bind = laughBindForLook(save.look ?? 0);
+    const ms = bind.hubPreviewMs ?? 2000;
     el.classList.add("laughing");
-    this.laughUntil = performance.now() + 2000;
+    this.laughUntil = performance.now() + ms;
     window.clearTimeout(this.laughTimer);
-    this.laughTimer = window.setTimeout(() => el.classList.remove("laughing"), 2000);
+    this.laughTimer = window.setTimeout(() => el.classList.remove("laughing"), ms);
   }
 
   private syncTabs(root: HTMLElement | null): void {
