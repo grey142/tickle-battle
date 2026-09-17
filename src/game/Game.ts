@@ -23,6 +23,8 @@ import {
   TEAM,
   TIMED_T,
   VANISH_T,
+  PILE_CD,
+  PILE_CD_STICKY,
 } from "./constants";
 import { normalizeSave, type ArenaMode, type SaveData } from "./types";
 import { MapWorld } from "./MapWorld";
@@ -1164,6 +1166,9 @@ export class Game {
     a.occupancy = "tickler";
     a.joinOn = b.id;
     a.targetId = b.id;
+    if (!a.isPlayer) {
+      a.pileTimer = a.role === "sticky" ? PILE_CD_STICKY : PILE_CD;
+    }
     this.attachSockets(b);
     blip(280, 0.06);
     return true;
@@ -1185,6 +1190,13 @@ export class Game {
     tickler.occupancy = "free";
     tickler.joinOn = -1;
     tickler.targetId = -1;
+    // Prevent instant re-pile on the same ticklee after peel/release.
+    if (!tickler.isPlayer) {
+      tickler.pileTimer = Math.max(
+        tickler.pileTimer,
+        tickler.role === "sticky" ? PILE_CD_STICKY : PILE_CD,
+      );
+    }
     if (list.length === 0) {
       ticklee.occupancy = "free";
       this.joinList.delete(ticklee.id);

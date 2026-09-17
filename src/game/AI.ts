@@ -58,15 +58,12 @@ export function tickBot(
     target = player;
   }
 
-  if (!target && allyDuel && (bot.role === "sticky" || bot.pileTimer <= 0)) {
+  if (!target && allyDuel && bot.pileTimer <= 0) {
     const t = fighters.find((f) => f.id === allyDuel.joinOn);
     if (t && t.occupancy === "ticklee") {
       if (touching(bot, t)) {
-        if (bot.role === "sticky" || bot.pileTimer <= 0) {
-          if (tryJoin(bot, t) || startTickle(bot, t)) {
-            if (bot.role !== "sticky") bot.pileTimer = PILE_CD;
-          }
-        }
+        // tryJoin arms pileTimer on success (sticky shorter). Opening a fresh duel is allowed.
+        if (!tryJoin(bot, t)) startTickle(bot, t);
         return;
       }
       if (bot.pos.distanceTo(allyDuel.pos) < 9) target = t;
@@ -107,12 +104,13 @@ export function tickBot(
 
   if (touching(bot, target)) {
     if (target.occupancy === "ticklee") {
-      tryJoin(bot, target);
+      if (bot.pileTimer <= 0) tryJoin(bot, target);
     } else {
       startTickle(bot, target);
     }
   }
   void TAP_CD;
+  void PILE_CD;
   void now;
 }
 
