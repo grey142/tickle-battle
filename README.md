@@ -29,7 +29,7 @@ serves the production bundle on the same URL.
 
 ## What works in Amateur Team Quick
 
-1. Plaza: **Home** (Look / Skills / Loadout), **Shop** (Amateur 6 weapons / 8 armors), **Arena** (Team Quick, Team Timed, FFA Quick, FFA Timed). Click the 3D hall doors or the overlay buttons. **Play Team Quick** launches immediately.
+1. Plaza: **walk** the 3D hall (WASD / LS). **Home** / **Shop** doors open rooms; **Arena** door (or walk-up + A/E) starts **Team Quick**. Overlay Arena / pad RB still opens mode select (Timed + FFA). **Play Team Quick** button also launches immediately.
 2. Spend the starting 7 skill points in Home → Skills (25-block bars: 10 Amateur fillable, 15 Pro-locked). Home → Look swaps Elara + Amateur 12 stills (Elara default). Shop has a 12-coin starter purse — buy Amateur 6 weapons / 8 armors, equip, ids persist.
 3. **10s spawn countdown** — first-person move, tickles do not start, contact ignored, bots parked (one amber waits on the mid-lane facing away). **Leave countdown** (or B / Escape) returns to plaza with no coins and no XP. At 0, one clean lift — no stacked spawn-ignore.
 4. Get **behind** the amber-rim bait (walk the glowing lane into their back; amber ring on the floor) or pile on with 2+ cyan contact. The tickle **starts automatically** (rear or pack). There is no Grab.
@@ -68,7 +68,7 @@ Cyan rim = your team. Amber = enemies. Magenta pulse = ticklee flash.
 
 ## What is stubbed
 
-See [docs/KNOWN_GAPS.md](docs/KNOWN_GAPS.md). All four Amateur modes launch from Arena (Team Quick / Team Timed / FFA Quick / FFA Timed). Gear is flats-then-% from the Amateur 6+8 ladder (bare hand / base attire = 0%). Humanoids are capsule kits with placeholder weapon props, not the full four-clip art bible. Click the 3D Home / Shop / Arena door frames in the hall, or the overlay buttons.
+See [docs/KNOWN_GAPS.md](docs/KNOWN_GAPS.md). Walkable plaza hub ships; Arena door starts Team Quick. All four Amateur modes still launch from the Arena overlay. Gear is flats-then-% from the Amateur 6+8 ladder (bare hand / base attire = 0%). Humanoids are capsule kits with placeholder weapon props, not the full four-clip art bible.
 
 ## Docs (design source of truth)
 

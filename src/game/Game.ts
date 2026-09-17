@@ -94,6 +94,12 @@ export class Game {
   matchWeapon = 0;
   matchArmor = 0;
   plazaPreview: Fighter | null = null;
+  /** First-person walk pose while hub.room === plaza (flat floor). */
+  hubPos = new THREE.Vector3(0, 0, -2.4);
+  hubYaw = Math.PI; // face +z toward Arena
+  hubPitch = 0;
+  hubNear: "home" | "shop" | "arena" | null = null;
+  private hubPrompted: "home" | "shop" | "arena" | null = null;
   result = "";
   toastT = 0;
   toast = "";
@@ -203,6 +209,10 @@ export class Game {
     this.overlay.querySelector("#btn-leave")?.addEventListener("click", () => this.bailCountdown());
     this.renderer.domElement.addEventListener("click", (e) => {
       if (this.tryPlazaDoor(e.clientX, e.clientY)) return;
+      if (this.mode === "hub" && this.hub.room === "plaza" && !this.input.padActive) {
+        this.renderer.domElement.requestPointerLock?.();
+        return;
+      }
       if (this.mode === "play" && !this.input.padActive) this.renderer.domElement.requestPointerLock?.();
     });
     this.overlay.addEventListener("click", (e) => {
@@ -242,12 +252,17 @@ export class Game {
       card?.getBoundingClientRect(),
     );
     if (!hit) return false;
-    this.hub.show(hit);
-    this.hub.render();
-    this.syncPlazaHall();
     this.plaza.setHover(null);
     this.renderer.domElement.style.cursor = "";
     document.body.style.cursor = "";
+    if (hit === "arena") {
+      this.arenaMode = "team-quick";
+      this.beginMatch(this.input.padActive);
+      return true;
+    }
+    this.hub.show(hit);
+    this.hub.render();
+    this.syncPlazaHall();
     return true;
   }
 
@@ -290,6 +305,11 @@ export class Game {
     if (this.hudEls.radar) this.hudEls.radar.style.display = "none";
     this.rearCue.visible = false;
     const s = this.save;
+    this.hubPos.set(0, 0, -2.4);
+    this.hubYaw = Math.PI;
+    this.hubPitch = 0;
+    this.hubNear = null;
+    this.hubPrompted = null;
     this.hub.show("plaza");
     this.hub.render();
     this.fillElaraPortrait();
@@ -320,6 +340,62 @@ export class Game {
     }
     this.camera.position.set(Math.sin(t) * 1.4 + 2.35, 1.78, 4.85);
     this.camera.lookAt(0, 1.12, 1.35);
+  }
+
+  private tickHubWalk(dt: number) {
+    const look = this.input.consumeLook();
+    this.hubYaw -= look.x;
+    this.hubPitch = THREE.MathUtils.clamp(this.hubPitch - look.y, -1.05, 0.95);
+    const mv = this.input.moveVec();
+    const sp = SPEED * 0.88;
+    const lx = -Math.sin(this.hubYaw);
+    const lz = -Math.cos(this.hubYaw);
+    const rx = Math.cos(this.hubYaw);
+    const rz = -Math.sin(this.hubYaw);
+    const dx = (lx * mv.z + rx * mv.x) * sp * dt;
+    const dz = (lz * mv.z + rz * mv.x) * sp * dt;
+    const r = this.plaza.resolve(this.hubPos.x + dx, this.hubPos.z + dz);
+    this.hubPos.x = r.x;
+    this.hubPos.z = r.z;
+    this.hubPos.y = 0;
+    this.hubNear = this.plaza.nearDoor(this.hubPos.x, this.hubPos.z);
+    if (this.hubNear !== this.hubPrompted) {
+      this.hubPrompted = this.hubNear;
+      if (this.hubNear === "arena") {
+        this.say("Arena — A / Enter / E / click starts Amateur Team Quick");
+      } else if (this.hubNear === "home") {
+        this.say("Home — A / Enter / E / click (Look · Skills · Loadout)");
+      } else if (this.hubNear === "shop") {
+        this.say("Shop — A / Enter / E / click (Amateur gear)");
+      }
+    }
+  }
+
+  private interactHubDoor(allowPlayFallback: boolean) {
+    const door = this.hubNear;
+    if (door === "arena") {
+      this.arenaMode = "team-quick";
+      this.beginMatch(this.input.padActive);
+      return;
+    }
+    if (door === "home" || door === "shop") {
+      this.hub.show(door);
+      this.hub.render();
+      this.syncPlazaHall();
+      return;
+    }
+    if (allowPlayFallback) {
+      this.arenaMode = "team-quick";
+      this.beginMatch(this.input.padActive);
+    }
+  }
+
+  private aimHubWalkCamera() {
+    this.camera.position.copy(this.hubPos).add(new THREE.Vector3(0, EYE, 0));
+    this.camera.rotation.order = "YXZ";
+    this.camera.rotation.y = this.hubYaw;
+    this.camera.rotation.x = this.hubPitch;
+    this.camera.rotation.z = 0;
   }
 
   private fillElaraPortrait() {
@@ -524,7 +600,9 @@ export class Game {
   private syncPlazaPreview() {
     const def = lookById(this.save.look);
     const palette = this.lookPalette(def.id);
-    const show = this.mode !== "play";
+    const show =
+      this.mode !== "play" &&
+      !(this.mode === "hub" && this.hub.room === "plaza");
     if (!this.plazaPreview) {
       this.plazaPreview = new Fighter({
         team: TEAM.CYAN,
@@ -578,10 +656,19 @@ export class Game {
 
     if (this.mode === "hub") {
       const consumed = this.hub.handlePad(this.input);
-      if (this.input.confirm && !consumed && this.hub.room === "plaza") {
-        this.beginMatch(this.input.padActive);
-        this.input.endFrame();
-        return;
+      if (this.hub.room === "plaza") {
+        if (!consumed) this.tickHubWalk(dt);
+        if (this.input.confirm && !consumed) {
+          this.interactHubDoor(true);
+          this.input.endFrame();
+          return;
+        }
+        if (!consumed && this.hubNear && this.input.keys.has("KeyE")) {
+          this.interactHubDoor(false);
+          this.input.keys.delete("KeyE");
+          this.input.endFrame();
+          return;
+        }
       }
       this.syncPlazaHall();
       this.syncPlazaPreview();
@@ -591,7 +678,8 @@ export class Game {
         this.plazaPreview.syncMesh();
       }
       this.scene.fog = new THREE.Fog(0x1a1614, 32, 80);
-      this.aimPlazaCamera();
+      if (this.hub.room === "plaza") this.aimHubWalkCamera();
+      else this.aimPlazaCamera();
       this.renderer.render(this.scene, this.camera);
       this.input.endFrame();
       this.publishDebug();
@@ -719,6 +807,9 @@ export class Game {
       __tb: () => ({
         mode: this.mode,
         room: this.hub.room,
+        hubPos: [+this.hubPos.x.toFixed(2), +this.hubPos.z.toFixed(2)],
+        hubYaw: +this.hubYaw.toFixed(2),
+        hubNear: this.hubNear,
         countdown: +this.countdown.toFixed(2),
         liveT: +this.liveT.toFixed(2),
         occ: p?.occupancy,
