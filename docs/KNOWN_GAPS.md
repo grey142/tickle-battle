@@ -24,7 +24,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Right-hand weapon placeholders; combat + UI SFX pack (`public/sfx/*.ogg|mp3`: tickle-lock / tickle / vanish / tap-out / reappear / escape / win / lose / buy / spend / countdown-tick, wired via `sfx.ts`; last-3s spawn + leave + vanish-clock ticks; AudioContext unlock on first gesture)
 - Same-tick escape-before-tickle global pass (ticklees resolve first)
 - 3D plaza backdrop; click Home / Shop / Arena door frames (or overlay buttons) to open rooms
-- **Walkable 3D plaza hub:** first-person WASD/LS + look; wall slide on plaza colliders; walk up to **Arena** (or click its door) to start Amateur Team Quick; Home/Shop doors open overlay rooms; Leave / results return to plaza with coins/XP preserved
+- **Walkable 3D plaza hub:** first-person WASD/LS + look; axis-separated wall slide on plaza colliders (less door-frame stick); walk up to **Arena** (or click its door) to start Amateur Team Quick — near-door trim glow + soft point-light pulse; Home/Shop doors open overlay rooms; Leave / results return to plaza with coins/XP preserved
 - Armor cloth overlay on the humanoid from equipped Amateur piece
 - Team Timed BR (6v6, 4 min, clean respawn, tap-out score, vanish cut at timer)
 - FFA Quick (12 solo, join cap 1, no pack, last standing) and FFA Timed (personal taps, respawn)
@@ -45,7 +45,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 
 ## Stub / missing
 
-- Walkable plaza ships with over-shoulder third-person mannequin on multi-frame idle sheets; remaining hub polish (richer door VFX) still TBD
+- Walkable plaza ships with over-shoulder third-person mannequin on multi-frame idle sheets plus near-door soft glow/pulse + tighter wall-slide; remaining hub polish still TBD
 - Painterly four-clip production anims and blendshapes still missing (tickle four-frame deepened A-pose cycle + intensity pick, run four-frame adaptations, laugh stage/multi-frame stills ship; full painterly anims TBD).
 - Navmesh AI mid-lane waypoints + wall-slide shipped; pile join cooldown is exact (`PILE_CD` 2.75s / sticky 1.35s, armed on join + drop)
 - Full licensed SFX library still TBD; remaining oscillator-only cues are gone for Team Quick UI/combat stingers (samples + oscillator fallbacks)

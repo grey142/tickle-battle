@@ -348,6 +348,7 @@ export class Game {
     this.syncPlazaHall();
     this.syncPlazaPreview();
     this.plaza.setHover(null);
+    this.plaza.setNear(null);
     void s;
   }
 
@@ -390,6 +391,7 @@ export class Game {
     this.hubPos.z = r.z;
     this.hubPos.y = 0;
     this.hubNear = this.plaza.nearDoor(this.hubPos.x, this.hubPos.z);
+    this.plaza.setNear(this.hubNear);
     if (this.hubNear !== this.hubPrompted) {
       this.hubPrompted = this.hubNear;
       if (this.hubNear === "arena") {
@@ -727,8 +729,13 @@ export class Game {
         this.plazaPreview.syncMesh();
       }
       this.scene.fog = new THREE.Fog(0x1a1614, 32, 80);
-      if (this.hub.room === "plaza") this.aimHubWalkCamera();
-      else this.aimPlazaCamera();
+      if (this.hub.room === "plaza") {
+        this.aimHubWalkCamera();
+        this.plaza.updateDoorFx(this.clock.elapsedTime);
+      } else {
+        this.plaza.setNear(null);
+        this.aimPlazaCamera();
+      }
       this.renderer.render(this.scene, this.camera);
       this.input.endFrame();
       this.publishDebug();
