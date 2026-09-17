@@ -45,7 +45,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 ## Stub / missing
 
 - Walkable 3D hub (doors open overlay rooms; you do not walk the plaza as a character)
-- Painterly four-clip production anims and blendshapes still missing (tickle four-frame A-pose adaptations + FP bind wiring ship; full painterly tickle TBD).
+- Painterly four-clip production anims and blendshapes still missing (tickle and run four-frame A-pose adaptations plus laugh stage/multi-frame stills ship; full painterly anims TBD).
 - Navmesh AI mid-lane waypoints + wall-slide shipped; pile join cooldown is exact (`PILE_CD` 2.75s / sticky 1.35s, armed on join + drop)
 - Remaining UI/result cues (reappear, escape fill, win/lose, shop) are still oscillator stingers, not a full licensed library
 - No jump (bible); ramp height is a groundY sample
@@ -56,3 +56,5 @@ Painterly s0–s3 stage stills plus multi-frame production cycle (`assets/binds/
 ## Tickle production polish (Support 4)
 Four-frame tickle cycles for Amateur 12 + Elara under `assets/binds/tickle/frames/` (f0 = A-pose still; f1–f3 lean/reach/bob adaptations). AI tickler billboards + FP portrait cycle frames; FP arms use `tickleBind` rate/amps (no hardcoded `sin(t*28)`); Humanoid tickle motion strengthened. Deferred: true painterly tickle stage stills/blendshapes beyond A-pose adaptations.
 
+## Run production frames (Support 3)
+Painterly four-frame run cycles for Amateur 12 + Elara now ship under `assets/binds/run/frames/` (f0 = A-pose still; f1–f3 bob/sway/squash). AI billboards + FP portrait cycle at `bind.run.billRate` while walk/run. Remaining: true four-clip production anims/blendshapes beyond still swaps.

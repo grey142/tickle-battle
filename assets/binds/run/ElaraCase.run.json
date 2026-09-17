@@ -19,5 +19,11 @@
     "billRate": 11.96
   },
   "runSpeed": 4.4,
-  "walkSpeed": 0.4
+  "walkSpeed": 0.4,
+  "frames": [
+    "frames/ElaraCase_f0.jpg",
+    "frames/ElaraCase_f1.jpg",
+    "frames/ElaraCase_f2.jpg",
+    "frames/ElaraCase_f3.jpg"
+  ]
 }

@@ -19,5 +19,11 @@
     "billRate": 12.35
   },
   "runSpeed": 4.4,
-  "walkSpeed": 0.4
+  "walkSpeed": 0.4,
+  "frames": [
+    "frames/BriarKnox_f0.jpg",
+    "frames/BriarKnox_f1.jpg",
+    "frames/BriarKnox_f2.jpg",
+    "frames/BriarKnox_f3.jpg"
+  ]
 }

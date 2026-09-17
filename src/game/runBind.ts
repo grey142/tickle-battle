@@ -18,6 +18,8 @@ export interface RunBind {
   run: RunLocoParams;
   runSpeed: number;
   walkSpeed: number;
+  /** Optional relative paths under assets/binds/run/ (e.g. frames/Slug_f0.jpg). */
+  frames?: string[];
 }
 
 const mods = import.meta.glob("../../assets/binds/run/*.run.json", {
@@ -61,6 +63,33 @@ export function runClipForSpeed(bind: RunBind, speed: number): "idle" | "walk" |
 
 export function runParamsForClip(bind: RunBind, clip: "walk" | "run"): RunLocoParams {
   return clip === "run" ? bind.run : bind.walk;
+}
+
+const frameStillMods = import.meta.glob("../../assets/binds/run/frames/*.jpg", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
+
+const frameStillByFile: Record<string, string> = {};
+for (const [path, url] of Object.entries(frameStillMods)) {
+  const file = path.split("/").pop();
+  if (!file) continue;
+  frameStillByFile[file] = url;
+}
+
+/** Resolve run-cycle frame URLs from bind.frames (basename or frames/Name.jpg). */
+export function runFrameUrls(bind: RunBind): string[] {
+  const rels = bind.frames;
+  if (!rels?.length) return [];
+  const out: string[] = [];
+  for (const rel of rels) {
+    const file = rel.split("/").pop();
+    if (!file) continue;
+    const url = frameStillByFile[file];
+    if (url) out.push(url);
+  }
+  return out;
 }
 
 export function listedRunSlugs(): string[] {

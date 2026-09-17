@@ -19,5 +19,11 @@
     "billRate": 11.96
   },
   "runSpeed": 4.4,
-  "walkSpeed": 0.4
+  "walkSpeed": 0.4,
+  "frames": [
+    "frames/NimCortez_f0.jpg",
+    "frames/NimCortez_f1.jpg",
+    "frames/NimCortez_f2.jpg",
+    "frames/NimCortez_f3.jpg"
+  ]
 }

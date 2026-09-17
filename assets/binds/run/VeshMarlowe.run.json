@@ -19,5 +19,11 @@
     "billRate": 13.52
   },
   "runSpeed": 4.4,
-  "walkSpeed": 0.4
+  "walkSpeed": 0.4,
+  "frames": [
+    "frames/VeshMarlowe_f0.jpg",
+    "frames/VeshMarlowe_f1.jpg",
+    "frames/VeshMarlowe_f2.jpg",
+    "frames/VeshMarlowe_f3.jpg"
+  ]
 }

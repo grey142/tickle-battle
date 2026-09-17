@@ -3,7 +3,7 @@ import { LOOKS, EYE, CAPSULE_H, BASE, K_DAMAGE, K_ESCAPE, K_STAMINA } from "./co
 import type { Occupancy, Role } from "./types";
 import { stillUrlFor } from "./stills";
 import { lookFromStill } from "./lookFromStill";
-import { runBindForSlug, runParamsForClip } from "./runBind";
+import { runBindForSlug, runParamsForClip, runFrameUrls, type RunBind } from "./runBind";
 import { Humanoid } from "./Humanoid";
 import {
   laughBindForLook,
@@ -96,6 +96,12 @@ export class Fighter {
   private tickleFrameKeyed: string[] = [];
   /** Keyed (or raw) URL for current tickle frame — FP portrait / HUD. */
   tickleFramePortrait?: string;
+  /** Active run-cycle frame index on billboard / FP portrait (-1 = base still). */
+  private runFrameApplied = -1;
+  private runFrameLoadToken = 0;
+  private runFrameKeyed: string[] = [];
+  /** Keyed (or raw) URL for current run frame — FP portrait / HUD. */
+  runFramePortrait?: string;
 
   constructor(opts: {
     team: number;
@@ -229,6 +235,7 @@ export class Fighter {
 
 
 
+
   /** Cycle AI billboard (and FP portrait URL) through laugh frames while ticklee. */
   private syncLaughFrameBillboard(clip: string, bind?: LaughBind, stageParams?: { billRate: number }) {
     const laughing =
@@ -349,7 +356,49 @@ export class Fighter {
       });
   }
 
-
+  /** Cycle AI billboard (and FP portrait URL) through run frames while walk/run. */
+  private syncRunFrameBillboard(clip: string, runBind: RunBind) {
+    const loco = clip === "walk" || clip === "run";
+    if (!loco) {
+      if (this.runFrameApplied !== -1) {
+        if (!this.isPlayer && this.keyedPortrait) this.ensureStillBillboard(this.keyedPortrait);
+        this.runFrameApplied = -1;
+        this.runFramePortrait = undefined;
+      }
+      return;
+    }
+    const urls = runFrameUrls(runBind);
+    if (urls.length < 2) return;
+    // FPS from bind.run.billRate (production clip rate); walk still cycles the same sheet.
+    const fps = Math.max(1, runBind.run.billRate || 12);
+    const idx = Math.floor(this.animT * fps) % urls.length;
+    if (idx === this.runFrameApplied && this.runFramePortrait) return;
+    const want = idx;
+    const token = ++this.runFrameLoadToken;
+    const raw = urls[want];
+    // Prefer already-keyed cache when warm.
+    const cached = this.runFrameKeyed[want];
+    if (cached) {
+      if (!this.isPlayer) this.ensureStillBillboard(cached);
+      this.runFrameApplied = want;
+      this.runFramePortrait = cached;
+      return;
+    }
+    lookFromStill(raw)
+      .then((kit) => {
+        if (token !== this.runFrameLoadToken) return;
+        this.runFrameKeyed[want] = kit.keyedUrl;
+        if (!this.isPlayer) this.ensureStillBillboard(kit.keyedUrl);
+        this.runFrameApplied = want;
+        this.runFramePortrait = kit.keyedUrl;
+      })
+      .catch(() => {
+        /* keep prior still if frame key fails */
+        if (token !== this.runFrameLoadToken) return;
+        this.runFrameApplied = want;
+        this.runFramePortrait = raw;
+      });
+  }
   tickAnim(dt: number) {
     const dist = this.pos.distanceTo(this.prevPos);
     this.speed = dt > 1e-4 ? dist / dt : 0;
@@ -379,6 +428,7 @@ export class Fighter {
       this.syncLaughStageBillboard(clip);
     }
     this.syncTickleFrameBillboard(clip, tickle);
+    this.syncRunFrameBillboard(clip, runBind);
   }
 
   /** Current free locomotion clip for HUD / debug. */
