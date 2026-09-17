@@ -9,6 +9,8 @@ export interface LaughStageParams {
   lean: number;
   billShake: number;
   billRate: number;
+  /** Optional relative path under assets/binds/laugh/ (e.g. stages/Slug_s1.jpg). */
+  still?: string;
 }
 
 export interface LaughBind {
@@ -55,6 +57,29 @@ export function laughBindForSlug(slug?: string): LaughBind {
 export function laughBindForLook(lookId: number): LaughBind {
   const look: LookDef = lookById(lookId);
   return laughBindForSlug(look.slug);
+}
+
+
+const stageStillMods = import.meta.glob("../../assets/binds/laugh/stages/*.jpg", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
+
+const stageStillByFile: Record<string, string> = {};
+for (const [path, url] of Object.entries(stageStillMods)) {
+  const file = path.split("/").pop();
+  if (!file) continue;
+  stageStillByFile[file] = url;
+}
+
+/** Resolve a stage still URL from bind stage.still (basename or stages/Name.jpg). */
+export function laughStageStillUrl(params: LaughStageParams): string | undefined {
+  const rel = params.still;
+  if (!rel) return undefined;
+  const file = rel.split("/").pop();
+  if (!file) return undefined;
+  return stageStillByFile[file];
 }
 
 export function laughStageForStamina(bind: LaughBind, staminaPct: number): LaughStageId {

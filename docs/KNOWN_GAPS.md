@@ -49,3 +49,6 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Navmesh AI mid-lane waypoints + wall-slide shipped; pile join cooldown is exact (`PILE_CD` 2.75s / sticky 1.35s, armed on join + drop)
 - Remaining UI/result cues (reappear, escape fill, win/lose, shop) are still oscillator stingers, not a full licensed library
 - No jump (bible); ramp height is a groundY sample
+
+## Laugh stage stills (Support)
+Painterly s0–s3 stills for Amateur 12 + Elara now ship under `assets/binds/laugh/stages/`; AI ticklee billboards swap by stamina. Remaining: true four-clip production anims/blendshapes beyond still swaps.

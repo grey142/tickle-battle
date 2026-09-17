@@ -11,7 +11,8 @@
       "amp": 0.0477,
       "lean": 0.048,
       "billShake": 0.027999999999999997,
-      "billRate": 11.899999999999999
+      "billRate": 11.899999999999999,
+      "still": "stages/BriarKnox_s0.jpg"
     },
     "s1": {
       "staminaMin": 40,
@@ -19,7 +20,8 @@
       "amp": 0.0795,
       "lean": 0.08399999999999999,
       "billShake": 0.055999999999999994,
-      "billRate": 15.3
+      "billRate": 15.3,
+      "still": "stages/BriarKnox_s1.jpg"
     },
     "s2": {
       "staminaMin": 15,
@@ -27,7 +29,8 @@
       "amp": 0.106,
       "lean": 0.12,
       "billShake": 0.08,
-      "billRate": 17
+      "billRate": 17,
+      "still": "stages/BriarKnox_s2.jpg"
     },
     "s3": {
       "staminaMin": 0,
@@ -35,7 +38,8 @@
       "amp": 0.1325,
       "lean": 0.144,
       "billShake": 0.10800000000000001,
-      "billRate": 20.4
+      "billRate": 20.4,
+      "still": "stages/BriarKnox_s3.jpg"
     }
   },
   "hubPreviewMs": 2000

@@ -5,7 +5,14 @@ import { stillUrlFor } from "./stills";
 import { lookFromStill } from "./lookFromStill";
 import { runBindForSlug, runParamsForClip } from "./runBind";
 import { Humanoid } from "./Humanoid";
-import { laughBindForLook, laughBindForSlug, laughParams } from "./laughBind";
+import {
+  laughBindForLook,
+  laughBindForSlug,
+  laughParams,
+  laughStageForStamina,
+  laughStageStillUrl,
+  type LaughStageId,
+} from "./laughBind";
 import { tickleBindForSlug } from "./tickleBind";
 import { idleBindForSlug } from "./idleBind";
 import { weaponById, armorById } from "./gear";
@@ -72,6 +79,9 @@ export class Fighter {
   private prevPos = new THREE.Vector3();
   private animT = Math.random() * 8;
   private speed = 0;
+  /** Active laugh stage still on billboard (AI ticklee). */
+  private laughStageApplied: LaughStageId | null = null;
+  private laughStageLoadToken = 0;
 
   constructor(opts: {
     team: number;
@@ -203,6 +213,37 @@ export class Fighter {
     return new THREE.Vector3(-Math.sin(this.yaw), 0, -Math.cos(this.yaw));
   }
 
+
+  /** Swap AI billboard to laugh stage still by stamina; restore base when not ticklee. */
+  private syncLaughStageBillboard(clip: string) {
+    if (this.isPlayer || !this.portraitSprite) return;
+    const bind = this.slug ? laughBindForSlug(this.slug) : laughBindForLook(this.look);
+    const laughing = clip === "squirm" || this.occupancy === "ticklee";
+    if (!laughing) {
+      if (this.laughStageApplied !== null && this.keyedPortrait) {
+        this.ensureStillBillboard(this.keyedPortrait);
+        this.laughStageApplied = null;
+      }
+      return;
+    }
+    const pct = (this.stamina / Math.max(1, this.maxStamina)) * 100;
+    const stage = laughStageForStamina(bind, pct);
+    if (stage === this.laughStageApplied) return;
+    const stageUrl = laughStageStillUrl(bind.stages[stage]);
+    if (!stageUrl) return;
+    const token = ++this.laughStageLoadToken;
+    const wantStage = stage;
+    lookFromStill(stageUrl)
+      .then((kit) => {
+        if (token !== this.laughStageLoadToken) return;
+        this.ensureStillBillboard(kit.keyedUrl);
+        this.laughStageApplied = wantStage;
+      })
+      .catch(() => {
+        /* keep prior billboard if stage still fails */
+      });
+  }
+
   tickAnim(dt: number) {
     const dist = this.pos.distanceTo(this.prevPos);
     this.speed = dt > 1e-4 ? dist / dt : 0;
@@ -222,6 +263,7 @@ export class Fighter {
     const tickle = clip === "tickle" ? tickleBindForSlug(this.slug) : undefined;
     this.humanoid.pose(clip, this.animT, tickle ?? laugh ?? loco);
     this.tickBillboardAnim(clip, runBind, laugh, tickle);
+    this.syncLaughStageBillboard(clip);
   }
 
   /** Current free locomotion clip for HUD / debug. */
