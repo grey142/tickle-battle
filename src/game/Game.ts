@@ -1543,10 +1543,17 @@ export class Game {
     const f = focus ?? p;
     stam.style.width = `${(100 * f.stamina) / f.maxStamina}%`;
     esc.style.width = `${f.escape}%`;
+    const loco = p.locomotionClip();
     this.hudEls["meta-left"].textContent =
       p.occupancy === "vanished"
         ? `VANISH ${f.vanishLeft.toFixed(1)}s — map only`
-        : `${f.name}  ·  ${f.occupancy}  ·  ${this.matchLoadout}`;
+        : `${f.name}  ·  ${f.occupancy}  ·  ${loco}  ·  ${this.matchLoadout}`;
+    if (this.hudEls["player-portrait"]) {
+      const img = this.hudEls["player-portrait"] as HTMLImageElement;
+      img.dataset.clip = loco;
+      img.classList.toggle("running", loco === "run");
+      img.classList.toggle("walking", loco === "walk");
+    }
     this.hudEls["top-left"].textContent =
       this.countdown > 0
         ? "Spawn lock — bots parked · tickle at 0 · mid-lane amber waits"

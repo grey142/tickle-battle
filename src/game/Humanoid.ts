@@ -221,7 +221,7 @@ export class Humanoid {
     });
   }
 
-  pose(clip: Clip, t: number) {
+  pose(clip: Clip, t: number, loco?: { rate: number; amp: number; lean: number }) {
     const z = 0;
     this.hips.rotation.set(0, 0, 0);
     this.spine.rotation.set(0, 0, 0);
@@ -249,8 +249,9 @@ export class Humanoid {
     }
     if (clip === "walk" || clip === "run") {
       const run = clip === "run";
-      const rate = run ? 11 : 7.2;
-      const amp = run ? 0.72 : 0.48;
+      const rate = loco?.rate ?? (run ? 11 : 7.2);
+      const amp = loco?.amp ?? (run ? 0.72 : 0.48);
+      const lean = loco?.lean ?? (run ? 0.18 : 0.06);
       const p = t * rate;
       this.lHip.rotation.x = Math.sin(p) * amp;
       this.rHip.rotation.x = Math.sin(p + Math.PI) * amp;
@@ -260,7 +261,7 @@ export class Humanoid {
       this.rShoulder.rotation.x = Math.sin(p) * (run ? 0.7 : 0.42);
       this.lElbow.rotation.x = 0.35 + (run ? 0.5 : 0.2);
       this.rElbow.rotation.x = 0.35 + (run ? 0.5 : 0.2);
-      this.spine.rotation.x = run ? 0.18 : 0.06;
+      this.spine.rotation.x = lean;
       this.chest.rotation.y = Math.sin(p) * (run ? 0.12 : 0.06);
       this.root.position.y = Math.abs(Math.sin(p * 2)) * (run ? 0.06 : 0.03);
       return;
