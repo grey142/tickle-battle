@@ -1,0 +1,17 @@
+{
+  "clip": "tickle",
+  "slug": "JunoHale",
+  "display": "Juno Hale",
+  "playerOnly": false,
+  "metalException": false,
+  "rate": 28.1,
+  "twistRate": 37.1,
+  "spineBase": 0.28,
+  "spineAmp": 0.044,
+  "chestAmp": 0.078,
+  "shoulderAmp": 0.218,
+  "elbowAmp": 0.4,
+  "weaponWag": 0.45,
+  "billWag": 0.055,
+  "billRate": 25.9
+}

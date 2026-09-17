@@ -1,0 +1,17 @@
+{
+  "clip": "tickle",
+  "slug": "LyraFinch",
+  "display": "Lyra Finch",
+  "playerOnly": false,
+  "metalException": false,
+  "rate": 27.7,
+  "twistRate": 36.6,
+  "spineBase": 0.278,
+  "spineAmp": 0.04,
+  "chestAmp": 0.076,
+  "shoulderAmp": 0.212,
+  "elbowAmp": 0.4,
+  "weaponWag": 0.44,
+  "billWag": 0.053,
+  "billRate": 25.7
+}

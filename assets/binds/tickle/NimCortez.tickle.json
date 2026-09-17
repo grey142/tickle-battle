@@ -1,0 +1,17 @@
+{
+  "clip": "tickle",
+  "slug": "NimCortez",
+  "display": "Nim Cortez",
+  "playerOnly": false,
+  "metalException": false,
+  "rate": 27.2,
+  "twistRate": 35.9,
+  "spineBase": 0.272,
+  "spineAmp": 0.042,
+  "chestAmp": 0.073,
+  "shoulderAmp": 0.209,
+  "elbowAmp": 0.385,
+  "weaponWag": 0.43,
+  "billWag": 0.05,
+  "billRate": 25.3
+}

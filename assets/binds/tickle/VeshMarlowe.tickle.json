@@ -1,0 +1,17 @@
+{
+  "clip": "tickle",
+  "slug": "VeshMarlowe",
+  "display": "Vesh Marlowe",
+  "playerOnly": false,
+  "metalException": false,
+  "rate": 29.7,
+  "twistRate": 39.3,
+  "spineBase": 0.295,
+  "spineAmp": 0.049,
+  "chestAmp": 0.092,
+  "shoulderAmp": 0.238,
+  "elbowAmp": 0.45,
+  "weaponWag": 0.53,
+  "billWag": 0.068,
+  "billRate": 27.8
+}

@@ -1,0 +1,17 @@
+{
+  "clip": "tickle",
+  "slug": "KoraVale",
+  "display": "Kora Vale",
+  "playerOnly": false,
+  "metalException": false,
+  "rate": 29.0,
+  "twistRate": 38.2,
+  "spineBase": 0.288,
+  "spineAmp": 0.047,
+  "chestAmp": 0.084,
+  "shoulderAmp": 0.228,
+  "elbowAmp": 0.42,
+  "weaponWag": 0.48,
+  "billWag": 0.061,
+  "billRate": 26.8
+}

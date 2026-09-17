@@ -4,6 +4,19 @@ import type { LookKit } from "./lookFromStill";
 
 export type Clip = "idle" | "walk" | "run" | "tickle" | "squirm" | "tapped";
 
+export interface TicklePoseParams {
+  rate: number;
+  twistRate: number;
+  spineBase: number;
+  spineAmp: number;
+  chestAmp: number;
+  shoulderAmp: number;
+  elbowAmp: number;
+  weaponWag: number;
+}
+
+export type PoseMods = { rate: number; amp: number; lean: number } | TicklePoseParams;
+
 type Joint = THREE.Group;
 
 function mat(color: number, rough = 0.62): THREE.MeshStandardMaterial {
@@ -221,7 +234,7 @@ export class Humanoid {
     });
   }
 
-  pose(clip: Clip, t: number, mods?: { rate: number; amp: number; lean: number }) {
+  pose(clip: Clip, t: number, mods?: PoseMods) {
     const z = 0;
     this.hips.rotation.set(0, 0, 0);
     this.spine.rotation.set(0, 0, 0);
@@ -249,9 +262,10 @@ export class Humanoid {
     }
     if (clip === "walk" || clip === "run") {
       const run = clip === "run";
-      const rate = mods?.rate ?? (run ? 11 : 7.2);
-      const amp = mods?.amp ?? (run ? 0.72 : 0.48);
-      const lean = mods?.lean ?? (run ? 0.18 : 0.06);
+      const loco = mods as { rate: number; amp: number; lean: number } | undefined;
+      const rate = loco?.rate ?? (run ? 11 : 7.2);
+      const amp = loco?.amp ?? (run ? 0.72 : 0.48);
+      const lean = loco?.lean ?? (run ? 0.18 : 0.06);
       const p = t * rate;
       this.lHip.rotation.x = Math.sin(p) * amp;
       this.rHip.rotation.x = Math.sin(p + Math.PI) * amp;
@@ -267,25 +281,34 @@ export class Humanoid {
       return;
     }
     if (clip === "tickle") {
-      // Obvious wag — body-visible cases (player ticklee cam / plaza); AI uses billboard shake.
-      const s = Math.sin(t * 28);
-      const s2 = Math.sin(t * 37);
-      this.spine.rotation.x = 0.28 + s * 0.04;
-      this.chest.rotation.y = s2 * 0.08;
-      this.lShoulder.rotation.set(-1.25, 0.2, 0.55 + s * 0.22);
-      this.rShoulder.rotation.set(-1.15, -0.25, -0.45 - s * 0.2);
-      this.lElbow.rotation.x = -0.45 + s * 0.4;
-      this.rElbow.rotation.x = -0.3 - s * 0.38;
+      // Per-look bind keeps the shared four-clip rig while making tickler motion readable.
+      const tickle = mods as TicklePoseParams | undefined;
+      const rate = tickle?.rate ?? 28;
+      const twistRate = tickle?.twistRate ?? 37;
+      const spineBase = tickle?.spineBase ?? 0.28;
+      const spineAmp = tickle?.spineAmp ?? 0.04;
+      const chestAmp = tickle?.chestAmp ?? 0.08;
+      const shoulderAmp = tickle?.shoulderAmp ?? 0.22;
+      const elbowAmp = tickle?.elbowAmp ?? 0.4;
+      const s = Math.sin(t * rate);
+      const s2 = Math.sin(t * twistRate);
+      this.spine.rotation.x = spineBase + s * spineAmp;
+      this.chest.rotation.y = s2 * chestAmp;
+      this.lShoulder.rotation.set(-1.25, 0.2, 0.55 + s * shoulderAmp);
+      this.rShoulder.rotation.set(-1.15, -0.25, -0.45 - s * shoulderAmp);
+      this.lElbow.rotation.x = -0.45 + s * elbowAmp;
+      this.rElbow.rotation.x = -0.3 - s * elbowAmp * 0.95;
       this.head.rotation.x = 0.2;
       this.lHip.rotation.x = 0.12;
       this.rHip.rotation.x = -0.08;
-      if (this.weaponMesh) this.weaponMesh.rotation.z = s * 0.45;
+      if (this.weaponMesh) this.weaponMesh.rotation.z = s * (tickle?.weaponWag ?? 0.45);
       return;
     }
     if (clip === "squirm") {
-      const rate = mods?.rate ?? 14;
-      const amp = mods?.amp ?? 0.1;
-      const lean = mods?.lean ?? 0.12;
+      const loco = mods as { rate: number; amp: number; lean: number } | undefined;
+      const rate = loco?.rate ?? 14;
+      const amp = loco?.amp ?? 0.1;
+      const lean = loco?.lean ?? 0.12;
       const s = Math.sin(t * rate);
       const s2 = Math.sin(t * rate * 0.68);
       this.hips.rotation.z = s * amp;

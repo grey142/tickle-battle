@@ -1,0 +1,17 @@
+{
+  "clip": "tickle",
+  "slug": "CassWynn",
+  "display": "Cass Wynn",
+  "playerOnly": false,
+  "metalException": false,
+  "rate": 28.6,
+  "twistRate": 37.8,
+  "spineBase": 0.285,
+  "spineAmp": 0.039,
+  "chestAmp": 0.082,
+  "shoulderAmp": 0.225,
+  "elbowAmp": 0.41,
+  "weaponWag": 0.47,
+  "billWag": 0.058,
+  "billRate": 26.4
+}

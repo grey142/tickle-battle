@@ -1,0 +1,17 @@
+{
+  "clip": "tickle",
+  "slug": "RynAshford",
+  "display": "Ryn Ashford",
+  "playerOnly": false,
+  "metalException": false,
+  "rate": 29.4,
+  "twistRate": 38.9,
+  "spineBase": 0.292,
+  "spineAmp": 0.048,
+  "chestAmp": 0.089,
+  "shoulderAmp": 0.234,
+  "elbowAmp": 0.44,
+  "weaponWag": 0.51,
+  "billWag": 0.066,
+  "billRate": 27.5
+}
