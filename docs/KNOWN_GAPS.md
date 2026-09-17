@@ -21,7 +21,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Post-match 3-coin tick-start opener / 1-coin assists (team), XP to level 10, countdown bail with no reward
 - 10s spawn lock: tickles do not start, contact edges cleared at 0 (no stacked ignore), bots parked, Leave returns plaza
 - AI loadouts scale with Elara's level; bots park in spawn during the 10s countdown
-- Right-hand weapon placeholders; combat + UI SFX pack (`public/sfx/*.ogg|mp3`: tickle-lock / tickle / vanish / tap-out / reappear / escape / win / lose / buy / spend, wired via `sfx.ts`)
+- Right-hand weapon placeholders; combat + UI SFX pack (`public/sfx/*.ogg|mp3`: tickle-lock / tickle / vanish / tap-out / reappear / escape / win / lose / buy / spend / countdown-tick, wired via `sfx.ts`; last-3s spawn + leave + vanish-clock ticks; AudioContext unlock on first gesture)
 - Same-tick escape-before-tickle global pass (ticklees resolve first)
 - 3D plaza backdrop; click Home / Shop / Arena door frames (or overlay buttons) to open rooms
 - **Walkable 3D plaza hub:** first-person WASD/LS + look; wall slide on plaza colliders; walk up to **Arena** (or click its door) to start Amateur Team Quick; Home/Shop doors open overlay rooms; Leave / results return to plaza with coins/XP preserved
