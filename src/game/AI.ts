@@ -139,31 +139,42 @@ function nearest(bot: Fighter, list: Fighter[]): Fighter | null {
 }
 
 function steerTo(bot: Fighter, map: MapWorld, dest: THREE.Vector3, dt: number) {
-  const dir = dest.clone().sub(bot.pos);
+  const goal = map.navWaypoint(bot.pos, dest);
+  const dir = goal.clone().sub(bot.pos);
   dir.y = 0;
   if (dir.lengthSq() < 0.04) return;
   dir.normalize();
   const sp = SPEED * (bot.role === "hunter" ? 1.05 : 0.95);
+  const stepLen = sp * dt;
   const tryStep = (dx: number, dz: number) => {
     const r = map.resolve(bot.pos.x + dx, bot.pos.z + dz, bot.pos.y);
     const moved = Math.hypot(r.x - bot.pos.x, r.z - bot.pos.z);
-    return { r, moved };
+    const progress = (r.x - bot.pos.x) * dir.x + (r.z - bot.pos.z) * dir.z;
+    return { r, moved, progress };
   };
-  const ahead = tryStep(dir.x * sp * dt, dir.z * sp * dt);
-  let step = dir;
+  const ahead = tryStep(dir.x * stepLen, dir.z * stepLen);
   let chosen = ahead;
-  if (ahead.moved < sp * dt * 0.35) {
-    const left = new THREE.Vector3(-dir.z, 0, dir.x);
-    const a = tryStep(left.x * sp * dt, left.z * sp * dt);
-    const b = tryStep(-left.x * sp * dt, -left.z * sp * dt);
-    if (a.moved >= b.moved && a.moved > ahead.moved) {
-      chosen = a;
-      step = left;
-    } else if (b.moved > ahead.moved) {
-      chosen = b;
-      step = left.clone().multiplyScalar(-1);
+  let step = dir.clone();
+  // Wall-slide: fan angles when blocked; keep best progress toward the waypoint.
+  if (ahead.moved < stepLen * 0.4) {
+    const angles = [0.55, -0.55, 0.95, -0.95, 1.35, -1.35, Math.PI / 2, -Math.PI / 2];
+    for (const ang of angles) {
+      const c = Math.cos(ang);
+      const s = Math.sin(ang);
+      const sx = dir.x * c - dir.z * s;
+      const sz = dir.x * s + dir.z * c;
+      const cand = tryStep(sx * stepLen, sz * stepLen);
+      if (cand.moved < stepLen * 0.2) continue;
+      const better =
+        cand.progress > chosen.progress + 0.002 ||
+        (Math.abs(cand.progress - chosen.progress) < 0.002 && cand.moved > chosen.moved);
+      if (better) {
+        chosen = cand;
+        step.set(sx, 0, sz).normalize();
+      }
     }
   }
+  if (chosen.moved < 1e-4) return;
   bot.yaw = Math.atan2(-step.x, -step.z);
   bot.pos.x = chosen.r.x;
   bot.pos.z = chosen.r.z;

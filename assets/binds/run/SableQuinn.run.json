@@ -8,14 +8,14 @@
     "rate": 7.056,
     "amp": 0.47,
     "lean": 0.059,
-    "billBob": 0.025,
+    "billBob": 0.03,
     "billRate": 8.33
   },
   "run": {
     "rate": 10.78,
     "amp": 0.706,
     "lean": 0.176,
-    "billBob": 0.054,
+    "billBob": 0.068,
     "billRate": 12.74
   },
   "runSpeed": 4.4,
