@@ -221,20 +221,43 @@ export class MapWorld {
     return { x: px, z: pz };
   }
 
+
+  /**
+   * Next short-term nav goal: mid-lane waypoints when crossing the map, then dest.
+   * Keeps bots out of wall pockets that pure wall-slide cannot escape.
+   */
+  navWaypoint(from: THREE.Vector3, dest: THREE.Vector3): THREE.Vector3 {
+    const y = dest.y;
+    const cross = from.x * dest.x < 0 && Math.abs(from.x) > 4 && Math.abs(dest.x) > 2;
+    if (!cross) {
+      if (Math.abs(from.z) > 3.2 && Math.abs(from.x) > 2 && Math.abs(dest.z) < 2) {
+        return new THREE.Vector3(from.x, y, 0);
+      }
+      return dest.clone();
+    }
+    if (Math.abs(from.z) > 1.1) {
+      return new THREE.Vector3(from.x, y, 0);
+    }
+    const gates = from.x < dest.x
+      ? [-10, -4, 0, 4, 10, dest.x]
+      : [10, 4, 0, -4, -10, dest.x];
+    for (const gx of gates) {
+      if (from.x < dest.x && from.x < gx - 0.85) {
+        return new THREE.Vector3(gx, y, 0);
+      }
+      if (from.x > dest.x && from.x > gx + 0.85) {
+        return new THREE.Vector3(gx, y, 0);
+      }
+    }
+    return dest.clone();
+  }
+
   /**
    * When a path crosses the map (spawn A ↔ spawn B), pin to the open z≈0 mid-lane
    * first so wall-slide cannot trap bots in a pocket.
    */
   laneRoute(from: THREE.Vector3, dest: THREE.Vector3): THREE.Vector3 {
-    const cross = from.x * dest.x < 0 && Math.abs(from.x) > 5 && Math.abs(dest.x) > 2.4;
-    if (!cross) return dest;
-    if (Math.abs(from.z) > 1.05 && Math.abs(from.x) > 3) {
-      return new THREE.Vector3(from.x, dest.y, 0);
-    }
-    if (Math.abs(from.x) > 2.4) {
-      return new THREE.Vector3(0, dest.y, 0);
-    }
-    return dest;
+    return this.navWaypoint(from, dest);
   }
 
   blockedAt(x: number, z: number, y: number, radius = 0.9): boolean {
