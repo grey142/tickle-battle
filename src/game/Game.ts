@@ -817,6 +817,23 @@ export class Game {
     }
     this.updateVisibility();
     for (const f of this.fighters) {
+      // Intensity for tickle frame windows: low victim stamina → harder f2/f3.
+      if (
+        (f.occupancy === "tickler" || (f.occupancy === "nudge" && f.joinOn >= 0)) &&
+        f.joinOn >= 0
+      ) {
+        const v = this.byId(f.joinOn);
+        if (v && v.maxStamina > 0) {
+          f.tickleIntensity = Math.max(
+            0,
+            Math.min(100, 100 - (100 * v.stamina) / v.maxStamina),
+          );
+        } else {
+          f.tickleIntensity = 0;
+        }
+      } else {
+        f.tickleIntensity = 0;
+      }
       f.tickAnim(Math.min(0.05, wallDt));
       f.syncMesh();
     }

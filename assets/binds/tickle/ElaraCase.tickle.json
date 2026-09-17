@@ -12,8 +12,8 @@
   "shoulderAmp": 0.2576,
   "elbowAmp": 0.473,
   "weaponWag": 0.54,
-  "billWag": 0.0736,
-  "billRate": 27.2,
+  "billWag": 0.0795,
+  "billRate": 28.83,
   "frames": [
     "frames/ElaraCase_f0.jpg",
     "frames/ElaraCase_f1.jpg",

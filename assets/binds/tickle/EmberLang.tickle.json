@@ -12,8 +12,8 @@
   "shoulderAmp": 0.2296,
   "elbowAmp": 0.418,
   "weaponWag": 0.4536,
-  "billWag": 0.0563,
-  "billRate": 25.0,
+  "billWag": 0.0608,
+  "billRate": 26.5,
   "frames": [
     "frames/EmberLang_f0.jpg",
     "frames/EmberLang_f1.jpg",

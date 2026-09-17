@@ -12,8 +12,8 @@
   "shoulderAmp": 0.2442,
   "elbowAmp": 0.44,
   "weaponWag": 0.486,
-  "billWag": 0.0633,
-  "billRate": 25.9,
+  "billWag": 0.0684,
+  "billRate": 27.45,
   "frames": [
     "frames/JunoHale_f0.jpg",
     "frames/JunoHale_f1.jpg",

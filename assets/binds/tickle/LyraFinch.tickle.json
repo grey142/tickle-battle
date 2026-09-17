@@ -12,8 +12,8 @@
   "shoulderAmp": 0.2374,
   "elbowAmp": 0.44,
   "weaponWag": 0.4752,
-  "billWag": 0.0609,
-  "billRate": 25.7,
+  "billWag": 0.0658,
+  "billRate": 27.24,
   "frames": [
     "frames/LyraFinch_f0.jpg",
     "frames/LyraFinch_f1.jpg",

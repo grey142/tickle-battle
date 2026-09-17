@@ -12,8 +12,8 @@
   "shoulderAmp": 0.2621,
   "elbowAmp": 0.484,
   "weaponWag": 0.5508,
-  "billWag": 0.0759,
-  "billRate": 27.5,
+  "billWag": 0.082,
+  "billRate": 29.15,
   "frames": [
     "frames/RynAshford_f0.jpg",
     "frames/RynAshford_f1.jpg",
