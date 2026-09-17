@@ -21,7 +21,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Post-match 3-coin tick-start opener / 1-coin assists (team), XP to level 10, countdown bail with no reward
 - 10s spawn lock: tickles do not start, contact edges cleared at 0 (no stacked ignore), bots parked, Leave returns plaza
 - AI loadouts scale with Elara's level; bots park in spawn during the 10s countdown
-- Right-hand weapon placeholders; distinct tickle-lock / tickle / vanish / tap-out SFX (`public/sfx/*.ogg|mp3`, wired via `sfx.ts`)
+- Right-hand weapon placeholders; combat + UI SFX pack (`public/sfx/*.ogg|mp3`: tickle-lock / tickle / vanish / tap-out / reappear / escape / win / lose / buy / spend, wired via `sfx.ts`)
 - Same-tick escape-before-tickle global pass (ticklees resolve first)
 - 3D plaza backdrop; click Home / Shop / Arena door frames (or overlay buttons) to open rooms
 - Armor cloth overlay on the humanoid from equipped Amateur piece
@@ -47,7 +47,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Walkable 3D hub (doors open overlay rooms; you do not walk the plaza as a character)
 - Painterly four-clip production anims and blendshapes still missing (tickle and run four-frame A-pose adaptations plus laugh stage/multi-frame stills ship; full painterly anims TBD).
 - Navmesh AI mid-lane waypoints + wall-slide shipped; pile join cooldown is exact (`PILE_CD` 2.75s / sticky 1.35s, armed on join + drop)
-- Remaining UI/result cues (reappear, escape fill, win/lose, shop) are still oscillator stingers, not a full licensed library
+- Full licensed SFX library still TBD; remaining oscillator-only cues are gone for Team Quick UI/combat stingers (samples + oscillator fallbacks)
 - No jump (bible); ramp height is a groundY sample
 
 ## Laugh production clips (Support)
