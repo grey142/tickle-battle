@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CAPSULE_R } from "./constants";
+import { CAPSULE_R, NUDGE_CAP } from "./constants";
 
 export type Box = { minx: number; maxx: number; minz: number; maxz: number; miny: number; maxy: number };
 
@@ -267,7 +267,7 @@ export class MapWorld {
     }
     let best: THREE.Vector3 | null = null;
     let bestS = -1;
-    for (let dist = 0.3; dist <= 2.4 + 0.01; dist += 0.3) {
+    for (let dist = 0.3; dist <= NUDGE_CAP + 0.01; dist += 0.3) {
       for (const [dx, dz] of dirs) {
         const x = origin.x + dx * dist;
         const z = origin.z + dz * dist;
