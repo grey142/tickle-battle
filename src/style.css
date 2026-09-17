@@ -436,3 +436,15 @@ button.hub-item { pointer-events: auto; }
   0%, 100% { opacity: 0.55; }
   50% { opacity: 1; }
 }
+
+#player-portrait.walking {
+  box-shadow: 0 0 8px #c4a57466;
+}
+#player-portrait.running {
+  box-shadow: 0 0 12px #c45c7888;
+  animation: portrait-run-bob 0.28s ease-in-out infinite;
+}
+@keyframes portrait-run-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}

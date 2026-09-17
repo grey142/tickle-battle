@@ -1,0 +1,23 @@
+{
+  "clip": "run",
+  "slug": "JunoHale",
+  "display": "Juno Hale",
+  "playerOnly": false,
+  "metalException": false,
+  "walk": {
+    "rate": 6.624,
+    "amp": 0.442,
+    "lean": 0.055,
+    "billBob": 0.023,
+    "billRate": 7.82
+  },
+  "run": {
+    "rate": 10.12,
+    "amp": 0.662,
+    "lean": 0.166,
+    "billBob": 0.051,
+    "billRate": 11.96
+  },
+  "runSpeed": 4.4,
+  "walkSpeed": 0.4
+}

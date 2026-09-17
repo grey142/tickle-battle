@@ -3,6 +3,7 @@ import { LOOKS, EYE, CAPSULE_H, BASE, K_DAMAGE, K_ESCAPE, K_STAMINA } from "./co
 import type { Occupancy, Role } from "./types";
 import { stillUrlFor } from "./stills";
 import { lookFromStill } from "./lookFromStill";
+import { runBindForSlug, runParamsForClip } from "./runBind";
 import { Humanoid } from "./Humanoid";
 import { laughBindForLook, laughBindForSlug, laughParams } from "./laughBind";
 import { weaponById, armorById } from "./gear";
@@ -213,12 +214,26 @@ export class Fighter {
             (this.stamina / Math.max(1, this.maxStamina)) * 100,
           )
         : undefined;
-    this.humanoid.pose(clip, this.animT, laugh);
-    this.tickBillboardAnim(laugh);
+    const runBind = runBindForSlug(this.slug);
+    const loco =
+      clip === "walk" || clip === "run" ? runParamsForClip(runBind, clip) : undefined;
+    this.humanoid.pose(clip, this.animT, laugh ?? loco);
+    this.tickBillboardAnim(clip, runBind, laugh);
   }
 
-  /** Procedural billboard feedback: tickler wag + ticklee laugh shake (bind-driven). */
-  private tickBillboardAnim(laugh?: { billShake: number; billRate: number }) {
+  /** Current free locomotion clip for HUD / debug. */
+  locomotionClip(): "idle" | "walk" | "run" | "busy" {
+    if (this.occupancy !== "free") return "busy";
+    const c = this.humanoid.clipFor(this.occupancy, this.speed, this.joinOn);
+    return c === "run" || c === "walk" || c === "idle" ? c : "busy";
+  }
+
+  /** Procedural billboard feedback: tickler wag + ticklee laugh shake + run bob. */
+  private tickBillboardAnim(
+    clip?: string,
+    runBind?: ReturnType<typeof runBindForSlug>,
+    laugh?: { billShake: number; billRate: number },
+  ) {
     const bill = this.portraitSprite;
     if (!bill) return;
     const mat = bill.material as THREE.SpriteMaterial;
@@ -250,6 +265,16 @@ export class Fighter {
       h = BILL_H * 0.72;
       y = BILL_Y * 0.55;
       rot = 0.35;
+    } else if (clip === "run" || clip === "walk") {
+      const loco = runBind ? (clip === "run" ? runBind.run : runBind.walk) : undefined;
+      const rate = loco?.billRate ?? (clip === "run" ? 13 : 8.5);
+      const bob = loco?.billBob ?? (clip === "run" ? 0.055 : 0.025);
+      const s = Math.sin(t * rate);
+      w = BILL_W * (1 + s * bob * 0.35);
+      h = BILL_H * (1 + Math.abs(s) * bob * 0.25);
+      x = s * bob * 0.4;
+      y = BILL_Y + Math.abs(s) * bob;
+      rot = s * bob * 0.5;
     } else {
       const b = Math.sin(t * 2.2) * 0.02;
       y = BILL_Y + b;
