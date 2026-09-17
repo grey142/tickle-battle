@@ -1,0 +1,12 @@
+{
+  "clip": "idle",
+  "slug": "TorenBlake",
+  "display": "Toren Blake",
+  "playerOnly": false,
+  "metalException": false,
+  "pose": "a_pose",
+  "breatheRate": 2.15,
+  "breatheAmp": 0.022,
+  "sway": 0.019,
+  "scalePulse": 0.02
+}

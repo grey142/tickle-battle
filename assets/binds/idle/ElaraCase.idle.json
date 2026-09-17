@@ -1,0 +1,12 @@
+{
+  "clip": "idle",
+  "slug": "ElaraCase",
+  "display": "Elara Case",
+  "playerOnly": true,
+  "metalException": true,
+  "pose": "a_pose",
+  "breatheRate": 2.07,
+  "breatheAmp": 0.021,
+  "sway": 0.015,
+  "scalePulse": 0.016
+}

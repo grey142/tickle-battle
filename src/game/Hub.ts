@@ -104,7 +104,9 @@ export class Hub {
 
     const stat = root.querySelector("#statline");
     if (stat) {
-      stat.textContent = `Elara Case  ·  Lv ${save.level}  ·  ${save.coins} coins  ·  ${save.unspent} skill pts  ·  ${w.name} / ${a.name}`;
+      const need = save.level < 10 ? 100 + 20 * (save.level - 1) : 0;
+      const xpBit = save.level >= 10 ? "XP capped" : `XP ${save.xp ?? 0}/${need}`;
+      stat.textContent = `Elara Case  ·  Lv ${save.level}  ·  ${xpBit}  ·  ${save.coins} coins  ·  ${save.unspent} skill pts  ·  ${w.name} / ${a.name}`;
     }
 
     this.syncTabs(root);

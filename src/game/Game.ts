@@ -1365,11 +1365,19 @@ export class Game {
 
   private commitMatchRewards(): boolean {
     this.save.coins += this.coinsEarned;
-    const gainedLevel = this.save.level < 10;
-    if (gainedLevel) {
+    // Amateur XP curve: need 100 + 20*(level-1) to advance; flat after 10.
+    const xpGain = Math.max(15, this.coinsEarned * 8 + (this.result === "Victory" ? 40 : 10));
+    this.save.xp = (this.save.xp ?? 0) + xpGain;
+    let gainedLevel = false;
+    while (this.save.level < 10) {
+      const need = 100 + 20 * (this.save.level - 1);
+      if (this.save.xp < need) break;
+      this.save.xp -= need;
       this.save.level += 1;
       this.save.unspent += 1;
+      gainedLevel = true;
     }
+    if (this.save.level >= 10) this.save.xp = 0;
     this.persistSave();
     return gainedLevel;
   }
@@ -1853,9 +1861,12 @@ export class Game {
     this.hudEls.hud.style.display = "none";
     const copy = this.overlay.querySelector("#result-copy");
     if (copy) {
+      const need = this.save.level < 10 ? 100 + 20 * (this.save.level - 1) : 0;
       const xp = gainedLevel
-        ? `Level ${this.save.level}  ·  +1 skill point (${this.save.unspent} unspent)`
-        : `Level 10 cap  ·  ${this.save.unspent} unspent`;
+        ? `Level ${this.save.level}  ·  +1 skill point (${this.save.unspent} unspent)  ·  XP ${this.save.xp}/${need || "—"}`
+        : this.save.level >= 10
+          ? `Level 10 cap  ·  ${this.save.unspent} unspent`
+          : `Level ${this.save.level}  ·  XP ${this.save.xp}/${need}  ·  ${this.save.unspent} unspent`;
       copy.innerHTML = `<h1>${this.result}</h1>
         <p class="sub">${sub}</p>
         <ul class="payouts">${this.payoutItems()}</ul>

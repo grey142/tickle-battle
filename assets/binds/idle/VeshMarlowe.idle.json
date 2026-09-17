@@ -1,0 +1,12 @@
+{
+  "clip": "idle",
+  "slug": "VeshMarlowe",
+  "display": "Vesh Marlowe",
+  "playerOnly": false,
+  "metalException": false,
+  "pose": "a_pose",
+  "breatheRate": 2.22,
+  "breatheAmp": 0.026,
+  "sway": 0.021,
+  "scalePulse": 0.012
+}

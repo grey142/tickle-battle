@@ -4,6 +4,7 @@ import type { Occupancy, Role } from "./types";
 import { stillUrlFor } from "./stills";
 import { lookFromStill } from "./lookFromStill";
 import { Humanoid } from "./Humanoid";
+import { idleBindForSlug } from "./idleBind";
 import { weaponById, armorById } from "./gear";
 
 let uid = 0;
@@ -241,8 +242,15 @@ export class Fighter {
       y = BILL_Y * 0.55;
       rot = 0.35;
     } else {
-      const b = Math.sin(t * 2.2) * 0.02;
+      // A-pose idle bind — per-look breathe / sway (free, vanish reappear, spawn, etc.)
+      const idle = idleBindForSlug(this.slug);
+      const b = Math.sin(t * idle.breatheRate) * idle.breatheAmp;
+      const s = Math.sin(t * idle.breatheRate * 0.65) * idle.sway;
+      w = BILL_W * (1 + Math.sin(t * idle.breatheRate) * idle.scalePulse);
+      h = BILL_H * (1 + b * 0.5);
+      x = s;
       y = BILL_Y + b;
+      rot = s * 0.4;
     }
     bill.scale.set(w, h, 1);
     bill.position.set(x, y, 0);

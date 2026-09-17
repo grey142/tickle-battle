@@ -1,0 +1,12 @@
+{
+  "clip": "idle",
+  "slug": "NimCortez",
+  "display": "Nim Cortez",
+  "playerOnly": false,
+  "metalException": false,
+  "pose": "a_pose",
+  "breatheRate": 2.1,
+  "breatheAmp": 0.027,
+  "sway": 0.018,
+  "scalePulse": 0.019
+}

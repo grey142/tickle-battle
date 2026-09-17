@@ -1,0 +1,12 @@
+{
+  "clip": "idle",
+  "slug": "LyraFinch",
+  "display": "Lyra Finch",
+  "playerOnly": false,
+  "metalException": false,
+  "pose": "a_pose",
+  "breatheRate": 2.12,
+  "breatheAmp": 0.028,
+  "sway": 0.022,
+  "scalePulse": 0.013
+}

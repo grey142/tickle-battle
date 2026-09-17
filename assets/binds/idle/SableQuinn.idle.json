@@ -1,0 +1,12 @@
+{
+  "clip": "idle",
+  "slug": "SableQuinn",
+  "display": "Sable Quinn",
+  "playerOnly": false,
+  "metalException": false,
+  "pose": "a_pose",
+  "breatheRate": 2.33,
+  "breatheAmp": 0.026,
+  "sway": 0.013,
+  "scalePulse": 0.013
+}
