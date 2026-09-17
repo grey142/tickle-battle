@@ -8,6 +8,12 @@ const AMBER = 0xd4a25a;
 
 export type PlazaDoor = "home" | "shop" | "arena";
 
+type Box = { minx: number; maxx: number; minz: number; maxz: number };
+
+const CAPSULE_R = 0.42;
+/** Walk-up range to interact with a door. */
+export const PLAZA_DOOR_REACH = 2.85;
+
 /** City-hub backdrop (same mesh as the overlay rooms; not a second map). */
 export class HubPlaza {
   group = new THREE.Group();
@@ -24,6 +30,8 @@ export class HubPlaza {
   private ndc = new THREE.Vector2();
   private hover: PlazaDoor | null = null;
   private doorGroups = new Map<PlazaDoor, THREE.Group>();
+  /** Simple XZ blockers for walkable plaza (walls, columns, low props). */
+  private walls: Box[] = [];
 
   constructor() {
     this.matMetal = new THREE.MeshStandardMaterial({
@@ -133,6 +141,86 @@ export class HubPlaza {
     this.addBox(0, 4.15, 3.5, 26, 0.22, 0.45, this.matDark, false);
 
     this.addBiolume();
+    this.buildColliders();
+  }
+
+  /** Nearest door within reach, or null. */
+  nearDoor(x: number, z: number, reach = PLAZA_DOOR_REACH): PlazaDoor | null {
+    let best: PlazaDoor | null = null;
+    let bestD = reach;
+    for (const id of ["home", "shop", "arena"] as const) {
+      const d = this.doors[id];
+      const dist = Math.hypot(x - d.x, z - d.z);
+      if (dist < bestD) {
+        bestD = dist;
+        best = id;
+      }
+    }
+    return best;
+  }
+
+  /** Capsule slide against plaza walls + outer bounds (flat floor y=0). */
+  resolve(x: number, z: number, radius = CAPSULE_R): { x: number; z: number } {
+    let px = x;
+    let pz = z;
+    for (let i = 0; i < 4; i++) {
+      for (const w of this.walls) {
+        const insideX = px > w.minx - radius && px < w.maxx + radius;
+        const insideZ = pz > w.minz - radius && pz < w.maxz + radius;
+        if (insideX && insideZ) {
+          const left = px - (w.minx - radius);
+          const right = w.maxx + radius - px;
+          const down = pz - (w.minz - radius);
+          const up = w.maxz + radius - pz;
+          const m = Math.min(left, right, down, up);
+          if (m === left) px = w.minx - radius - 0.001;
+          else if (m === right) px = w.maxx + radius + 0.001;
+          else if (m === down) pz = w.minz - radius - 0.001;
+          else pz = w.maxz + radius + 0.001;
+        }
+      }
+    }
+    px = THREE.MathUtils.clamp(px, -13.2, 13.2);
+    pz = THREE.MathUtils.clamp(pz, -10.2, 10.2);
+    return { x: px, z: pz };
+  }
+
+  private addWall(minx: number, maxx: number, minz: number, maxz: number) {
+    this.walls.push({ minx, maxx, minz, maxz });
+  }
+
+  private buildColliders() {
+    this.walls = [];
+    const thick = 0.8;
+    const halfW = 14;
+    const halfD = 11;
+    const doorW = 2.4;
+    const half = doorW / 2;
+    const zFront = halfD - thick / 2;
+    const zBack = -(halfD - thick / 2);
+    const xLeft = -(halfW - thick / 2);
+    const xRight = halfW - thick / 2;
+    const frontLen = halfW - half;
+    const sideLen = halfD - half;
+
+    this.addWall(-halfW, halfW, zBack - thick / 2, zBack + thick / 2);
+    this.addWall(-(half + frontLen), -half, zFront - thick / 2, zFront + thick / 2);
+    this.addWall(half, half + frontLen, zFront - thick / 2, zFront + thick / 2);
+    this.addWall(xLeft - thick / 2, xLeft + thick / 2, -(half + sideLen), -half);
+    this.addWall(xLeft - thick / 2, xLeft + thick / 2, half, half + sideLen);
+    this.addWall(xRight - thick / 2, xRight + thick / 2, -(half + sideLen), -half);
+    this.addWall(xRight - thick / 2, xRight + thick / 2, half, half + sideLen);
+    for (const [x, z] of [
+      [-6.2, -5.2],
+      [6.2, -5.2],
+      [-6.2, 5.2],
+      [6.2, 5.2],
+    ] as const) {
+      this.addWall(x - 0.45, x + 0.45, z - 0.45, z + 0.45);
+    }
+    this.addWall(-4.2, 4.2, -6.7, -6.1);
+    this.addWall(-6.6, -3.0, 2.9, 3.5);
+    this.addWall(3.0, 6.6, 2.9, 3.5);
   }
 
   pickDoor(

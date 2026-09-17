@@ -399,7 +399,7 @@ export class Hub {
     const el = this.root?.querySelector("#hub-pad-hint");
     if (!el) return;
     if (this.room === "plaza") {
-      el.textContent = "Xbox: A / Menu Play · X Home · Y Shop · RB Arena · B back";
+      el.textContent = "Xbox: LS walk plaza · A at Arena = Team Quick · X Home · Y Shop · RB modes · B back";
       return;
     }
     const where =
@@ -732,10 +732,10 @@ function shellHtml(includeElara: boolean): string {
 
   return `
   <button type="button" class="cta ghost hub-back" id="hub-back" data-hub="hub-back" hidden>Back</button>
-  <p class="statline" id="hub-pad-hint">Xbox: A / Menu Play · X Home · Y Shop · RB Arena · B back</p>
+  <p class="statline" id="hub-pad-hint">Xbox: LS walk plaza · A at Arena = Team Quick · X Home · Y Shop · RB modes · B back</p>
   <div id="hub-plaza" class="hub-panel on">
     <h1>Tickle Battle</h1>
-    <p class="sub">Amateur Team Quick — 6v6, one life, last team standing. You play Elara Case. AI fill is Amateur 12 (metal-free).</p>
+    <p class="sub">Walk the 3D plaza (WASD / LS). Arena door starts Amateur Team Quick. Home / Shop doors open rooms. AI fill is Amateur 12 (metal-free).</p>
     ${portrait}
     <div id="roster" class="roster"></div>
     <div class="row hub-doors">
@@ -764,7 +764,7 @@ function shellHtml(includeElara: boolean): string {
           <span>Laptop 1 / 2 / 3 rooms · arrows in rooms</span>
       </div>
     </div>
-    <p class="hint">Click the 3D hall doors, or the buttons. Laptop: click canvas to look, WASD move, T / Space tickle, E escape, Q release. Tickle starts when you are behind an enemy or pack 2+ touches.<br/>Phone: left stick, drag right to look, Tickle / Escape.</p>
+    <p class="hint">Walk the plaza: click canvas to look, WASD / LS move. Walk up to Arena (or click its door) for Team Quick; Home / Shop doors open overlay rooms. Match: T / Space tickle, E escape, Q release — rear or pack 2+ starts the tickle.<br/>Phone: left stick, drag right to look, Tickle / Escape.</p>
     <p class="coming">Pro / Legends / story — not in this slice</p>
   </div>
 
