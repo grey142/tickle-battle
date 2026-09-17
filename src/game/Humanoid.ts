@@ -15,7 +15,14 @@ export interface TicklePoseParams {
   weaponWag: number;
 }
 
-export type PoseMods = { rate: number; amp: number; lean: number } | TicklePoseParams;
+export interface LaughPoseParams {
+  rate: number;
+  amp: number;
+  lean: number;
+  blend?: { jaw: number; cheek: number; eye: number; brow: number };
+}
+
+export type PoseMods = LaughPoseParams | TicklePoseParams;
 
 type Joint = THREE.Group;
 
@@ -251,6 +258,9 @@ export class Humanoid {
     this.rKnee.rotation.set(0.08, 0, 0);
     this.chest.position.y = 0.22;
     this.root.position.y = 0;
+    this.head.scale.set(1, 1, 1);
+    this.face.scale.set(1, 1, 1);
+    this.face.position.set(0, 0.02, -0.128);
 
     if (clip === "idle") {
       const b = Math.sin(t * 2.2) * 0.015;
@@ -309,24 +319,36 @@ export class Humanoid {
       return;
     }
     if (clip === "squirm") {
-      // Production laugh/squirm: stamina-driven bind + stronger readable blendshape-like motion.
-      const loco = mods as { rate: number; amp: number; lean: number } | undefined;
+      // Production laugh/squirm: joint squirm + face-card blendshapes (jaw/cheek/eye/brow).
+      const loco = mods as LaughPoseParams | undefined;
       const rate = loco?.rate ?? 14;
       const amp = (loco?.amp ?? 0.1) * 1.35;
       const lean = (loco?.lean ?? 0.12) * 1.25;
+      const blend = loco?.blend;
+      const jaw = blend?.jaw ?? 0.45;
+      const cheek = blend?.cheek ?? 0.3;
+      const eye = blend?.eye ?? 0.4;
+      const brow = blend?.brow ?? 0.2;
       const s = Math.sin(t * rate);
       const s2 = Math.sin(t * rate * 0.68);
       const s3 = Math.sin(t * rate * 1.41);
       const s4 = Math.sin(t * rate * 2.15);
+      const laughPulse = 0.55 + 0.45 * Math.abs(s4);
       this.hips.rotation.z = s * amp * 1.15;
       this.hips.rotation.y = s3 * amp * 0.45;
       this.spine.rotation.set(0.22 + s2 * lean * 0.85, s3 * lean * 0.35, s * lean * 1.35);
       this.chest.rotation.z = -s * amp * 1.05;
       this.chest.rotation.x = Math.abs(s2) * lean * 0.4;
       this.chest.rotation.y = s4 * amp * 0.55;
-      // Head/neck as stand-in blendshapes: laugh bob + side squirm.
       this.neck.rotation.set(s2 * lean * 0.4, s * lean * 0.55, s3 * amp * 0.7);
       this.head.rotation.set(0.32 + s2 * lean * 1.05 + Math.abs(s4) * 0.06, s * lean * 1.15, s3 * lean * 0.45);
+      // Soft head morph: cheek puff widens skull slightly.
+      this.head.scale.set(1 + cheek * 0.12 * laughPulse, 1 + jaw * 0.06, 1 + cheek * 0.04);
+      // Face card blendshapes (no morph target mesh on Amateur capsule kit).
+      const jawOpen = jaw * laughPulse;
+      const eyeSquint = eye * (0.65 + 0.35 * Math.abs(s2));
+      this.face.scale.set(1 + cheek * 0.08, 1 + jawOpen * 0.55 - eyeSquint * 0.22, 1);
+      this.face.position.set(0, 0.02 + brow * 0.03 - jawOpen * 0.02, -0.128);
       this.lShoulder.rotation.set(-0.48 + s2 * amp * 0.8, 0.08, 0.62 + s * amp * 2.4);
       this.rShoulder.rotation.set(-0.42 - s2 * amp * 0.8, -0.08, -0.62 - s * amp * 2.4);
       this.lElbow.rotation.x = 0.72 + s * amp * 0.9;

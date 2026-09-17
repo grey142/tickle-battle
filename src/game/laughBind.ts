@@ -2,6 +2,17 @@ import { lookById, type LookDef } from "./stills";
 
 export type LaughStageId = "s0" | "s1" | "s2" | "s3";
 
+export interface LaughBlend {
+  /** 0–1 jaw open / mouth stretch on the face card. */
+  jaw: number;
+  /** 0–1 cheek puff (head soft-width). */
+  cheek: number;
+  /** 0–1 eye squint (face card squash). */
+  eye: number;
+  /** 0–1 brow lift (face card Y). */
+  brow: number;
+}
+
 export interface LaughStageParams {
   staminaMin: number;
   rate: number;
@@ -11,6 +22,8 @@ export interface LaughStageParams {
   billRate: number;
   /** Optional relative path under assets/binds/laugh/ (e.g. stages/Slug_s1.jpg). */
   still?: string;
+  /** Face-card blendshape weights beyond joint squirm. */
+  blend?: LaughBlend;
 }
 
 export interface LaughBind {
@@ -43,10 +56,10 @@ const FALLBACK: LaughBind = {
   slug: "default",
   display: "Default",
   stages: {
-    s0: { staminaMin: 70, rate: 8, amp: 0.04, lean: 0.05, billShake: 0.03, billRate: 10 },
-    s1: { staminaMin: 40, rate: 11, amp: 0.07, lean: 0.09, billShake: 0.06, billRate: 13 },
-    s2: { staminaMin: 15, rate: 14, amp: 0.1, lean: 0.12, billShake: 0.09, billRate: 16 },
-    s3: { staminaMin: 0, rate: 16, amp: 0.13, lean: 0.15, billShake: 0.12, billRate: 19 },
+    s0: { staminaMin: 70, rate: 8, amp: 0.04, lean: 0.05, billShake: 0.03, billRate: 10, blend: { jaw: 0.22, cheek: 0.12, eye: 0.18, brow: 0.08 } },
+    s1: { staminaMin: 40, rate: 11, amp: 0.07, lean: 0.09, billShake: 0.06, billRate: 13, blend: { jaw: 0.42, cheek: 0.28, eye: 0.38, brow: 0.16 } },
+    s2: { staminaMin: 15, rate: 14, amp: 0.1, lean: 0.12, billShake: 0.09, billRate: 16, blend: { jaw: 0.68, cheek: 0.48, eye: 0.62, brow: 0.28 } },
+    s3: { staminaMin: 0, rate: 16, amp: 0.13, lean: 0.15, billShake: 0.12, billRate: 19, blend: { jaw: 0.92, cheek: 0.72, eye: 0.88, brow: 0.42 } },
   },
   hubPreviewMs: 2000,
 };
