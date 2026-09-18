@@ -7,62 +7,62 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 8.662500000000001,
-      "amp": 0.0549,
-      "lean": 0.06599999999999999,
-      "billShake": 0.0431,
-      "billRate": 13.299999999999999,
+      "rate": 9.529,
+      "amp": 0.0615,
+      "lean": 0.0726,
+      "billShake": 0.0483,
+      "billRate": 14.9,
       "still": "stages/TorenBlake_s0.jpg",
       "blend": {
-        "jaw": 0.299,
-        "cheek": 0.162,
-        "eye": 0.244,
-        "brow": 0.109
+        "jaw": 0.344,
+        "cheek": 0.186,
+        "eye": 0.281,
+        "brow": 0.125
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 12.600000000000001,
-      "amp": 0.0915,
-      "lean": 0.11549999999999998,
-      "billShake": 0.0862,
-      "billRate": 17.1,
+      "rate": 13.86,
+      "amp": 0.1025,
+      "lean": 0.127,
+      "billShake": 0.0965,
+      "billRate": 19.15,
       "still": "stages/TorenBlake_s1.jpg",
       "blend": {
-        "jaw": 0.541,
-        "cheek": 0.361,
-        "eye": 0.491,
-        "brow": 0.206
+        "jaw": 0.622,
+        "cheek": 0.415,
+        "eye": 0.565,
+        "brow": 0.237
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 15.75,
-      "amp": 0.122,
-      "lean": 0.16499999999999998,
-      "billShake": 0.1232,
-      "billRate": 19,
+      "rate": 17.325,
+      "amp": 0.1366,
+      "lean": 0.1815,
+      "billShake": 0.138,
+      "billRate": 21.28,
       "still": "stages/TorenBlake_s2.jpg",
       "blend": {
-        "jaw": 0.904,
-        "cheek": 0.638,
-        "eye": 0.824,
-        "brow": 0.373
+        "jaw": 1.0,
+        "cheek": 0.734,
+        "eye": 0.948,
+        "brow": 0.429
       }
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 18.112499999999997,
-      "amp": 0.1525,
-      "lean": 0.19799999999999998,
-      "billShake": 0.1663,
-      "billRate": 22.8,
+      "rate": 19.924,
+      "amp": 0.1708,
+      "lean": 0.2178,
+      "billShake": 0.1863,
+      "billRate": 25.54,
       "still": "stages/TorenBlake_s3.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.954,
+        "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.557
+        "brow": 0.641
       }
     }
   },
@@ -71,6 +71,7 @@
     "frames/TorenBlake_f0.jpg",
     "frames/TorenBlake_f1.jpg",
     "frames/TorenBlake_f2.jpg",
-    "frames/TorenBlake_f3.jpg"
+    "frames/TorenBlake_f3.jpg",
+    "frames/TorenBlake_f4.jpg"
   ]
 }

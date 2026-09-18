@@ -7,62 +7,62 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 8.085,
-      "amp": 0.0477,
-      "lean": 0.048,
-      "billShake": 0.0314,
-      "billRate": 11.899999999999999,
+      "rate": 8.894,
+      "amp": 0.0534,
+      "lean": 0.0528,
+      "billShake": 0.0352,
+      "billRate": 13.33,
       "still": "stages/BriarKnox_s0.jpg",
       "blend": {
-        "jaw": 0.292,
-        "cheek": 0.159,
-        "eye": 0.24,
-        "brow": 0.105
+        "jaw": 0.336,
+        "cheek": 0.183,
+        "eye": 0.276,
+        "brow": 0.121
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 11.76,
-      "amp": 0.0795,
-      "lean": 0.08399999999999999,
-      "billShake": 0.0627,
-      "billRate": 15.3,
+      "rate": 12.936,
+      "amp": 0.089,
+      "lean": 0.0924,
+      "billShake": 0.0702,
+      "billRate": 17.14,
       "still": "stages/BriarKnox_s1.jpg",
       "blend": {
-        "jaw": 0.591,
-        "cheek": 0.395,
-        "eye": 0.535,
-        "brow": 0.225
+        "jaw": 0.68,
+        "cheek": 0.454,
+        "eye": 0.615,
+        "brow": 0.259
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 14.7,
-      "amp": 0.106,
-      "lean": 0.12,
-      "billShake": 0.0896,
-      "billRate": 17,
+      "rate": 16.17,
+      "amp": 0.1187,
+      "lean": 0.132,
+      "billShake": 0.1004,
+      "billRate": 19.04,
       "still": "stages/BriarKnox_s2.jpg",
       "blend": {
-        "jaw": 0.979,
-        "cheek": 0.69,
-        "eye": 0.892,
-        "brow": 0.403
+        "jaw": 1.0,
+        "cheek": 0.793,
+        "eye": 1.0,
+        "brow": 0.463
       }
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 16.904999999999998,
-      "amp": 0.1325,
-      "lean": 0.144,
-      "billShake": 0.121,
-      "billRate": 20.4,
+      "rate": 18.595,
+      "amp": 0.1484,
+      "lean": 0.1584,
+      "billShake": 0.1355,
+      "billRate": 22.85,
       "still": "stages/BriarKnox_s3.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.98,
+        "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.599
+        "brow": 0.689
       }
     }
   },
@@ -71,6 +71,7 @@
     "frames/BriarKnox_f0.jpg",
     "frames/BriarKnox_f1.jpg",
     "frames/BriarKnox_f2.jpg",
-    "frames/BriarKnox_f3.jpg"
+    "frames/BriarKnox_f3.jpg",
+    "frames/BriarKnox_f4.jpg"
   ]
 }

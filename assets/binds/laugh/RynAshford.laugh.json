@@ -7,62 +7,62 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 8.085,
-      "amp": 0.0549,
-      "lean": 0.048,
-      "billShake": 0.047,
-      "billRate": 13.299999999999999,
+      "rate": 8.894,
+      "amp": 0.0615,
+      "lean": 0.0528,
+      "billShake": 0.0526,
+      "billRate": 14.9,
       "still": "stages/RynAshford_s0.jpg",
       "blend": {
-        "jaw": 0.292,
-        "cheek": 0.159,
-        "eye": 0.24,
-        "brow": 0.105
+        "jaw": 0.336,
+        "cheek": 0.183,
+        "eye": 0.276,
+        "brow": 0.121
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 11.76,
-      "amp": 0.0915,
-      "lean": 0.08399999999999999,
-      "billShake": 0.0941,
-      "billRate": 17.1,
+      "rate": 12.936,
+      "amp": 0.1025,
+      "lean": 0.0924,
+      "billShake": 0.1054,
+      "billRate": 19.15,
       "still": "stages/RynAshford_s1.jpg",
       "blend": {
-        "jaw": 0.591,
-        "cheek": 0.395,
-        "eye": 0.535,
-        "brow": 0.225
+        "jaw": 0.68,
+        "cheek": 0.454,
+        "eye": 0.615,
+        "brow": 0.259
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 14.7,
-      "amp": 0.122,
-      "lean": 0.12,
-      "billShake": 0.1344,
-      "billRate": 19,
+      "rate": 16.17,
+      "amp": 0.1366,
+      "lean": 0.132,
+      "billShake": 0.1505,
+      "billRate": 21.28,
       "still": "stages/RynAshford_s2.jpg",
       "blend": {
-        "jaw": 0.979,
-        "cheek": 0.69,
-        "eye": 0.892,
-        "brow": 0.403
+        "jaw": 1.0,
+        "cheek": 0.793,
+        "eye": 1.0,
+        "brow": 0.463
       }
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 16.904999999999998,
-      "amp": 0.1525,
-      "lean": 0.144,
-      "billShake": 0.18,
-      "billRate": 22.8,
+      "rate": 18.595,
+      "amp": 0.1708,
+      "lean": 0.1584,
+      "billShake": 0.2016,
+      "billRate": 25.54,
       "still": "stages/RynAshford_s3.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.98,
+        "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.599
+        "brow": 0.689
       }
     }
   },
@@ -71,6 +71,7 @@
     "frames/RynAshford_f0.jpg",
     "frames/RynAshford_f1.jpg",
     "frames/RynAshford_f2.jpg",
-    "frames/RynAshford_f3.jpg"
+    "frames/RynAshford_f3.jpg",
+    "frames/RynAshford_f4.jpg"
   ]
 }

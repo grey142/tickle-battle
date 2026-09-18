@@ -7,62 +7,62 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 8.47,
-      "amp": 0.0405,
-      "lean": 0.054000000000000006,
-      "billShake": 0.0353,
-      "billRate": 10.5,
+      "rate": 9.317,
+      "amp": 0.0454,
+      "lean": 0.0594,
+      "billShake": 0.0395,
+      "billRate": 11.76,
       "still": "stages/ElaraCase_s0.jpg",
       "blend": {
-        "jaw": 0.296,
-        "cheek": 0.161,
-        "eye": 0.242,
-        "brow": 0.109
+        "jaw": 0.34,
+        "cheek": 0.185,
+        "eye": 0.278,
+        "brow": 0.125
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 12.32,
-      "amp": 0.0675,
-      "lean": 0.0945,
-      "billShake": 0.0706,
-      "billRate": 13.5,
+      "rate": 13.552,
+      "amp": 0.0756,
+      "lean": 0.104,
+      "billShake": 0.0791,
+      "billRate": 15.12,
       "still": "stages/ElaraCase_s1.jpg",
       "blend": {
-        "jaw": 0.535,
-        "cheek": 0.356,
-        "eye": 0.484,
-        "brow": 0.204
+        "jaw": 0.615,
+        "cheek": 0.409,
+        "eye": 0.557,
+        "brow": 0.235
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 15.4,
-      "amp": 0.09,
-      "lean": 0.135,
-      "billShake": 0.1008,
-      "billRate": 15,
+      "rate": 16.94,
+      "amp": 0.1008,
+      "lean": 0.1485,
+      "billShake": 0.1129,
+      "billRate": 16.8,
       "still": "stages/ElaraCase_s2.jpg",
       "blend": {
-        "jaw": 0.89,
-        "cheek": 0.628,
-        "eye": 0.812,
-        "brow": 0.367
+        "jaw": 1.0,
+        "cheek": 0.722,
+        "eye": 0.934,
+        "brow": 0.422
       }
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 17.709999999999997,
-      "amp": 0.11249999999999999,
-      "lean": 0.162,
-      "billShake": 0.1361,
-      "billRate": 18.0,
+      "rate": 19.481,
+      "amp": 0.126,
+      "lean": 0.1782,
+      "billShake": 0.1524,
+      "billRate": 20.16,
       "still": "stages/ElaraCase_s3.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.98,
+        "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.619
+        "brow": 0.712
       }
     }
   },
@@ -71,6 +71,7 @@
     "frames/ElaraCase_f0.jpg",
     "frames/ElaraCase_f1.jpg",
     "frames/ElaraCase_f2.jpg",
-    "frames/ElaraCase_f3.jpg"
+    "frames/ElaraCase_f3.jpg",
+    "frames/ElaraCase_f4.jpg"
   ]
 }

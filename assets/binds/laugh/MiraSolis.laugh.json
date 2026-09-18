@@ -7,62 +7,62 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 8.662500000000001,
-      "amp": 0.0405,
-      "lean": 0.06599999999999999,
-      "billShake": 0.0431,
-      "billRate": 10.5,
+      "rate": 9.529,
+      "amp": 0.0454,
+      "lean": 0.0726,
+      "billShake": 0.0483,
+      "billRate": 11.76,
       "still": "stages/MiraSolis_s0.jpg",
       "blend": {
-        "jaw": 0.299,
-        "cheek": 0.162,
-        "eye": 0.244,
-        "brow": 0.109
+        "jaw": 0.344,
+        "cheek": 0.186,
+        "eye": 0.281,
+        "brow": 0.125
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 12.600000000000001,
-      "amp": 0.0675,
-      "lean": 0.11549999999999998,
-      "billShake": 0.0862,
-      "billRate": 13.5,
+      "rate": 13.86,
+      "amp": 0.0756,
+      "lean": 0.127,
+      "billShake": 0.0965,
+      "billRate": 15.12,
       "still": "stages/MiraSolis_s1.jpg",
       "blend": {
-        "jaw": 0.541,
-        "cheek": 0.361,
-        "eye": 0.491,
-        "brow": 0.206
+        "jaw": 0.622,
+        "cheek": 0.415,
+        "eye": 0.565,
+        "brow": 0.237
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 15.75,
-      "amp": 0.09,
-      "lean": 0.16499999999999998,
-      "billShake": 0.1232,
-      "billRate": 15,
+      "rate": 17.325,
+      "amp": 0.1008,
+      "lean": 0.1815,
+      "billShake": 0.138,
+      "billRate": 16.8,
       "still": "stages/MiraSolis_s2.jpg",
       "blend": {
-        "jaw": 0.904,
-        "cheek": 0.638,
-        "eye": 0.824,
-        "brow": 0.373
+        "jaw": 1.0,
+        "cheek": 0.734,
+        "eye": 0.948,
+        "brow": 0.429
       }
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 18.112499999999997,
-      "amp": 0.11249999999999999,
-      "lean": 0.19799999999999998,
-      "billShake": 0.1663,
-      "billRate": 18.0,
+      "rate": 19.924,
+      "amp": 0.126,
+      "lean": 0.2178,
+      "billShake": 0.1863,
+      "billRate": 20.16,
       "still": "stages/MiraSolis_s3.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.954,
+        "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.557
+        "brow": 0.641
       }
     }
   },
@@ -71,6 +71,7 @@
     "frames/MiraSolis_f0.jpg",
     "frames/MiraSolis_f1.jpg",
     "frames/MiraSolis_f2.jpg",
-    "frames/MiraSolis_f3.jpg"
+    "frames/MiraSolis_f3.jpg",
+    "frames/MiraSolis_f4.jpg"
   ]
 }

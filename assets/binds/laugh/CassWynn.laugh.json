@@ -7,62 +7,62 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 8.277500000000002,
-      "amp": 0.0477,
-      "lean": 0.06,
-      "billShake": 0.0314,
-      "billRate": 11.899999999999999,
+      "rate": 9.105,
+      "amp": 0.0534,
+      "lean": 0.066,
+      "billShake": 0.0352,
+      "billRate": 13.33,
       "still": "stages/CassWynn_s0.jpg",
       "blend": {
-        "jaw": 0.293,
-        "cheek": 0.16,
-        "eye": 0.241,
-        "brow": 0.108
+        "jaw": 0.337,
+        "cheek": 0.184,
+        "eye": 0.277,
+        "brow": 0.124
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 12.040000000000001,
-      "amp": 0.0795,
-      "lean": 0.105,
-      "billShake": 0.0627,
-      "billRate": 15.3,
+      "rate": 13.244,
+      "amp": 0.089,
+      "lean": 0.1155,
+      "billShake": 0.0702,
+      "billRate": 17.14,
       "still": "stages/CassWynn_s1.jpg",
       "blend": {
-        "jaw": 0.529,
-        "cheek": 0.353,
-        "eye": 0.478,
-        "brow": 0.2
+        "jaw": 0.608,
+        "cheek": 0.406,
+        "eye": 0.55,
+        "brow": 0.23
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 15.05,
-      "amp": 0.106,
-      "lean": 0.15,
-      "billShake": 0.0896,
-      "billRate": 17,
+      "rate": 16.555,
+      "amp": 0.1187,
+      "lean": 0.165,
+      "billShake": 0.1004,
+      "billRate": 19.04,
       "still": "stages/CassWynn_s2.jpg",
       "blend": {
-        "jaw": 0.878,
-        "cheek": 0.62,
-        "eye": 0.801,
-        "brow": 0.362
+        "jaw": 1.0,
+        "cheek": 0.713,
+        "eye": 0.921,
+        "brow": 0.416
       }
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 17.3075,
-      "amp": 0.1325,
-      "lean": 0.18,
-      "billShake": 0.121,
-      "billRate": 20.4,
+      "rate": 19.038,
+      "amp": 0.1484,
+      "lean": 0.198,
+      "billShake": 0.1355,
+      "billRate": 22.85,
       "still": "stages/CassWynn_s3.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.98,
+        "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.609
+        "brow": 0.7
       }
     }
   },
@@ -71,6 +71,7 @@
     "frames/CassWynn_f0.jpg",
     "frames/CassWynn_f1.jpg",
     "frames/CassWynn_f2.jpg",
-    "frames/CassWynn_f3.jpg"
+    "frames/CassWynn_f3.jpg",
+    "frames/CassWynn_f4.jpg"
   ]
 }

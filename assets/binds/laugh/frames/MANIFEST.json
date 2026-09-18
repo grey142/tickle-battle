@@ -4,13 +4,13 @@
     "f0",
     "f1",
     "f2",
-    "f3"
+    "f3",
+    "f4"
   ],
-  "source": "painterly stage stills s0\u2013s3 reused as production multi-frame cycle",
+  "source": "painterly stage stills reused as production multi-frame cycle; f4 derived from f2/f3 with stronger squash/lean/grade/vignette",
   "characters": [
     "BriarKnox",
     "CassWynn",
-    "ElaraCase",
     "EmberLang",
     "JunoHale",
     "KoraVale",
@@ -20,7 +20,23 @@
     "RynAshford",
     "SableQuinn",
     "TorenBlake",
-    "VeshMarlowe"
+    "VeshMarlowe",
+    "ElaraCase"
   ],
-  "note": "Metal-free Amateur; Elara jewelry exception only. Billboard cycles while ticklee; stamina still drives humanoid rate/amp/lean."
+  "files": [
+    "BriarKnox_f4.jpg",
+    "CassWynn_f4.jpg",
+    "EmberLang_f4.jpg",
+    "JunoHale_f4.jpg",
+    "KoraVale_f4.jpg",
+    "LyraFinch_f4.jpg",
+    "MiraSolis_f4.jpg",
+    "NimCortez_f4.jpg",
+    "RynAshford_f4.jpg",
+    "SableQuinn_f4.jpg",
+    "TorenBlake_f4.jpg",
+    "VeshMarlowe_f4.jpg",
+    "ElaraCase_f4.jpg"
+  ],
+  "note": "Metal-free Amateur; Elara jewelry exception only. Billboard cycles while ticklee; stamina-weighted windows lock low stamina onto f3\u2013f4; stamina drives humanoid rate/amp/lean/blend."
 }
