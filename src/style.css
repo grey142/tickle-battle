@@ -343,11 +343,22 @@ button.hub-item { pointer-events: auto; }
 }
 #shop-note { min-height: 1.2em; margin: 6px 0 8px; }
 @keyframes hub-laugh {
-  0%, 100% { transform: translate(0, 0) rotate(0); }
-  20% { transform: translate(2px, 1px) rotate(-2deg); }
-  40% { transform: translate(-2px, 2px) rotate(2deg); }
-  60% { transform: translate(2px, 0) rotate(-1deg); }
-  80% { transform: translate(-1px, 1px) rotate(1deg); }
+  0%, 100% { transform: translate(0, 0) rotate(0) scale(1, 1); }
+  15% { transform: translate(3px, 2px) rotate(-3deg) scale(1.04, 0.94); }
+  30% { transform: translate(-3px, 3px) rotate(3deg) scale(1.08, 0.9); }
+  45% { transform: translate(2px, 1px) rotate(-2deg) scale(1.05, 0.92); }
+  60% { transform: translate(-2px, 2px) rotate(2deg) scale(1.1, 0.88); }
+  80% { transform: translate(1px, 1px) rotate(-1deg) scale(1.03, 0.96); }
+}
+.look-preview.laughing img {
+  transform-origin: center 70%;
+  animation: hub-laugh-face 2s ease;
+}
+@keyframes hub-laugh-face {
+  0%, 100% { transform: scale(1, 1); }
+  25% { transform: scale(1.06, 0.92); }
+  50% { transform: scale(1.1, 0.86); }
+  75% { transform: scale(1.05, 0.94); }
 }
 .skill-unspent { margin-top: 8px; font-size: 13px; color: #cbbba8; }
 .skill-track { margin: 12px 0; padding: 10px; border: 1px solid #6a5e52; background: #161210; }

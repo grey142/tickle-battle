@@ -10,14 +10,14 @@
       "rate": 8.085,
       "amp": 0.0477,
       "lean": 0.048,
-      "billShake": 0.027999999999999997,
+      "billShake": 0.0314,
       "billRate": 11.899999999999999,
       "still": "stages/BriarKnox_s0.jpg",
       "blend": {
-        "jaw": 0.261,
-        "cheek": 0.142,
-        "eye": 0.214,
-        "brow": 0.094
+        "jaw": 0.292,
+        "cheek": 0.159,
+        "eye": 0.24,
+        "brow": 0.105
       }
     },
     "s1": {
@@ -25,14 +25,14 @@
       "rate": 11.76,
       "amp": 0.0795,
       "lean": 0.08399999999999999,
-      "billShake": 0.055999999999999994,
+      "billShake": 0.0627,
       "billRate": 15.3,
       "still": "stages/BriarKnox_s1.jpg",
       "blend": {
-        "jaw": 0.528,
-        "cheek": 0.353,
-        "eye": 0.478,
-        "brow": 0.201
+        "jaw": 0.591,
+        "cheek": 0.395,
+        "eye": 0.535,
+        "brow": 0.225
       }
     },
     "s2": {
@@ -40,14 +40,14 @@
       "rate": 14.7,
       "amp": 0.106,
       "lean": 0.12,
-      "billShake": 0.08,
+      "billShake": 0.0896,
       "billRate": 17,
       "still": "stages/BriarKnox_s2.jpg",
       "blend": {
-        "jaw": 0.874,
-        "cheek": 0.616,
-        "eye": 0.796,
-        "brow": 0.36
+        "jaw": 0.979,
+        "cheek": 0.69,
+        "eye": 0.892,
+        "brow": 0.403
       }
     },
     "s3": {
@@ -55,14 +55,14 @@
       "rate": 16.904999999999998,
       "amp": 0.1325,
       "lean": 0.144,
-      "billShake": 0.10800000000000001,
+      "billShake": 0.121,
       "billRate": 20.4,
       "still": "stages/BriarKnox_s3.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.918,
+        "cheek": 0.98,
         "eye": 1.0,
-        "brow": 0.535
+        "brow": 0.599
       }
     }
   },

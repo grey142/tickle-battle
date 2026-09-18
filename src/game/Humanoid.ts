@@ -261,6 +261,7 @@ export class Humanoid {
     this.head.scale.set(1, 1, 1);
     this.face.scale.set(1, 1, 1);
     this.face.position.set(0, 0.02, -0.128);
+    this.face.rotation.z = 0;
 
     if (clip === "idle") {
       const b = Math.sin(t * 2.2) * 0.015;
@@ -333,22 +334,35 @@ export class Humanoid {
       const s2 = Math.sin(t * rate * 0.68);
       const s3 = Math.sin(t * rate * 1.41);
       const s4 = Math.sin(t * rate * 2.15);
-      const laughPulse = 0.55 + 0.45 * Math.abs(s4);
-      this.hips.rotation.z = s * amp * 1.15;
-      this.hips.rotation.y = s3 * amp * 0.45;
-      this.spine.rotation.set(0.22 + s2 * lean * 0.85, s3 * lean * 0.35, s * lean * 1.35);
-      this.chest.rotation.z = -s * amp * 1.05;
-      this.chest.rotation.x = Math.abs(s2) * lean * 0.4;
-      this.chest.rotation.y = s4 * amp * 0.55;
-      this.neck.rotation.set(s2 * lean * 0.4, s * lean * 0.55, s3 * amp * 0.7);
-      this.head.rotation.set(0.32 + s2 * lean * 1.05 + Math.abs(s4) * 0.06, s * lean * 1.15, s3 * lean * 0.45);
-      // Soft head morph: cheek puff widens skull slightly (deepened read).
-      this.head.scale.set(1 + cheek * 0.16 * laughPulse, 1 + jaw * 0.09, 1 + cheek * 0.055);
-      // Face card blendshapes (no morph target mesh on Amateur capsule kit).
+      const laughPulse = 0.5 + 0.5 * Math.abs(s4);
+      this.hips.rotation.z = s * amp * 1.2;
+      this.hips.rotation.y = s3 * amp * 0.5;
+      this.spine.rotation.set(0.24 + s2 * lean * 0.95, s3 * lean * 0.4, s * lean * 1.45);
+      this.chest.rotation.z = -s * amp * 1.15;
+      this.chest.rotation.x = Math.abs(s2) * lean * 0.48;
+      this.chest.rotation.y = s4 * amp * 0.62;
+      this.neck.rotation.set(s2 * lean * 0.48, s * lean * 0.62, s3 * amp * 0.8);
+      this.head.rotation.set(0.36 + s2 * lean * 1.15 + Math.abs(s4) * 0.08, s * lean * 1.25, s3 * lean * 0.55);
+      // Soft head morph toward painterly/morph-target feel (capsule kit stand-in).
+      this.head.scale.set(
+        1 + cheek * 0.22 * laughPulse,
+        1 + jaw * 0.14 * laughPulse,
+        1 + cheek * 0.08 + eye * 0.03,
+      );
       const jawOpen = jaw * laughPulse;
-      const eyeSquint = eye * (0.65 + 0.35 * Math.abs(s2));
-      this.face.scale.set(1 + cheek * 0.11, 1 + jawOpen * 0.72 - eyeSquint * 0.28, 1);
-      this.face.position.set(0, 0.02 + brow * 0.045 - jawOpen * 0.028, -0.128);
+      const eyeSquint = eye * (0.55 + 0.45 * Math.abs(s2));
+      // Face card: jaw open stretches Y, cheek widens X, eye squint compresses Y, brow lifts.
+      this.face.scale.set(
+        1 + cheek * 0.16 * laughPulse,
+        1 + jawOpen * 0.95 - eyeSquint * 0.36,
+        1,
+      );
+      this.face.position.set(
+        s * cheek * 0.012,
+        0.02 + brow * 0.06 * laughPulse - jawOpen * 0.04,
+        -0.128,
+      );
+      this.face.rotation.z = s2 * cheek * 0.08;
       this.lShoulder.rotation.set(-0.48 + s2 * amp * 0.8, 0.08, 0.62 + s * amp * 2.4);
       this.rShoulder.rotation.set(-0.42 - s2 * amp * 0.8, -0.08, -0.62 - s * amp * 2.4);
       this.lElbow.rotation.x = 0.72 + s * amp * 0.9;

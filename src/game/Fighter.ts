@@ -581,13 +581,22 @@ export class Fighter {
     } else if (this.occupancy === "ticklee" || (this.occupancy === "nudge" && this.joinOn < 0)) {
       const shake = laugh?.billShake ?? 0.09;
       const rate = laugh?.billRate ?? 16;
+      const blend = (laugh as { blend?: { jaw: number; cheek: number; eye: number; brow: number } } | undefined)?.blend;
+      const jaw = blend?.jaw ?? 0.45;
+      const cheek = blend?.cheek ?? 0.3;
+      const eye = blend?.eye ?? 0.4;
       const s = Math.sin(t * rate);
       const s2 = Math.sin(t * rate * 0.7);
-      w = BILL_W * (1 + s * shake * 0.8);
-      h = BILL_H * (1 - s * shake * 0.35);
-      x = s * shake * 1.1;
-      y = BILL_Y + Math.abs(s2) * shake * 0.55;
-      rot = s2 * shake * 0.9;
+      const s3 = Math.sin(t * rate * 1.35);
+      const pulse = 0.55 + 0.45 * Math.abs(s3);
+      // Billboard morph-feel: cheek widens, jaw opens (taller), eye squint shortens.
+      const morphW = 1 + cheek * 0.12 * pulse + s * shake * 0.85;
+      const morphH = 1 + jaw * 0.14 * pulse - eye * 0.08 * pulse - s * shake * 0.4;
+      w = BILL_W * morphW;
+      h = BILL_H * morphH;
+      x = s * shake * 1.2 + s2 * cheek * 0.04;
+      y = BILL_Y + Math.abs(s2) * shake * 0.65 + jaw * 0.04 * pulse;
+      rot = s2 * shake * 1.05 + s * cheek * 0.05;
     } else if (this.occupancy === "tapped") {
       h = BILL_H * 0.72;
       y = BILL_Y * 0.55;
