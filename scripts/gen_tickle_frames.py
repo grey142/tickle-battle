@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate five-frame painterly tickle stills from metal-free A-poses (Amateur 12 + Elara).
 
-f0 = grounded A-pose; f1–f4 = stronger lean/reach/bob + oil-paint grade so
-intensity-weighted cycle reads distinct (harder windows favor f3/f4).
+f0 = grounded A-pose; f1–f4 = lean/reach/bob + oil-paint grade;
+f3/f4 pushed further past #29 so hard windows read clearly.
 Metal-free Amateur; Elara jewelry exception only.
 Requires: Pillow, numpy
 """
@@ -136,58 +136,59 @@ def vignette(im: Image.Image, amount: float) -> Image.Image:
 
 
 def make_frames(src: Path) -> list[Image.Image]:
-    """Five-frame cycle: f0 calm → f4 peak lean/reach with painterly grade."""
+    """Five-frame cycle: f0 calm → f4 peak; f3/f4 pushed harder past #29."""
     base = Image.open(src).convert("RGB")
 
-    # f0 — grounded A-pose, slight cool grade, light sharpen (readable still)
-    f0 = ImageEnhance.Sharpness(base).enhance(1.08)
-    f0 = ImageEnhance.Contrast(f0).enhance(1.04)
-    f0 = warm_grade(f0, 0.0, cool=0.35)
-    f0 = painterly(f0, 0.18)
+    # f0 — grounded A-pose, cool grade (soft window stays readable)
+    f0 = ImageEnhance.Sharpness(base).enhance(1.06)
+    f0 = ImageEnhance.Contrast(f0).enhance(1.03)
+    f0 = warm_grade(f0, 0.0, cool=0.42)
+    f0 = painterly(f0, 0.14)
 
     # f1 — clear lean/reach (mild intensity)
-    f1 = punch_reach(base, 1.55)
-    f1 = squash_stretch(f1, 1.02, 0.985)
-    f1 = affine_frame(f1, 0.11, -0.028, 1.045, -hshift(base, 0.022), -2.8)
-    f1 = ImageEnhance.Contrast(f1).enhance(1.1)
-    f1 = ImageEnhance.Color(f1).enhance(1.06)
-    f1 = warm_grade(f1, 0.55, cool=0.05)
-    f1 = painterly(f1, 0.42)
-    f1 = vignette(f1, 0.18)
+    f1 = punch_reach(base, 1.65)
+    f1 = squash_stretch(f1, 1.025, 0.982)
+    f1 = affine_frame(f1, 0.118, -0.03, 1.05, -hshift(base, 0.024), -3.0)
+    f1 = ImageEnhance.Contrast(f1).enhance(1.11)
+    f1 = ImageEnhance.Color(f1).enhance(1.07)
+    f1 = warm_grade(f1, 0.5, cool=0.08)
+    f1 = painterly(f1, 0.4)
+    f1 = vignette(f1, 0.16)
 
-    # f2 — opposite lean + deeper reach
-    f2 = punch_reach(base, 2.25)
-    f2 = squash_stretch(f2, 0.97, 1.02)
-    f2 = affine_frame(f2, -0.125, 0.036, 1.07, -hshift(base, 0.038), 3.4)
-    f2 = ImageEnhance.Brightness(f2).enhance(1.045)
-    f2 = ImageEnhance.Contrast(f2).enhance(1.14)
-    f2 = ImageEnhance.Color(f2).enhance(1.1)
-    f2 = warm_grade(f2, 0.95)
-    f2 = painterly(f2, 0.62)
-    f2 = vignette(f2, 0.28)
+    # f2 — opposite lean + deeper reach (mid bridge)
+    f2 = punch_reach(base, 2.35)
+    f2 = squash_stretch(f2, 0.965, 1.025)
+    f2 = affine_frame(f2, -0.132, 0.038, 1.075, -hshift(base, 0.04), 3.6)
+    f2 = ImageEnhance.Brightness(f2).enhance(1.04)
+    f2 = ImageEnhance.Contrast(f2).enhance(1.145)
+    f2 = ImageEnhance.Color(f2).enhance(1.11)
+    f2 = warm_grade(f2, 0.9)
+    f2 = painterly(f2, 0.58)
+    f2 = vignette(f2, 0.26)
 
-    # f3 — peak bob/reach (hard)
-    f3 = punch_reach(base, 2.0)
-    f3 = squash_stretch(f3, 1.04, 0.97)
-    f3 = affine_frame(f3, 0.075, -0.03, 1.09, -hshift(base, 0.052), 1.8)
-    f3 = ImageEnhance.Sharpness(f3).enhance(1.12)
-    f3 = ImageEnhance.Contrast(f3).enhance(1.16)
-    f3 = ImageEnhance.Color(f3).enhance(1.14)
-    f3 = warm_grade(f3, 1.25)
-    f3 = painterly(f3, 0.78)
-    f3 = vignette(f3, 0.36)
+    # f3 — hard: bigger lean/reach/bob + hot grade (distinct from f2)
+    f3 = punch_reach(base, 2.55)
+    f3 = squash_stretch(f3, 1.055, 0.955)
+    f3 = affine_frame(f3, 0.095, -0.038, 1.115, -hshift(base, 0.062), 2.4)
+    f3 = ImageEnhance.Sharpness(f3).enhance(1.18)
+    f3 = ImageEnhance.Contrast(f3).enhance(1.2)
+    f3 = ImageEnhance.Color(f3).enhance(1.18)
+    f3 = ImageEnhance.Brightness(f3).enhance(1.035)
+    f3 = warm_grade(f3, 1.4)
+    f3 = painterly(f3, 0.88)
+    f3 = vignette(f3, 0.44)
 
-    # f4 — alternate peak (opposite shear, hottest grade) for intensity apex
-    f4 = punch_reach(base, 2.45)
-    f4 = squash_stretch(f4, 0.95, 1.035)
-    f4 = affine_frame(f4, -0.08, 0.04, 1.1, -hshift(base, 0.06), -1.6)
-    f4 = ImageEnhance.Brightness(f4).enhance(1.06)
-    f4 = ImageEnhance.Sharpness(f4).enhance(1.16)
-    f4 = ImageEnhance.Contrast(f4).enhance(1.18)
-    f4 = ImageEnhance.Color(f4).enhance(1.18)
-    f4 = warm_grade(f4, 1.45)
-    f4 = painterly(f4, 0.92)
-    f4 = vignette(f4, 0.42)
+    # f4 — peak: opposite shear, hottest grade, max reach (apex read)
+    f4 = punch_reach(base, 2.85)
+    f4 = squash_stretch(f4, 0.93, 1.05)
+    f4 = affine_frame(f4, -0.105, 0.048, 1.135, -hshift(base, 0.072), -2.2)
+    f4 = ImageEnhance.Brightness(f4).enhance(1.08)
+    f4 = ImageEnhance.Sharpness(f4).enhance(1.22)
+    f4 = ImageEnhance.Contrast(f4).enhance(1.24)
+    f4 = ImageEnhance.Color(f4).enhance(1.22)
+    f4 = warm_grade(f4, 1.65)
+    f4 = painterly(f4, 1.05)
+    f4 = vignette(f4, 0.52)
     return [f0, f1, f2, f3, f4]
 
 

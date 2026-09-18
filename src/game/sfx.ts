@@ -79,7 +79,7 @@ function ensureSamplesLoaded(): Promise<void> {
   return loadPromise;
 }
 
-function playBuffer(id: CueId, gain = 0.7): boolean {
+function playBuffer(id: CueId, gain = 0.7, rate = 1): boolean {
   const a = ensure();
   const buf = buffers.get(id);
   if (!a || !buf) return false;
@@ -89,9 +89,10 @@ function playBuffer(id: CueId, gain = 0.7): boolean {
     const g = a.createGain();
     const t0 = a.currentTime;
     src.buffer = buf;
+    src.playbackRate.setValueAtTime(Math.max(0.5, Math.min(2, rate)), t0);
     // Soft attack envelope so sample stingers don't click on start.
     g.gain.setValueAtTime(0.0001, t0);
-    g.gain.exponentialRampToValueAtTime(Math.max(0.0001, gain), t0 + 0.008);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0001, gain), t0 + 0.006);
     src.connect(g);
     g.connect(a.destination);
     src.start(t0);
@@ -102,9 +103,9 @@ function playBuffer(id: CueId, gain = 0.7): boolean {
 }
 
 /** Play sample if loaded; otherwise oscillator fallback. Always kick preload. */
-function playCue(id: CueId, gain: number, fallback: () => void) {
+function playCue(id: CueId, gain: number, fallback: () => void, rate = 1) {
   void ensureSamplesLoaded();
-  if (playBuffer(id, gain)) return;
+  if (playBuffer(id, gain, rate)) return;
   fallback();
 }
 
@@ -174,11 +175,12 @@ export function stingStart() {
   playCue("tickle-lock", 0.75, () => sting(155, 0.09, "square", 0.06));
 }
 
-/** Nearby reappear tell — white ping (`public/sfx/reappear`). */
+/** Nearby reappear tell — bright rising ping (`public/sfx/reappear`). */
 export function stingReappear() {
-  playCue("reappear", 0.68, () => {
-    sting(880, 0.1, "sine", 0.045);
-    sting(1320, 0.12, "triangle", 0.03, 0.04);
+  playCue("reappear", 0.72, () => {
+    sting(520, 0.1, "sine", 0.04, 0, 1180);
+    sting(990, 0.09, "sine", 0.05, 0.02);
+    sting(1485, 0.11, "triangle", 0.032, 0.05);
   });
 }
 
@@ -197,15 +199,32 @@ export function stingEscape() {
 
 /** Falling whoosh-out — vanish (`public/sfx/vanish`). */
 export function stingVanish() {
-  playCue("vanish", 0.72, () => {
-    sting(640, 0.32, "sine", 0.05, 0, 88);
-    sting(420, 0.22, "triangle", 0.03, 0.04, 70);
+  playCue("vanish", 0.76, () => {
+    sting(90, 0.1, "sine", 0.04);
+    sting(640, 0.36, "sine", 0.055, 0.02, 58);
+    sting(420, 0.26, "triangle", 0.035, 0.05, 48);
+    sting(280, 0.2, "sawtooth", 0.02, 0.08, 40);
   });
 }
 
-/** Soft countdown beat — last ~3s spawn / leave / vanish clock (`public/sfx/countdown-tick`). */
-export function stingCountdownTick(gain = 0.48) {
-  playCue("countdown-tick", gain, () => sting(660, 0.07, "sine", Math.min(0.05, gain * 0.09)));
+/**
+ * Soft countdown beat — last ~3s spawn / leave / vanish clock (`public/sfx/countdown-tick`).
+ * @param gain linear peak
+ * @param step HUD ceil 3/2/1 (pitches up toward 1); omit/other = neutral
+ */
+export function stingCountdownTick(gain = 0.48, step = 2) {
+  const rate = step <= 1 ? 1.16 : step === 2 ? 1.02 : 0.9;
+  const freq = step <= 1 ? 820 : step === 2 ? 680 : 560;
+  playCue(
+    "countdown-tick",
+    gain,
+    () => {
+      sting(freq, 0.06, "sine", Math.min(0.055, gain * 0.1));
+      sting(freq * 1.5, 0.035, "triangle", Math.min(0.03, gain * 0.055), 0.018);
+      if (step <= 1) sting(freq * 2, 0.03, "sine", 0.02, 0.035);
+    },
+    rate,
+  );
 }
 
 /** Grim sport buzzer — tap-out (`public/sfx/tap-out`). */
