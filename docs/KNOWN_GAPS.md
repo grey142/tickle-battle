@@ -21,7 +21,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Post-match 3-coin tick-start opener / 1-coin assists (team), XP to level 10, countdown bail with no reward
 - 10s spawn lock: tickles do not start, contact edges cleared at 0 (no stacked ignore), bots parked, Leave returns plaza
 - AI loadouts scale with Elara's level; bots park in spawn during the 10s countdown
-- Right-hand weapon placeholders; combat + UI SFX pack (`public/sfx/*.ogg|mp3`: tickle-lock / tickle / vanish / tap-out / reappear / escape / win / lose / buy / spend / countdown-tick, wired via `sfx.ts`; last-3s spawn + leave + vanish-clock ticks; AudioContext unlock on first gesture)
+- Right-hand weapon placeholders; combat + UI SFX pack (`public/sfx/*.ogg|mp3`: tickle-lock / tickle / vanish / tap-out / reappear / escape / win / lose / buy / spend / countdown-tick — layered procedural cues via `gen_sfx_pack.py`, wired via `sfx.ts` with oscillator fallbacks; last-3s spawn + leave + vanish-clock ticks; AudioContext unlock on first gesture)
 - Same-tick escape-before-tickle global pass (ticklees resolve first)
 - 3D plaza backdrop; click Home / Shop / Arena door frames (or overlay buttons) to open rooms
 - **Walkable 3D plaza hub:** first-person WASD/LS + look; axis-separated wall slide on plaza colliders (less door-frame stick); walk up to **Arena** (or click its door) to start Amateur Team Quick — near-door trim glow + soft point-light pulse; Home/Shop doors open overlay rooms; Leave / results return to plaza with coins/XP preserved
@@ -41,21 +41,21 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Home Look laugh preview (~2s still + plaza mannequin squirm); stills drive the shared 3D rig; bots also show keyed still billboards in-match
 - Soft-nudge searches 16 directions out to `NUDGE_CAP` 1.5m for clear space, else cancel + pairwise cooldown; freeze is pile-local
 - AI pile-join cooldown: `PILE_CD` 2.75s (sticky 1.35s) on successful join and on drop/peel — no sticky bypass
-- AI fighters use full-body Amateur still billboards (capsule humanoid hidden); `K_DAMAGE = 0.95` (1/3 of prior 2.85) for ~3× harder tap-outs; FP tickle arms wired to tickleBind rate/amps + billboard wag + four-frame tickle still cycle while tickling
+- AI fighters use full-body Amateur still billboards (capsule humanoid hidden); `K_DAMAGE = 0.95` (1/3 of prior 2.85) for ~3× harder tap-outs; FP tickle arms wired to tickleBind rate/amps + billboard wag + five-frame tickle still cycle while tickling
 
 ## Stub / missing
 
 - Walkable plaza ships with over-shoulder third-person mannequin on multi-frame idle sheets plus near-door soft glow/pulse + tighter wall-slide; remaining hub polish still TBD
-- Painterly four-clip production anims and blendshapes still missing (tickle four-frame deepened A-pose cycle + intensity pick, run four-frame adaptations, laugh stage/multi-frame stills ship; full painterly anims TBD).
+- Painterly four-clip production anims and blendshapes still missing (tickle five-frame painterly A-pose cycle + intensity pick, run four-frame adaptations, laugh stage/multi-frame stills ship; full mesh anims TBD).
 - Navmesh AI mid-lane waypoints + wall-slide shipped; pile join cooldown is exact (`PILE_CD` 2.75s / sticky 1.35s, armed on join + drop)
-- Full licensed SFX library still TBD; remaining oscillator-only cues are gone for Team Quick UI/combat stingers (samples + oscillator fallbacks)
+- Full licensed SFX library still TBD (and out of scope — procedural/CC0 only); Team Quick UI/combat stingers use deepened layered samples + oscillator fallbacks
 - No jump (bible); ramp height is a groundY sample
 
 ## Laugh production clips (Support)
 Painterly s0–s3 stage stills plus multi-frame cycle (`assets/binds/laugh/frames/` f0–f3) for Amateur 12 + Elara. Ticklee billboards cycle frames with stamina-weighted windows (low stamina favors f2/f3); stamina drives rate/amp/lean plus deepened face-card blend (jaw/cheek/eye/brow) on FP/plaza humanoid and ticklee billboard squash; hub Look laugh preview uses harder stamina window + stronger CSS morph. Remaining: true morph-target mesh blendshapes if a non-capsule head ships later.
 
 ## Tickle production polish (Support 4)
-Four-frame tickle cycles for Amateur 12 + Elara under `assets/binds/tickle/frames/` (f0 = A-pose still; f1–f3 deepened lean/reach/bob with stronger transforms + warm grade). AI tickler billboards + FP portrait use **intensity-weighted** frame windows (victim stamina → harder f2/f3, like laugh #23); FP arms use `tickleBind` rate/amps (no hardcoded `sin(t*28)`); Humanoid tickle motion strengthened. Deferred: true painterly tickle stage stills/blendshapes beyond A-pose adaptations.
+Five-frame tickle cycles for Amateur 12 + Elara under `assets/binds/tickle/frames/` (f0 = A-pose still; f1–f4 deepened lean/reach/bob with stronger pose deltas + oil-paint grade/vignette). AI tickler billboards + FP portrait use **intensity-weighted** frame windows (victim stamina → harder f3/f4); FP arms use `tickleBind` rate/amps (no hardcoded `sin(t*28)`); Humanoid tickle motion strengthened. Deferred: true multi-clip mesh anims / blendshapes beyond still adaptations.
 
 ## Run production frames (Support 3)
 Painterly four-frame run cycles for Amateur 12 + Elara now ship under `assets/binds/run/frames/` (f0 = A-pose still; f1–f3 bob/sway/squash). AI billboards + FP portrait cycle at `bind.run.billRate` while walk/run. Remaining: true four-clip production anims/blendshapes beyond still swaps.

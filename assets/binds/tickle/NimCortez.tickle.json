@@ -13,11 +13,12 @@
   "elbowAmp": 0.4235,
   "weaponWag": 0.4644,
   "billWag": 0.0621,
-  "billRate": 26.82,
+  "billRate": 27.89,
   "frames": [
     "frames/NimCortez_f0.jpg",
     "frames/NimCortez_f1.jpg",
     "frames/NimCortez_f2.jpg",
-    "frames/NimCortez_f3.jpg"
+    "frames/NimCortez_f3.jpg",
+    "frames/NimCortez_f4.jpg"
   ]
 }

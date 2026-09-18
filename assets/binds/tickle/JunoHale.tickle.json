@@ -13,11 +13,12 @@
   "elbowAmp": 0.44,
   "weaponWag": 0.486,
   "billWag": 0.0684,
-  "billRate": 27.45,
+  "billRate": 28.55,
   "frames": [
     "frames/JunoHale_f0.jpg",
     "frames/JunoHale_f1.jpg",
     "frames/JunoHale_f2.jpg",
-    "frames/JunoHale_f3.jpg"
+    "frames/JunoHale_f3.jpg",
+    "frames/JunoHale_f4.jpg"
   ]
 }

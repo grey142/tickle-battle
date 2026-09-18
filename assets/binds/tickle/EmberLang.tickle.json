@@ -13,11 +13,12 @@
   "elbowAmp": 0.418,
   "weaponWag": 0.4536,
   "billWag": 0.0608,
-  "billRate": 26.5,
+  "billRate": 27.56,
   "frames": [
     "frames/EmberLang_f0.jpg",
     "frames/EmberLang_f1.jpg",
     "frames/EmberLang_f2.jpg",
-    "frames/EmberLang_f3.jpg"
+    "frames/EmberLang_f3.jpg",
+    "frames/EmberLang_f4.jpg"
   ]
 }

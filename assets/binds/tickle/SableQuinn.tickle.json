@@ -13,11 +13,12 @@
   "elbowAmp": 0.4455,
   "weaponWag": 0.4968,
   "billWag": 0.0707,
-  "billRate": 27.67,
+  "billRate": 28.78,
   "frames": [
     "frames/SableQuinn_f0.jpg",
     "frames/SableQuinn_f1.jpg",
     "frames/SableQuinn_f2.jpg",
-    "frames/SableQuinn_f3.jpg"
+    "frames/SableQuinn_f3.jpg",
+    "frames/SableQuinn_f4.jpg"
   ]
 }

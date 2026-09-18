@@ -13,11 +13,12 @@
   "elbowAmp": 0.462,
   "weaponWag": 0.5184,
   "billWag": 0.0757,
-  "billRate": 28.41,
+  "billRate": 29.55,
   "frames": [
     "frames/KoraVale_f0.jpg",
     "frames/KoraVale_f1.jpg",
     "frames/KoraVale_f2.jpg",
-    "frames/KoraVale_f3.jpg"
+    "frames/KoraVale_f3.jpg",
+    "frames/KoraVale_f4.jpg"
   ]
 }

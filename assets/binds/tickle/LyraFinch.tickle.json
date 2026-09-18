@@ -13,11 +13,12 @@
   "elbowAmp": 0.44,
   "weaponWag": 0.4752,
   "billWag": 0.0658,
-  "billRate": 27.24,
+  "billRate": 28.33,
   "frames": [
     "frames/LyraFinch_f0.jpg",
     "frames/LyraFinch_f1.jpg",
     "frames/LyraFinch_f2.jpg",
-    "frames/LyraFinch_f3.jpg"
+    "frames/LyraFinch_f3.jpg",
+    "frames/LyraFinch_f4.jpg"
   ]
 }
