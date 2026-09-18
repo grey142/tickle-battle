@@ -59,8 +59,9 @@ export function normalizeSave(raw: Partial<SaveData> | null | undefined): SaveDa
     look: clampInt(raw.look ?? 0, 0, 12),
     weapon: Number(raw.weapon) || 0,
     armor: Number(raw.armor) || 0,
-    ownedWeapons: uniqueIds([0, ...ownedW]),
-    ownedArmors: uniqueIds([0, ...ownedA]),
+    // Equipped loadout always stays owned so Look/Skills/Shop reloads stay consistent.
+    ownedWeapons: uniqueIds([0, ...ownedW, Number(raw.weapon) || 0]),
+    ownedArmors: uniqueIds([0, ...ownedA, Number(raw.armor) || 0]),
   };
 }
 

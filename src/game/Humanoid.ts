@@ -264,11 +264,24 @@ export class Humanoid {
     this.face.rotation.z = 0;
 
     if (clip === "idle") {
-      const b = Math.sin(t * 2.2) * 0.015;
-      this.spine.rotation.x = b;
-      this.chest.position.y = 0.22 + b * 0.4;
-      this.lShoulder.rotation.z = 0.12 + Math.sin(t * 2.2) * 0.02;
-      this.rShoulder.rotation.z = -0.12 - Math.sin(t * 2.2) * 0.02;
+      // Deeper dual-phase breathe + weight shift (capsule still visible in FP/plaza halls).
+      const rate = 2.05;
+      const b = Math.sin(t * rate) * 0.028;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * 0.012;
+      const shift = Math.sin(t * rate * 0.35) * 0.022;
+      this.spine.rotation.x = b + b2;
+      this.spine.rotation.z = shift * 0.35;
+      this.chest.position.y = 0.22 + (b + b2) * 0.55;
+      this.chest.rotation.y = shift * 0.4;
+      this.hips.rotation.z = shift * 0.5;
+      this.lShoulder.rotation.z = 0.12 + Math.sin(t * rate) * 0.035;
+      this.rShoulder.rotation.z = -0.12 - Math.sin(t * rate) * 0.035;
+      this.lShoulder.rotation.x = shift * 0.25;
+      this.rShoulder.rotation.x = -shift * 0.25;
+      this.neck.rotation.x = b * 0.35;
+      this.head.rotation.x = Math.sin(t * rate * 0.9) * 0.018;
+      this.head.rotation.y = shift * 0.45;
+      this.root.position.y = Math.abs(b) * 0.15;
       return;
     }
     if (clip === "walk" || clip === "run") {
