@@ -725,6 +725,12 @@ export class Game {
       this.syncPlazaPreview();
       if (this.plazaPreview) {
         this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
+        if (this.hub.laughing) {
+          // Preview harder laugh morph/frames (not full stamina mild window).
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.28);
+        } else {
+          this.plazaPreview.stamina = this.plazaPreview.maxStamina;
+        }
         this.plazaPreview.tickAnim(Math.min(0.05, wallDt));
         this.plazaPreview.syncMesh();
       }
@@ -750,6 +756,12 @@ export class Game {
       this.syncPlazaPreview();
       if (this.plazaPreview) {
         this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
+        if (this.hub.laughing) {
+          // Preview harder laugh morph/frames (not full stamina mild window).
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.28);
+        } else {
+          this.plazaPreview.stamina = this.plazaPreview.maxStamina;
+        }
         this.plazaPreview.tickAnim(Math.min(0.05, wallDt));
         this.plazaPreview.syncMesh();
       }

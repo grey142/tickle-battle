@@ -10,14 +10,14 @@
       "rate": 8.085,
       "amp": 0.0477,
       "lean": 0.054000000000000006,
-      "billShake": 0.0315,
+      "billShake": 0.0353,
       "billRate": 11.899999999999999,
       "still": "stages/EmberLang_s0.jpg",
       "blend": {
-        "jaw": 0.261,
-        "cheek": 0.142,
-        "eye": 0.214,
-        "brow": 0.094
+        "jaw": 0.292,
+        "cheek": 0.159,
+        "eye": 0.24,
+        "brow": 0.105
       }
     },
     "s1": {
@@ -25,14 +25,14 @@
       "rate": 11.76,
       "amp": 0.0795,
       "lean": 0.0945,
-      "billShake": 0.063,
+      "billShake": 0.0706,
       "billRate": 15.3,
       "still": "stages/EmberLang_s1.jpg",
       "blend": {
-        "jaw": 0.528,
-        "cheek": 0.353,
-        "eye": 0.478,
-        "brow": 0.201
+        "jaw": 0.591,
+        "cheek": 0.395,
+        "eye": 0.535,
+        "brow": 0.225
       }
     },
     "s2": {
@@ -40,14 +40,14 @@
       "rate": 14.7,
       "amp": 0.106,
       "lean": 0.135,
-      "billShake": 0.09,
+      "billShake": 0.1008,
       "billRate": 17,
       "still": "stages/EmberLang_s2.jpg",
       "blend": {
-        "jaw": 0.874,
-        "cheek": 0.616,
-        "eye": 0.796,
-        "brow": 0.36
+        "jaw": 0.979,
+        "cheek": 0.69,
+        "eye": 0.892,
+        "brow": 0.403
       }
     },
     "s3": {
@@ -55,14 +55,14 @@
       "rate": 16.904999999999998,
       "amp": 0.1325,
       "lean": 0.162,
-      "billShake": 0.1215,
+      "billShake": 0.1361,
       "billRate": 20.4,
       "still": "stages/EmberLang_s3.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.918,
+        "cheek": 0.98,
         "eye": 1.0,
-        "brow": 0.535
+        "brow": 0.599
       }
     }
   },
