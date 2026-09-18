@@ -678,6 +678,9 @@ export class Game {
       this.scene.add(this.plazaPreview.group);
     } else {
       this.plazaPreview.applyGear(this.save.weapon, this.save.armor);
+      // Skills spend updates blocks — keep mannequin in sync with persist.
+      this.plazaPreview.blocks = { ...this.save.blocks };
+      this.plazaPreview.recalc();
       if (this.plazaPreview.slug !== def.slug || this.plazaPreview.look !== palette) {
         this.plazaPreview.name = def.display;
         this.plazaPreview.applyLookSlug(def.slug, palette);
@@ -740,7 +743,7 @@ export class Game {
         this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
         if (this.hub.laughing) {
           // Preview harder laugh morph/frames (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.22);
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.28);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
         }
@@ -771,7 +774,7 @@ export class Game {
         this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
         if (this.hub.laughing) {
           // Preview harder laugh morph/frames (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.22);
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.28);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
         }
