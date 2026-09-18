@@ -24,7 +24,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 - Right-hand weapon placeholders; combat + UI SFX pack (`public/sfx/*.ogg|mp3`: tickle-lock / tickle / vanish / tap-out / reappear / escape / win / lose / buy / spend / countdown-tick — layered procedural cues via `gen_sfx_pack.py`, wired via `sfx.ts` with oscillator fallbacks; last-3s spawn + leave + vanish-clock ticks; AudioContext unlock on first gesture)
 - Same-tick escape-before-tickle global pass (ticklees resolve first)
 - 3D plaza backdrop; click Home / Shop / Arena door frames (or overlay buttons) to open rooms
-- **Walkable 3D plaza hub:** first-person WASD/LS + look; axis-separated wall slide on plaza colliders (less door-frame stick); walk up to **Arena** (or click its door) to start Amateur Team Quick — near-door trim glow + soft point-light pulse; Home/Shop doors open overlay rooms; Leave / results return to plaza with coins/XP preserved
+- **Walkable 3D plaza hub:** first-person WASD/LS + look; axis-separated wall slide with extended jamb slack (Home/Shop/Arena); walk up to **Arena** (or click its door) to start Amateur Team Quick — near-door trim glow + soft point-light pulse on **all three doors** (Home/Shop match Arena pulse; Arena slight CTA lead) + pulsing floor pads; Leave / results return to plaza with profile reloaded from disk (coins/XP/Look/loadout preserved)
 - Armor cloth overlay on the humanoid from equipped Amateur piece
 - Team Timed BR (6v6, 4 min, clean respawn, tap-out score, vanish cut at timer)
 - FFA Quick (12 solo, join cap 1, no pack, last standing) and FFA Timed (personal taps, respawn)
@@ -45,8 +45,8 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 
 ## Stub / missing
 
-- Walkable plaza ships with over-shoulder third-person mannequin on multi-frame idle sheets plus near-door soft glow/pulse + tighter wall-slide; remaining hub polish still TBD
-- Painterly four-clip production anims and blendshapes still missing (tickle five-frame painterly A-pose cycle + intensity pick, run four-frame adaptations, laugh stage/multi-frame stills ship; full mesh anims TBD).
+- Walkable plaza ships with over-shoulder third-person mannequin on multi-frame idle sheets plus Home/Shop/Arena near-door soft glow/pulse + extended jamb wall-slide + hardened Leave/Return; remaining hub polish still TBD
+- Painterly four-clip production anims and blendshapes still missing (tickle five-frame deepened A-pose cycle + intensity pick, run four-frame adaptations, laugh stage/multi-frame stills ship; full painterly anims TBD).
 - Navmesh AI mid-lane waypoints + wall-slide shipped; pile join cooldown is exact (`PILE_CD` 2.75s / sticky 1.35s, armed on join + drop)
 - Full licensed SFX library still TBD (and out of scope — procedural/CC0 only); Team Quick UI/combat stingers use deepened layered samples + oscillator fallbacks
 - No jump (bible); ramp height is a groundY sample
@@ -58,4 +58,4 @@ Painterly s0–s3 stage stills plus multi-frame cycle (`assets/binds/laugh/frame
 Five-frame tickle cycles for Amateur 12 + Elara under `assets/binds/tickle/frames/` (f0 = A-pose still; f1–f4 deepened lean/reach/bob with stronger pose deltas + oil-paint grade/vignette). AI tickler billboards + FP portrait use **intensity-weighted** frame windows (victim stamina → harder f3/f4); FP arms use `tickleBind` rate/amps (no hardcoded `sin(t*28)`); Humanoid tickle motion strengthened. Deferred: true multi-clip mesh anims / blendshapes beyond still adaptations.
 
 ## Run production frames (Support 3)
-Painterly four-frame run cycles for Amateur 12 + Elara now ship under `assets/binds/run/frames/` (f0 = A-pose still; f1–f3 bob/sway/squash). AI billboards + FP portrait cycle at `bind.run.billRate` while walk/run. Remaining: true four-clip production anims/blendshapes beyond still swaps.
+Painterly four-frame run cycles for Amateur 12 + Elara under `assets/binds/run/frames/` (f0 = A-pose still; f1–f3 **deepened** stride bob/sway/squash + bumped bind rate/amp/lean/billBob). Humanoid loco + billboard bob strengthened. AI billboards + FP portrait cycle at `bind.run.billRate` while walk/run. Remaining: true four-clip production anims/blendshapes beyond still swaps.

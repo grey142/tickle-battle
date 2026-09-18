@@ -308,6 +308,11 @@ export class Game {
   private bailCountdown() {
     if (this.mode !== "play" || this.countdown <= 0) return;
     stingCountdownTick(0.42);
+    // Harden Leave: clear match state first, keep save untouched, then plaza.
+    this.countdown = 0;
+    this.countdownTickCeil = -1;
+    this.vanishTickCeil = -1;
+    this.combatAnnounced = false;
     this.clearFighters();
     this.say("Left during countdown — no coins, no XP");
     this.showHub();
@@ -334,8 +339,10 @@ export class Game {
     if (this.hudEls.top) this.hudEls.top.style.display = "none";
     if (this.hudEls.crosshair) this.hudEls.crosshair.style.display = "none";
     if (this.hudEls.radar) this.hudEls.radar.style.display = "none";
+    if (this.hudEls["btn-leave"]) this.hudEls["btn-leave"].style.display = "none";
     this.rearCue.visible = false;
-    const s = this.save;
+    // Re-read disk save so Leave / Return never drop Look / coins / skills / loadout.
+    this.save = loadSave();
     this.hubPos.set(0, 0, -2.4);
     this.hubYaw = Math.PI;
     this.hubPitch = 0;
@@ -349,7 +356,7 @@ export class Game {
     this.syncPlazaPreview();
     this.plaza.setHover(null);
     this.plaza.setNear(null);
-    void s;
+    this.persistSave();
   }
 
   private aimPlazaCamera() {
@@ -2092,7 +2099,9 @@ export class Game {
     if (this.hudEls.radar) this.hudEls.radar.style.display = "none";
     if (this.hudEls["btn-leave"]) this.hudEls["btn-leave"].style.display = "none";
     this.rearCue.visible = false;
+    // Persist rewards before clearing fighters so Return always sees a clean profile.
     const gainedLevel = this.commitMatchRewards();
+    this.clearFighters();
     if (this.result === "Draw") blip(220, 0.15);
     else if (playerWin) stingWin();
     else stingLose();
