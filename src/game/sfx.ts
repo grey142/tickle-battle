@@ -1,4 +1,4 @@
-/** Amateur Team Quick SFX — deepened procedural sample pack + oscillator fallbacks. */
+/** Amateur Team Quick SFX — procedural sample pack + oscillator fallbacks (vanish-v2). */
 
 type CueId =
   | "tickle-lock"
@@ -159,12 +159,32 @@ export function resumeAudio() {
 }
 
 let unlockBound = false;
+let unlockChirpPlayed = false;
+
+/** Soft confirmation chirp when AudioContext first unlocks (not a combat cue). */
+function softUnlockChirp() {
+  if (unlockChirpPlayed) return;
+  unlockChirpPlayed = true;
+  const a = ensure();
+  if (!a) return;
+  try {
+    if (a.state === "suspended") void a.resume();
+    // Quiet rising blip — tells the player audio is live without fighting combat SFX.
+    sting(420, 0.07, "sine", 0.028, 0, 680);
+    sting(880, 0.05, "triangle", 0.016, 0.04);
+  } catch {
+    /* ignore */
+  }
+}
 
 /** Unlock AudioContext + preload samples on first user gesture (autoplay policy). */
 export function bindAudioUnlock(target: Document | HTMLElement = document) {
   if (unlockBound) return;
   unlockBound = true;
-  const kick = () => resumeAudio();
+  const kick = () => {
+    resumeAudio();
+    softUnlockChirp();
+  };
   target.addEventListener("pointerdown", kick, { passive: true });
   target.addEventListener("keydown", kick);
   target.addEventListener("touchstart", kick, { passive: true });
@@ -177,10 +197,11 @@ export function stingStart() {
 
 /** Nearby reappear tell — bright rising ping (`public/sfx/reappear`). */
 export function stingReappear() {
-  playCue("reappear", 0.72, () => {
-    sting(520, 0.1, "sine", 0.04, 0, 1180);
-    sting(990, 0.09, "sine", 0.05, 0.02);
-    sting(1485, 0.11, "triangle", 0.032, 0.05);
+  playCue("reappear", 0.74, () => {
+    sting(640, 0.09, "sine", 0.038, 0, 1420);
+    sting(1120, 0.08, "sine", 0.052, 0.018);
+    sting(1680, 0.1, "triangle", 0.034, 0.04);
+    sting(2240, 0.08, "sine", 0.02, 0.07);
   });
 }
 
@@ -199,11 +220,12 @@ export function stingEscape() {
 
 /** Falling whoosh-out — vanish (`public/sfx/vanish`). */
 export function stingVanish() {
-  playCue("vanish", 0.76, () => {
-    sting(90, 0.1, "sine", 0.04);
-    sting(640, 0.36, "sine", 0.055, 0.02, 58);
-    sting(420, 0.26, "triangle", 0.035, 0.05, 48);
-    sting(280, 0.2, "sawtooth", 0.02, 0.08, 40);
+  playCue("vanish", 0.78, () => {
+    sting(78, 0.12, "sine", 0.045);
+    sting(680, 0.4, "sine", 0.058, 0.02, 46);
+    sting(440, 0.3, "triangle", 0.038, 0.05, 34);
+    sting(300, 0.24, "sawtooth", 0.022, 0.09, 28);
+    sting(190, 0.2, "sine", 0.016, 0.14, 24);
   });
 }
 
@@ -213,15 +235,21 @@ export function stingVanish() {
  * @param step HUD ceil 3/2/1 (pitches up toward 1); omit/other = neutral
  */
 export function stingCountdownTick(gain = 0.48, step = 2) {
-  const rate = step <= 1 ? 1.16 : step === 2 ? 1.02 : 0.9;
-  const freq = step <= 1 ? 820 : step === 2 ? 680 : 560;
+  // Wider rate ladder than #34 so 3→2→1 is unmistakable.
+  const rate = step <= 1 ? 1.22 : step === 2 ? 1.0 : 0.86;
+  const freq = step <= 1 ? 860 : step === 2 ? 700 : 540;
   playCue(
     "countdown-tick",
     gain,
     () => {
-      sting(freq, 0.06, "sine", Math.min(0.055, gain * 0.1));
-      sting(freq * 1.5, 0.035, "triangle", Math.min(0.03, gain * 0.055), 0.018);
-      if (step <= 1) sting(freq * 2, 0.03, "sine", 0.02, 0.035);
+      sting(freq, 0.055, "sine", Math.min(0.058, gain * 0.11));
+      sting(freq * 1.5, 0.032, "triangle", Math.min(0.032, gain * 0.06), 0.016);
+      if (step <= 1) {
+        sting(freq * 2, 0.028, "sine", 0.022, 0.03);
+        sting(freq * 2.5, 0.022, "triangle", 0.014, 0.045);
+      } else if (step === 2) {
+        sting(freq * 2, 0.024, "sine", 0.014, 0.032);
+      }
     },
     rate,
   );
