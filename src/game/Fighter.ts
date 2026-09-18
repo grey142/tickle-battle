@@ -379,30 +379,26 @@ export class Fighter {
     }
     const urls = laughFrameUrls(bind);
     if (urls.length < 2) return false;
-    // Tighter stamina→frame windows (past #31): high soft-locks f0–f1; mid opens
-    // f1–f2; low/peak biases f3–f4 harder/earlier. FPS climbs with stamina drop.
+    // Stamina-weighted window: low stamina favors harder laugh frames (f2/f3).
     const pct = Math.max(0, Math.min(100, staminaPct ?? 100));
     const n = urls.length;
     let lo = 0;
     let hi = n - 1;
-    if (pct >= 66) {
+    if (pct >= 70) {
       lo = 0;
       hi = Math.min(1, n - 1);
-    } else if (pct >= 42) {
-      lo = Math.min(1, n - 1);
+    } else if (pct >= 40) {
+      lo = 0;
       hi = Math.min(2, n - 1);
-    } else if (pct >= 22) {
-      lo = Math.min(2, n - 1);
-      hi = Math.min(3, n - 1);
-    } else if (pct >= 8) {
-      lo = Math.min(3, n - 1);
+    } else if (pct >= 15) {
+      lo = Math.min(1, n - 1);
       hi = n - 1;
     } else {
-      lo = Math.min(4, n - 1);
+      lo = Math.min(2, n - 1);
       hi = n - 1;
     }
     const span = Math.max(1, hi - lo + 1);
-    const fps = Math.max(9, Math.round((stageParams?.billRate || 14) * (0.4 + (100 - pct) * 0.0095)));
+    const fps = Math.max(7, Math.round((stageParams?.billRate || 14) * (0.55 + (100 - pct) * 0.004)));
     const idx = lo + (Math.floor(this.animT * fps) % span);
     if (idx === this.laughFrameApplied && this.laughFramePortrait) return true;
     const want = idx;
@@ -701,19 +697,22 @@ export class Fighter {
       y = BILL_Y + Math.abs(s) * bob * 1.5;
       rot = s * bob * 0.88;
     } else {
-      // Multi-frame sheet + deeper dual-phase breathe / weight-shift (beyond flat sheet swap).
+      // Crossfade sheets + stronger dual-phase breathe / weight-shift (past #32).
       this.applyIdleSheetFrame(dt, true);
       const idle = idleBindForSlug(this.slug);
       const rate = idle.breatheRate;
-      const b = Math.sin(t * rate) * idle.breatheAmp;
-      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 0.45;
+      const b = Math.sin(t * rate) * idle.breatheAmp * 1.15;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 0.55;
       const shift = idle.weightShift ?? idle.sway;
-      const s = Math.sin(t * rate * 0.62) * idle.sway + Math.sin(t * rate * 0.31) * shift * 0.55;
-      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse + Math.sin(t * rate * 1.7) * idle.scalePulse * 0.35);
-      h = BILL_H * (1 + (b + b2) * 0.85);
+      const s =
+        Math.sin(t * rate * 0.62) * idle.sway * 1.2 +
+        Math.sin(t * rate * 0.31 + 0.4) * shift * 0.75 +
+        Math.sin(t * rate * 0.17) * shift * 0.25;
+      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 1.15 + Math.sin(t * rate * 1.7) * idle.scalePulse * 0.45);
+      h = BILL_H * (1 + (b + b2) * 0.95);
       x = s;
-      y = BILL_Y + b + b2 * 0.5;
-      rot = s * 0.55;
+      y = BILL_Y + b + b2 * 0.55;
+      rot = s * 0.62;
       bill.scale.set(w, h, 1);
       bill.position.set(x, y, 0);
       mat.rotation = rot;
