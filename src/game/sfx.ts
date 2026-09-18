@@ -1,4 +1,4 @@
-/** Amateur Team Quick SFX — procedural sample pack + oscillator fallbacks (vanish-v2). */
+/** Amateur Team Quick SFX — procedural sample pack + oscillator fallbacks (vanish-v3). */
 
 type CueId =
   | "tickle-lock"
@@ -197,11 +197,12 @@ export function stingStart() {
 
 /** Nearby reappear tell — bright rising ping (`public/sfx/reappear`). */
 export function stingReappear() {
-  playCue("reappear", 0.74, () => {
-    sting(640, 0.09, "sine", 0.038, 0, 1420);
-    sting(1120, 0.08, "sine", 0.052, 0.018);
-    sting(1680, 0.1, "triangle", 0.034, 0.04);
-    sting(2240, 0.08, "sine", 0.02, 0.07);
+  playCue("reappear", 0.76, () => {
+    sting(720, 0.08, "sine", 0.036, 0, 1580);
+    sting(1240, 0.075, "sine", 0.055, 0.016);
+    sting(1860, 0.09, "triangle", 0.036, 0.036);
+    sting(2480, 0.07, "sine", 0.022, 0.06);
+    sting(3120, 0.05, "sine", 0.012, 0.085);
   });
 }
 
@@ -220,12 +221,13 @@ export function stingEscape() {
 
 /** Falling whoosh-out — vanish (`public/sfx/vanish`). */
 export function stingVanish() {
-  playCue("vanish", 0.78, () => {
-    sting(78, 0.12, "sine", 0.045);
-    sting(680, 0.4, "sine", 0.058, 0.02, 46);
-    sting(440, 0.3, "triangle", 0.038, 0.05, 34);
-    sting(300, 0.24, "sawtooth", 0.022, 0.09, 28);
-    sting(190, 0.2, "sine", 0.016, 0.14, 24);
+  playCue("vanish", 0.8, () => {
+    sting(68, 0.14, "sine", 0.05);
+    sting(740, 0.44, "sine", 0.06, 0.018, 38);
+    sting(480, 0.34, "triangle", 0.04, 0.045, 28);
+    sting(320, 0.28, "sawtooth", 0.024, 0.085, 22);
+    sting(210, 0.24, "sine", 0.018, 0.13, 18);
+    sting(140, 0.2, "sine", 0.012, 0.18, 16);
   });
 }
 
@@ -233,22 +235,31 @@ export function stingVanish() {
  * Soft countdown beat — last ~3s spawn / leave / vanish clock (`public/sfx/countdown-tick`).
  * @param gain linear peak
  * @param step HUD ceil 3/2/1 (pitches up toward 1); omit/other = neutral
+ * @param soft vanish-clock mode: slightly lower pitch so it stays a tell vs spawn alarm
  */
-export function stingCountdownTick(gain = 0.48, step = 2) {
-  // Wider rate ladder than #34 so 3→2→1 is unmistakable.
-  const rate = step <= 1 ? 1.22 : step === 2 ? 1.0 : 0.86;
-  const freq = step <= 1 ? 860 : step === 2 ? 700 : 540;
+export function stingCountdownTick(gain = 0.48, step = 2, soft = false) {
+  // Wider rate ladder than #37 so 3→2→1 is unmistakable.
+  let rate = step <= 1 ? 1.34 : step === 2 ? 1.0 : 0.78;
+  let freq = step <= 1 ? 920 : step === 2 ? 700 : 500;
+  if (soft) {
+    rate *= 0.94;
+    freq *= 0.9;
+  }
   playCue(
     "countdown-tick",
     gain,
     () => {
-      sting(freq, 0.055, "sine", Math.min(0.058, gain * 0.11));
-      sting(freq * 1.5, 0.032, "triangle", Math.min(0.032, gain * 0.06), 0.016);
+      sting(freq, 0.05, "sine", Math.min(0.06, gain * 0.12));
+      sting(freq * 1.5, 0.03, "triangle", Math.min(0.034, gain * 0.065), 0.014);
       if (step <= 1) {
-        sting(freq * 2, 0.028, "sine", 0.022, 0.03);
-        sting(freq * 2.5, 0.022, "triangle", 0.014, 0.045);
+        sting(freq * 2, 0.026, "sine", soft ? 0.016 : 0.024, 0.028);
+        sting(freq * 2.5, 0.02, "triangle", soft ? 0.01 : 0.016, 0.042);
+        if (!soft) sting(freq * 3, 0.016, "sine", 0.01, 0.055);
       } else if (step === 2) {
-        sting(freq * 2, 0.024, "sine", 0.014, 0.032);
+        sting(freq * 2, 0.022, "sine", soft ? 0.01 : 0.015, 0.03);
+      } else if (!soft) {
+        // Step 3: soft wood body only — no upper sparkle.
+        sting(freq * 0.5, 0.04, "triangle", Math.min(0.02, gain * 0.04), 0.008);
       }
     },
     rate,
