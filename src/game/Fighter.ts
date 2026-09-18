@@ -110,6 +110,11 @@ export class Fighter {
    * low victim stam → high intensity → harder f3/f4). Fallback uses weapon/skill.
    */
   tickleIntensity = 0;
+  /** Smoothed intensity for window pick (lerps toward tickleIntensity). */
+  private tickleIntensitySmooth = 0;
+  /** Last lo/hi window — hysteresis so band edges don't thrash frames. */
+  private tickleWinLo = 0;
+  private tickleWinHi = 1;
   /** Active run-cycle frame index on billboard / FP portrait (-1 = base still). */
   private runFrameApplied = -1;
   private runFrameLoadToken = 0;
@@ -453,7 +458,7 @@ export class Fighter {
   }
 
 /** Cycle AI billboard (and FP portrait URL) through tickle frames while tickling. */
-  private syncTickleFrameBillboard(clip: string, tickle?: TickleBind) {
+  private syncTickleFrameBillboard(clip: string, tickle?: TickleBind, dt = 0.016) {
     const tickling =
       clip === "tickle" ||
       this.occupancy === "tickler" ||
@@ -464,11 +469,14 @@ export class Fighter {
         this.tickleFrameApplied = -1;
         this.tickleFramePortrait = undefined;
       }
+      this.tickleIntensitySmooth = 0;
+      this.tickleWinLo = 0;
+      this.tickleWinHi = 1;
       return;
     }
     const urls = tickleFrameUrls(tickle);
     if (urls.length < 2) return;
-    // Intensity-weighted window (mirrors laugh stamina windows): harder tickle → f3/f4.
+    // Intensity-weighted window: victim stamina → harder f3/f4 (clearer past #29).
     let intensity = this.tickleIntensity;
     if (intensity <= 0) {
       // Fallback when Game has not stamped victim-based intensity yet.
@@ -477,32 +485,45 @@ export class Fighter {
         this.weaponPct * 200 + this.blocks.tickle * 8 + Math.min(25, this.pileTimer * 5),
       );
     }
-    const pct = Math.max(0, Math.min(100, intensity));
+    const target = Math.max(0, Math.min(100, intensity));
+    // Smooth intensity so window transitions don't pop at band edges.
+    const k = 1 - Math.exp(-6.5 * Math.max(0.001, dt));
+    this.tickleIntensitySmooth += (target - this.tickleIntensitySmooth) * k;
+    const pct = this.tickleIntensitySmooth;
     const n = urls.length;
     let lo = 0;
     let hi = n - 1;
-    // Five-frame intensity windows (f0 calm → f4 peak): low intensity stays soft,
-    // mid opens mid frames, hard/peak lock onto f3–f4.
-    if (pct < 22) {
+    // Tighter stamina→frame bands: soft f0–f1, mid f1–f2 / f2–f3, hard/peak f3–f4.
+    if (pct < 16) {
       lo = 0;
       hi = Math.min(1, n - 1);
-    } else if (pct < 42) {
-      lo = 0;
-      hi = Math.min(2, n - 1);
-    } else if (pct < 62) {
+    } else if (pct < 34) {
       lo = Math.min(1, n - 1);
-      hi = Math.min(3, n - 1);
-    } else if (pct < 82) {
+      hi = Math.min(2, n - 1);
+    } else if (pct < 52) {
       lo = Math.min(2, n - 1);
+      hi = Math.min(3, n - 1);
+    } else if (pct < 70) {
+      lo = Math.min(3, n - 1);
       hi = n - 1;
     } else {
       lo = Math.min(3, n - 1);
       hi = n - 1;
     }
+    this.tickleWinLo = lo;
+    this.tickleWinHi = hi;
     const span = Math.max(1, hi - lo + 1);
     // FPS from billRate; higher intensity cycles faster so hard frames land more often.
-    const fps = Math.max(8, Math.round((tickle.billRate || 26) * (0.4 + pct * 0.005)));
-    const idx = lo + (Math.floor(this.animT * fps) % span);
+    const fps = Math.max(9, Math.round((tickle.billRate || 26) * (0.38 + pct * 0.0055)));
+    const phase = Math.floor(this.animT * fps);
+    // Peak intensity: bias cycle toward f4 (f3,f4,f4,f3,f4) for stronger hard read.
+    let idx: number;
+    if (pct >= 78 && span >= 2) {
+      const cycle = [lo, hi, hi, lo, hi];
+      idx = cycle[phase % cycle.length];
+    } else {
+      idx = lo + (phase % span);
+    }
     if (idx === this.tickleFrameApplied && this.tickleFramePortrait) return;
     const want = idx;
     const token = ++this.tickleFrameLoadToken;
@@ -601,7 +622,7 @@ export class Fighter {
     if (!this.syncLaughFrameBillboard(clip, laughBind, laugh, stamPct)) {
       this.syncLaughStageBillboard(clip);
     }
-    this.syncTickleFrameBillboard(clip, tickle);
+    this.syncTickleFrameBillboard(clip, tickle, dt);
     this.syncRunFrameBillboard(clip, runBind);
   }
 

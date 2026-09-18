@@ -288,9 +288,9 @@ export class Game {
       const ceil = Math.ceil(this.countdown);
       if (ceil <= 3 && ceil >= 1 && ceil !== this.countdownTickCeil) {
         this.countdownTickCeil = ceil;
-        // Slightly louder as it approaches 1.
-        const gain = ceil === 1 ? 0.58 : ceil === 2 ? 0.5 : 0.44;
-        stingCountdownTick(gain);
+        // Louder + higher pitch toward 1 (past #22).
+        const gain = ceil === 1 ? 0.68 : ceil === 2 ? 0.54 : 0.42;
+        stingCountdownTick(gain, ceil);
       }
     }
     const p = this.player;
@@ -298,7 +298,8 @@ export class Game {
       const vCeil = Math.ceil(p.vanishLeft);
       if (vCeil <= 3 && vCeil >= 1 && vCeil !== this.vanishTickCeil) {
         this.vanishTickCeil = vCeil;
-        stingCountdownTick(vCeil === 1 ? 0.5 : 0.4);
+        const gain = vCeil === 1 ? 0.62 : vCeil === 2 ? 0.5 : 0.4;
+        stingCountdownTick(gain, vCeil);
       }
     } else {
       this.vanishTickCeil = -1;
@@ -307,7 +308,7 @@ export class Game {
 
   private bailCountdown() {
     if (this.mode !== "play" || this.countdown <= 0) return;
-    stingCountdownTick(0.42);
+    stingCountdownTick(0.48, 2);
     // Harden Leave: clear match state first, keep save untouched, then plaza.
     this.countdown = 0;
     this.countdownTickCeil = -1;
@@ -852,17 +853,18 @@ export class Game {
     }
     this.updateVisibility();
     for (const f of this.fighters) {
-      // Intensity for tickle frame windows: low victim stamina → harder f2/f3.
+      // Intensity for tickle frame windows: low victim stamina → harder f3/f4.
+      // Contrast stretch so soft/hard ends map clearer (past #29).
       if (
         (f.occupancy === "tickler" || (f.occupancy === "nudge" && f.joinOn >= 0)) &&
         f.joinOn >= 0
       ) {
         const v = this.byId(f.joinOn);
         if (v && v.maxStamina > 0) {
-          f.tickleIntensity = Math.max(
-            0,
-            Math.min(100, 100 - (100 * v.stamina) / v.maxStamina),
-          );
+          const raw = Math.max(0, Math.min(100, 100 - (100 * v.stamina) / v.maxStamina)) / 100;
+          const contrasted =
+            raw < 0.5 ? 0.5 * Math.pow(raw * 2, 1.28) : 1 - 0.5 * Math.pow((1 - raw) * 2, 1.28);
+          f.tickleIntensity = contrasted * 100;
         } else {
           f.tickleIntensity = 0;
         }
