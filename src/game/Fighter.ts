@@ -112,7 +112,7 @@ export class Fighter {
   tickleIntensity = 0;
   /** Smoothed intensity for window pick (lerps toward tickleIntensity). */
   private tickleIntensitySmooth = 0;
-  /** Last lo/hi window — hysteresis so band edges don't thrash frames. */
+  /** Last lo/hi window — hysteresis deadband so band edges don't thrash frames. */
   private tickleWinLo = 0;
   private tickleWinHi = 1;
   /** Active run-cycle frame index on billboard / FP portrait (-1 = base still). */
@@ -476,7 +476,7 @@ export class Fighter {
     }
     const urls = tickleFrameUrls(tickle);
     if (urls.length < 2) return;
-    // Intensity-weighted window: victim stamina → harder f3/f4 (clearer past #29).
+    // Intensity-weighted window: victim stamina → harder f3/f4 (clearer past #34).
     let intensity = this.tickleIntensity;
     if (intensity <= 0) {
       // Fallback when Game has not stamped victim-based intensity yet.
@@ -486,41 +486,56 @@ export class Fighter {
       );
     }
     const target = Math.max(0, Math.min(100, intensity));
-    // Smooth intensity so window transitions don't pop at band edges.
-    const k = 1 - Math.exp(-6.5 * Math.max(0.001, dt));
+    // Asymmetric smooth: climb into hard windows a bit faster than easing out.
+    const climb = target > this.tickleIntensitySmooth;
+    const rate = climb ? 8.2 : 5.4;
+    const k = 1 - Math.exp(-rate * Math.max(0.001, dt));
     this.tickleIntensitySmooth += (target - this.tickleIntensitySmooth) * k;
     const pct = this.tickleIntensitySmooth;
     const n = urls.length;
-    let lo = 0;
-    let hi = n - 1;
-    // Tighter stamina→frame bands: soft f0–f1, mid f1–f2 / f2–f3, hard/peak f3–f4.
-    if (pct < 16) {
-      lo = 0;
-      hi = Math.min(1, n - 1);
-    } else if (pct < 34) {
-      lo = Math.min(1, n - 1);
-      hi = Math.min(2, n - 1);
-    } else if (pct < 52) {
-      lo = Math.min(2, n - 1);
-      hi = Math.min(3, n - 1);
-    } else if (pct < 70) {
-      lo = Math.min(3, n - 1);
-      hi = n - 1;
+    // Desired bands (past #34): soft f0–f1 → early mid f1–f2 → mid f2–f3 → hard/peak f3–f4.
+    const windowFor = (band: number): [number, number] => {
+      if (band <= 0) return [0, Math.min(1, n - 1)];
+      if (band === 1) return [Math.min(1, n - 1), Math.min(2, n - 1)];
+      if (band === 2) return [Math.min(2, n - 1), Math.min(3, n - 1)];
+      return [Math.min(3, n - 1), n - 1];
+    };
+    const bandFromPct = (p: number) => (p < 14 ? 0 : p < 30 ? 1 : p < 48 ? 2 : 3);
+    const bandFromWindow = (a: number, b: number) => {
+      if (a <= 0 && b <= 1) return 0;
+      if (a === 1) return 1;
+      if (a === 2) return 2;
+      return 3;
+    };
+    const rawBand = bandFromPct(pct);
+    const prevBand = bandFromWindow(this.tickleWinLo, this.tickleWinHi);
+    // ±3.5 deadband so edge flicker doesn't thrash lo/hi.
+    const dead = 3.5;
+    const upAt = [14 + dead, 30 + dead, 48 + dead];
+    const downAt = [14 - dead, 30 - dead, 48 - dead];
+    let band = prevBand;
+    if (rawBand > prevBand) {
+      band = pct >= upAt[Math.min(prevBand, 2)] ? rawBand : prevBand;
+    } else if (rawBand < prevBand) {
+      band = pct <= downAt[Math.min(rawBand, 2)] ? rawBand : prevBand;
     } else {
-      lo = Math.min(3, n - 1);
-      hi = n - 1;
+      band = rawBand;
     }
+    const [lo, hi] = windowFor(band);
     this.tickleWinLo = lo;
     this.tickleWinHi = hi;
     const span = Math.max(1, hi - lo + 1);
     // FPS from billRate; higher intensity cycles faster so hard frames land more often.
-    const fps = Math.max(9, Math.round((tickle.billRate || 26) * (0.38 + pct * 0.0055)));
+    const fps = Math.max(10, Math.round((tickle.billRate || 26) * (0.36 + pct * 0.0062)));
     const phase = Math.floor(this.animT * fps);
-    // Peak intensity: bias cycle toward f4 (f3,f4,f4,f3,f4) for stronger hard read.
+    // Peak intensity: heavier f4 bias (f4,f3,f4,f4,f3,f4) past #34.
     let idx: number;
-    if (pct >= 78 && span >= 2) {
-      const cycle = [lo, hi, hi, lo, hi];
+    if (pct >= 72 && span >= 2) {
+      const cycle = pct >= 88 ? [hi, hi, lo, hi, hi, hi] : [hi, lo, hi, hi, lo, hi];
       idx = cycle[phase % cycle.length];
+    } else if (pct >= 58 && span >= 2) {
+      // Soft peak lean: favor hi every other beat.
+      idx = phase % 2 === 0 ? hi : lo;
     } else {
       idx = lo + (phase % span);
     }
