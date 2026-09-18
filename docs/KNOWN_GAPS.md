@@ -46,13 +46,13 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 ## Stub / missing
 
 - Walkable plaza ships with over-shoulder third-person mannequin on multi-frame idle sheets plus Home/Shop/Arena near-door soft glow/pulse + extended jamb wall-slide + hardened Leave/Return; remaining hub polish still TBD
-- Painterly four-clip production anims and blendshapes still missing (tickle five-frame deepened A-pose cycle + intensity pick, run four-frame adaptations, laugh stage/multi-frame stills ship; full painterly anims TBD).
+- Painterly four-clip production anims and blendshapes still missing (tickle five-frame deepened A-pose cycle + intensity pick, run four-frame adaptations, laugh five-frame stamina-weighted cycle + blend deepen ship; full painterly anims TBD).
 - Navmesh AI mid-lane waypoints + wall-slide shipped; pile join cooldown is exact (`PILE_CD` 2.75s / sticky 1.35s, armed on join + drop)
 - Full licensed SFX library still TBD (and out of scope — procedural/CC0 only); Team Quick UI/combat stingers use deepened layered samples + oscillator fallbacks
 - No jump (bible); ramp height is a groundY sample
 
 ## Laugh production clips (Support)
-Painterly s0–s3 stage stills plus multi-frame cycle (`assets/binds/laugh/frames/` f0–f3) for Amateur 12 + Elara. Ticklee billboards cycle frames with stamina-weighted windows (low stamina favors f2/f3); stamina drives rate/amp/lean plus deepened face-card blend (jaw/cheek/eye/brow) on FP/plaza humanoid and ticklee billboard squash; hub Look laugh preview uses harder stamina window + stronger CSS morph. Remaining: true morph-target mesh blendshapes if a non-capsule head ships later.
+Painterly s0–s3 stage stills plus **five-frame** stamina-weighted cycle (`assets/binds/laugh/frames/` f0–f4) for Amateur 12 + Elara (f4 derived from f2/f3 with stronger squash/lean/grade/vignette; metal-free). Ticklee billboards cycle with tightened stamina windows (high → soft f0–f1; mid opens mid; low locks onto f2–f4 / f3–f4) and more aggressive billRate×stamina FPS; stamina drives bumped rate/amp/lean/billShake plus deepened face-card blend (jaw/cheek/eye/brow ~15% stronger + slight head tilt) on FP/plaza humanoid and ticklee billboard squash; hub Look laugh preview uses harder stamina window (~22%) + stronger CSS morph. Remaining: true morph-target mesh blendshapes if a non-capsule head ships later.
 
 ## Tickle production polish (Support 4)
 Five-frame tickle cycles for Amateur 12 + Elara under `assets/binds/tickle/frames/` (f0 = A-pose still; f1–f4 deepened lean/reach/bob with stronger pose deltas + oil-paint grade/vignette). AI tickler billboards + FP portrait use **intensity-weighted** frame windows (victim stamina → harder f3/f4); FP arms use `tickleBind` rate/amps (no hardcoded `sin(t*28)`); Humanoid tickle motion strengthened. Deferred: true multi-clip mesh anims / blendshapes beyond still adaptations.

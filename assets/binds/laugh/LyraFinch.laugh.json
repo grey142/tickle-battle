@@ -7,62 +7,62 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 7.700000000000001,
-      "amp": 0.0441,
-      "lean": 0.048,
-      "billShake": 0.0392,
-      "billRate": 11.2,
+      "rate": 8.47,
+      "amp": 0.0494,
+      "lean": 0.0528,
+      "billShake": 0.0439,
+      "billRate": 12.54,
       "still": "stages/LyraFinch_s0.jpg",
       "blend": {
-        "jaw": 0.287,
-        "cheek": 0.157,
-        "eye": 0.235,
-        "brow": 0.104
+        "jaw": 0.33,
+        "cheek": 0.181,
+        "eye": 0.27,
+        "brow": 0.12
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 11.200000000000001,
-      "amp": 0.07350000000000001,
-      "lean": 0.08399999999999999,
-      "billShake": 0.0784,
-      "billRate": 14.4,
+      "rate": 12.32,
+      "amp": 0.0823,
+      "lean": 0.0924,
+      "billShake": 0.0878,
+      "billRate": 16.13,
       "still": "stages/LyraFinch_s1.jpg",
       "blend": {
-        "jaw": 0.578,
-        "cheek": 0.385,
-        "eye": 0.523,
-        "brow": 0.22
+        "jaw": 0.665,
+        "cheek": 0.443,
+        "eye": 0.601,
+        "brow": 0.253
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 14.0,
-      "amp": 0.098,
-      "lean": 0.12,
-      "billShake": 0.112,
-      "billRate": 16,
+      "rate": 15.4,
+      "amp": 0.1098,
+      "lean": 0.132,
+      "billShake": 0.1254,
+      "billRate": 17.92,
       "still": "stages/LyraFinch_s2.jpg",
       "blend": {
-        "jaw": 0.952,
-        "cheek": 0.672,
-        "eye": 0.868,
-        "brow": 0.392
+        "jaw": 1.0,
+        "cheek": 0.773,
+        "eye": 0.998,
+        "brow": 0.451
       }
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 16.099999999999998,
-      "amp": 0.1225,
-      "lean": 0.144,
-      "billShake": 0.1512,
-      "billRate": 19.2,
+      "rate": 17.71,
+      "amp": 0.1372,
+      "lean": 0.1584,
+      "billShake": 0.1693,
+      "billRate": 21.5,
       "still": "stages/LyraFinch_s3.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.98,
+        "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.58
+        "brow": 0.667
       }
     }
   },
@@ -71,6 +71,7 @@
     "frames/LyraFinch_f0.jpg",
     "frames/LyraFinch_f1.jpg",
     "frames/LyraFinch_f2.jpg",
-    "frames/LyraFinch_f3.jpg"
+    "frames/LyraFinch_f3.jpg",
+    "frames/LyraFinch_f4.jpg"
   ]
 }

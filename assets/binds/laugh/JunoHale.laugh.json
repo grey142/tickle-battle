@@ -7,62 +7,62 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 8.855000000000002,
-      "amp": 0.0405,
-      "lean": 0.06,
-      "billShake": 0.047,
-      "billRate": 10.5,
+      "rate": 9.741,
+      "amp": 0.0454,
+      "lean": 0.066,
+      "billShake": 0.0526,
+      "billRate": 11.76,
       "still": "stages/JunoHale_s0.jpg",
       "blend": {
-        "jaw": 0.301,
-        "cheek": 0.164,
-        "eye": 0.245,
-        "brow": 0.11
+        "jaw": 0.346,
+        "cheek": 0.189,
+        "eye": 0.282,
+        "brow": 0.127
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 12.880000000000003,
-      "amp": 0.0675,
-      "lean": 0.105,
-      "billShake": 0.0941,
-      "billRate": 13.5,
+      "rate": 14.168,
+      "amp": 0.0756,
+      "lean": 0.1155,
+      "billShake": 0.1054,
+      "billRate": 15.12,
       "still": "stages/JunoHale_s1.jpg",
       "blend": {
-        "jaw": 0.548,
-        "cheek": 0.365,
-        "eye": 0.496,
-        "brow": 0.209
+        "jaw": 0.63,
+        "cheek": 0.42,
+        "eye": 0.57,
+        "brow": 0.24
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 16.1,
-      "amp": 0.09,
-      "lean": 0.15,
-      "billShake": 0.1344,
-      "billRate": 15,
+      "rate": 17.71,
+      "amp": 0.1008,
+      "lean": 0.165,
+      "billShake": 0.1505,
+      "billRate": 16.8,
       "still": "stages/JunoHale_s2.jpg",
       "blend": {
-        "jaw": 0.918,
-        "cheek": 0.648,
-        "eye": 0.837,
-        "brow": 0.379
+        "jaw": 1.0,
+        "cheek": 0.745,
+        "eye": 0.963,
+        "brow": 0.436
       }
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 18.515,
-      "amp": 0.11249999999999999,
-      "lean": 0.18,
-      "billShake": 0.18,
-      "billRate": 18.0,
+      "rate": 20.367,
+      "amp": 0.126,
+      "lean": 0.198,
+      "billShake": 0.2016,
+      "billRate": 20.16,
       "still": "stages/JunoHale_s3.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.971,
+        "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.567
+        "brow": 0.652
       }
     }
   },
@@ -71,6 +71,7 @@
     "frames/JunoHale_f0.jpg",
     "frames/JunoHale_f1.jpg",
     "frames/JunoHale_f2.jpg",
-    "frames/JunoHale_f3.jpg"
+    "frames/JunoHale_f3.jpg",
+    "frames/JunoHale_f4.jpg"
   ]
 }
