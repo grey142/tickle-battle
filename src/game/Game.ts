@@ -757,15 +757,18 @@ export class Game {
   private tickPlazaMannequinContinuity(dt: number) {
     const man = this.plazaPreview;
     if (!man || this.mode === "play") return;
-    const k = 1 - Math.exp(-dt * 7.5);
+    const inPlaza = this.mode === "hub" && this.hub.room === "plaza";
+    // Track plaza feet tightly; ease softer into Home/Shop hall pose so idle phase keeps rolling.
+    const rate = inPlaza ? 14 : 4.8;
+    const k = 1 - Math.exp(-dt * rate);
     const before = man.pos.clone();
     man.pos.lerp(this.plazaPoseTarget, k);
     let dy = this.plazaYawTarget - man.yaw;
     while (dy > Math.PI) dy -= Math.PI * 2;
     while (dy < -Math.PI) dy += Math.PI * 2;
     man.yaw += dy * k;
-    // Large teleports (door room change) settle so walk→idle sheet doesn't spike.
-    if (before.distanceToSquared(man.pos) > 1.0) man.settle();
+    // Only settle on big room teleports — small plaza steps keep walk→idle speed continuous.
+    if (before.distanceToSquared(man.pos) > 2.25) man.settle();
   }
 
   private isFfa(): boolean {
@@ -822,8 +825,8 @@ export class Game {
       if (this.plazaPreview) {
         this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
         if (this.hub.laughing) {
-          // Preview harder laugh morph/frames past #35 (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.12);
+          // Preview harder laugh morph/frames (not full stamina mild window).
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.28);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
         }
@@ -853,8 +856,8 @@ export class Game {
       if (this.plazaPreview) {
         this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
         if (this.hub.laughing) {
-          // Preview harder laugh morph/frames past #35 (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.12);
+          // Preview harder laugh morph/frames (not full stamina mild window).
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.28);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
         }
