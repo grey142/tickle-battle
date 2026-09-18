@@ -379,26 +379,30 @@ export class Fighter {
     }
     const urls = laughFrameUrls(bind);
     if (urls.length < 2) return false;
-    // Stamina-weighted window: low stamina favors harder laugh frames (f2/f3).
+    // Tighter stamina→frame windows (past #31): high soft-locks f0–f1; mid opens
+    // f1–f2; low/peak biases f3–f4 harder/earlier. FPS climbs with stamina drop.
     const pct = Math.max(0, Math.min(100, staminaPct ?? 100));
     const n = urls.length;
     let lo = 0;
     let hi = n - 1;
-    if (pct >= 70) {
+    if (pct >= 66) {
       lo = 0;
       hi = Math.min(1, n - 1);
-    } else if (pct >= 40) {
-      lo = 0;
-      hi = Math.min(2, n - 1);
-    } else if (pct >= 15) {
+    } else if (pct >= 42) {
       lo = Math.min(1, n - 1);
+      hi = Math.min(2, n - 1);
+    } else if (pct >= 22) {
+      lo = Math.min(2, n - 1);
+      hi = Math.min(3, n - 1);
+    } else if (pct >= 8) {
+      lo = Math.min(3, n - 1);
       hi = n - 1;
     } else {
-      lo = Math.min(2, n - 1);
+      lo = Math.min(4, n - 1);
       hi = n - 1;
     }
     const span = Math.max(1, hi - lo + 1);
-    const fps = Math.max(7, Math.round((stageParams?.billRate || 14) * (0.55 + (100 - pct) * 0.004)));
+    const fps = Math.max(9, Math.round((stageParams?.billRate || 14) * (0.4 + (100 - pct) * 0.0095)));
     const idx = lo + (Math.floor(this.animT * fps) % span);
     if (idx === this.laughFrameApplied && this.laughFramePortrait) return true;
     const want = idx;

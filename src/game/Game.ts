@@ -766,7 +766,7 @@ export class Game {
         this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
         if (this.hub.laughing) {
           // Preview harder laugh morph/frames (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.28);
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.16);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
         }
@@ -797,7 +797,7 @@ export class Game {
         this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
         if (this.hub.laughing) {
           // Preview harder laugh morph/frames (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.28);
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.16);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
         }

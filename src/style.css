@@ -344,11 +344,11 @@ button.hub-item { pointer-events: auto; }
 #shop-note { min-height: 1.2em; margin: 6px 0 8px; }
 @keyframes hub-laugh {
   0%, 100% { transform: translate(0, 0) rotate(0) scale(1, 1); }
-  15% { transform: translate(4px, 2px) rotate(-3.5deg) scale(1.05, 0.92); }
-  30% { transform: translate(-4px, 3px) rotate(3.5deg) scale(1.1, 0.87); }
-  45% { transform: translate(3px, 1px) rotate(-2.5deg) scale(1.07, 0.9); }
-  60% { transform: translate(-3px, 3px) rotate(2.5deg) scale(1.13, 0.84); }
-  80% { transform: translate(1px, 1px) rotate(-1.2deg) scale(1.04, 0.95); }
+  12% { transform: translate(5px, 3px) rotate(-4.2deg) scale(1.07, 0.88); }
+  28% { transform: translate(-5px, 4px) rotate(4.2deg) scale(1.14, 0.82); }
+  44% { transform: translate(4px, 2px) rotate(-3.2deg) scale(1.1, 0.86); }
+  60% { transform: translate(-4px, 4px) rotate(3.2deg) scale(1.17, 0.78); }
+  78% { transform: translate(2px, 1px) rotate(-1.6deg) scale(1.06, 0.92); }
 }
 .look-preview.laughing img {
   transform-origin: center 70%;
@@ -356,9 +356,10 @@ button.hub-item { pointer-events: auto; }
 }
 @keyframes hub-laugh-face {
   0%, 100% { transform: scale(1, 1); }
-  25% { transform: scale(1.08, 0.9); }
-  50% { transform: scale(1.14, 0.82); }
-  75% { transform: scale(1.07, 0.92); }
+  20% { transform: scale(1.11, 0.86); }
+  45% { transform: scale(1.18, 0.76); }
+  70% { transform: scale(1.12, 0.84); }
+  85% { transform: scale(1.06, 0.92); }
 }
 .skill-unspent { margin-top: 8px; font-size: 13px; color: #cbbba8; }
 .skill-track { margin: 12px 0; padding: 10px; border: 1px solid #6a5e52; background: #161210; }
