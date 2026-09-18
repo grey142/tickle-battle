@@ -13,11 +13,12 @@
   "elbowAmp": 0.451,
   "weaponWag": 0.5076,
   "billWag": 0.072,
-  "billRate": 27.98,
+  "billRate": 29.1,
   "frames": [
     "frames/CassWynn_f0.jpg",
     "frames/CassWynn_f1.jpg",
     "frames/CassWynn_f2.jpg",
-    "frames/CassWynn_f3.jpg"
+    "frames/CassWynn_f3.jpg",
+    "frames/CassWynn_f4.jpg"
   ]
 }

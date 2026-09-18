@@ -13,11 +13,12 @@
   "elbowAmp": 0.473,
   "weaponWag": 0.54,
   "billWag": 0.0795,
-  "billRate": 28.83,
+  "billRate": 29.98,
   "frames": [
     "frames/ElaraCase_f0.jpg",
     "frames/ElaraCase_f1.jpg",
     "frames/ElaraCase_f2.jpg",
-    "frames/ElaraCase_f3.jpg"
+    "frames/ElaraCase_f3.jpg",
+    "frames/ElaraCase_f4.jpg"
   ]
 }

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Generate four-frame tickle stills from metal-free A-poses (Amateur 12 + Elara).
+"""Generate five-frame painterly tickle stills from metal-free A-poses (Amateur 12 + Elara).
 
-f0 = A-pose still; f1–f3 = deepened lean/reach/bob adaptations (stronger than
-plain A-pose lean) so intensity-weighted cycle reads harder on f2/f3.
-Full painterly production tickle art is deferred — this is the shippable slice.
+f0 = grounded A-pose; f1–f4 = stronger lean/reach/bob + oil-paint grade so
+intensity-weighted cycle reads distinct (harder windows favor f3/f4).
+Metal-free Amateur; Elara jewelry exception only.
 Requires: Pillow, numpy
 """
 from __future__ import annotations
@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageEnhance, ImageFilter
+from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "assets/binds/tickle/frames"
@@ -46,7 +46,7 @@ def affine_frame(
     ang = np.deg2rad(rot)
     ca, sa = np.cos(ang), np.sin(ang)
     sx = scale
-    sy = scale * (1.0 - abs(shear_y) * 0.15)
+    sy = scale * (1.0 - abs(shear_y) * 0.18)
     A = np.array([[sx, shear_x], [shear_y, sy]], dtype=np.float64)
     R = np.array([[ca, -sa], [sa, ca]], dtype=np.float64)
     M = R @ A
@@ -66,52 +66,129 @@ def affine_frame(
 
 
 def punch_reach(im: Image.Image, amount: float) -> Image.Image:
+    """Crop-in from sides/bottom so arms/torso read closer (reach)."""
     w, h = im.size
-    inset_x = int(w * 0.028 * amount)
-    inset_top = int(h * 0.014 * amount)
-    inset_bot = int(h * 0.06 * amount)
+    inset_x = int(w * 0.034 * amount)
+    inset_top = int(h * 0.012 * amount)
+    inset_bot = int(h * 0.072 * amount)
     box = (inset_x, inset_top, w - inset_x, h - inset_bot)
     return im.crop(box).resize((w, h), Image.BICUBIC)
 
 
-def warm_grade(im: Image.Image, amount: float) -> Image.Image:
-    """Slight warm push so harder frames read more energetic."""
+def squash_stretch(im: Image.Image, sx: float, sy: float) -> Image.Image:
+    """Mild non-uniform scale about center for pose readability."""
+    w, h = im.size
+    nw, nh = max(1, int(w * sx)), max(1, int(h * sy))
+    scaled = im.resize((nw, nh), Image.BICUBIC)
+    canvas = Image.new("RGB", (w, h), (248, 244, 238))
+    canvas.paste(scaled, ((w - nw) // 2, (h - nh) // 2))
+    return canvas
+
+
+def warm_grade(im: Image.Image, amount: float, cool: float = 0.0) -> Image.Image:
+    """Warm push (hard frames) or cool pull (calm). amount/cool in ~0–1.5."""
     arr = np.asarray(im).astype(np.float32)
-    arr[..., 0] = np.clip(arr[..., 0] * (1.0 + 0.04 * amount), 0, 255)
-    arr[..., 1] = np.clip(arr[..., 1] * (1.0 + 0.01 * amount), 0, 255)
-    arr[..., 2] = np.clip(arr[..., 2] * (1.0 - 0.03 * amount), 0, 255)
+    arr[..., 0] = np.clip(arr[..., 0] * (1.0 + 0.055 * amount - 0.04 * cool), 0, 255)
+    arr[..., 1] = np.clip(arr[..., 1] * (1.0 + 0.015 * amount + 0.01 * cool), 0, 255)
+    arr[..., 2] = np.clip(arr[..., 2] * (1.0 - 0.045 * amount + 0.05 * cool), 0, 255)
     return Image.fromarray(arr.astype(np.uint8))
 
 
+def painterly(im: Image.Image, strength: float) -> Image.Image:
+    """Oil-paint-ish: downsample smear + edge restore + mild posterize."""
+    if strength <= 0.01:
+        return im
+    w, h = im.size
+    # Smear at lower res (brush size scales with strength)
+    factor = max(2, int(3 + strength * 3))
+    small = im.resize((max(8, w // factor), max(8, h // factor)), Image.BILINEAR)
+    smeared = small.resize((w, h), Image.BICUBIC)
+    # Blend original edges back so silhouette stays readable
+    edges = im.filter(ImageFilter.FIND_EDGES)
+    edge_arr = np.asarray(edges).astype(np.float32)
+    edge_mask = np.clip(edge_arr.mean(axis=2) / 255.0 * (0.55 + 0.35 * strength), 0, 1)
+    edge_mask = edge_mask[..., None]
+    base = np.asarray(im).astype(np.float32)
+    paint = np.asarray(smeared).astype(np.float32)
+    mix = paint * (1.0 - edge_mask * 0.65) + base * (edge_mask * 0.65)
+    out = Image.fromarray(np.clip(mix, 0, 255).astype(np.uint8))
+    # Soft median for blotchy paint, then unsharp for stage punch
+    if strength >= 0.45:
+        out = out.filter(ImageFilter.MedianFilter(size=3))
+    bits = max(5, 8 - int(strength * 2.2))
+    out = ImageOps.posterize(out, bits)
+    out = out.filter(ImageFilter.UnsharpMask(radius=1.1 + 0.4 * strength, percent=int(70 + 40 * strength), threshold=2))
+    return out
+
+
+def vignette(im: Image.Image, amount: float) -> Image.Image:
+    if amount <= 0.01:
+        return im
+    w, h = im.size
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    cx, cy = (w - 1) / 2.0, (h - 1) / 2.0
+    rx, ry = w * 0.62, h * 0.62
+    r = np.sqrt(((xx - cx) / rx) ** 2 + ((yy - cy) / ry) ** 2)
+    shade = np.clip(1.0 - amount * np.clip(r - 0.35, 0, 1) ** 1.6, 0.72, 1.0)
+    arr = np.asarray(im).astype(np.float32)
+    arr *= shade[..., None]
+    return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
+
+
 def make_frames(src: Path) -> list[Image.Image]:
-    """Deepened four-frame cycle: f0 calm still → f3 hardest lean/reach."""
+    """Five-frame cycle: f0 calm → f4 peak lean/reach with painterly grade."""
     base = Image.open(src).convert("RGB")
-    # f0 — grounded A-pose (mild sharpen)
-    f0 = ImageEnhance.Sharpness(base).enhance(1.06)
-    f0 = ImageEnhance.Contrast(f0).enhance(1.02)
+
+    # f0 — grounded A-pose, slight cool grade, light sharpen (readable still)
+    f0 = ImageEnhance.Sharpness(base).enhance(1.08)
+    f0 = ImageEnhance.Contrast(f0).enhance(1.04)
+    f0 = warm_grade(f0, 0.0, cool=0.35)
+    f0 = painterly(f0, 0.18)
 
     # f1 — clear lean/reach (mild intensity)
-    f1 = punch_reach(base, 1.35)
-    f1 = affine_frame(f1, 0.085, -0.02, 1.035, -hshift(base, 0.018), -2.1)
-    f1 = ImageEnhance.Contrast(f1).enhance(1.07)
-    f1 = warm_grade(f1, 0.45)
+    f1 = punch_reach(base, 1.55)
+    f1 = squash_stretch(f1, 1.02, 0.985)
+    f1 = affine_frame(f1, 0.11, -0.028, 1.045, -hshift(base, 0.022), -2.8)
+    f1 = ImageEnhance.Contrast(f1).enhance(1.1)
+    f1 = ImageEnhance.Color(f1).enhance(1.06)
+    f1 = warm_grade(f1, 0.55, cool=0.05)
+    f1 = painterly(f1, 0.42)
+    f1 = vignette(f1, 0.18)
 
-    # f2 — opposite lean + deeper reach (hard)
-    f2 = punch_reach(base, 2.05)
-    f2 = affine_frame(f2, -0.095, 0.028, 1.055, -hshift(base, 0.032), 2.6)
-    f2 = ImageEnhance.Brightness(f2).enhance(1.035)
-    f2 = ImageEnhance.Contrast(f2).enhance(1.1)
-    f2 = warm_grade(f2, 0.85)
-    f2 = f2.filter(ImageFilter.UnsharpMask(radius=1.2, percent=80, threshold=2))
+    # f2 — opposite lean + deeper reach
+    f2 = punch_reach(base, 2.25)
+    f2 = squash_stretch(f2, 0.97, 1.02)
+    f2 = affine_frame(f2, -0.125, 0.036, 1.07, -hshift(base, 0.038), 3.4)
+    f2 = ImageEnhance.Brightness(f2).enhance(1.045)
+    f2 = ImageEnhance.Contrast(f2).enhance(1.14)
+    f2 = ImageEnhance.Color(f2).enhance(1.1)
+    f2 = warm_grade(f2, 0.95)
+    f2 = painterly(f2, 0.62)
+    f2 = vignette(f2, 0.28)
 
-    # f3 — peak bob/reach (hardest)
-    f3 = punch_reach(base, 1.75)
-    f3 = affine_frame(f3, 0.055, -0.022, 1.07, -hshift(base, 0.045), 1.35)
-    f3 = ImageEnhance.Sharpness(f3).enhance(1.14)
-    f3 = ImageEnhance.Contrast(f3).enhance(1.12)
-    f3 = warm_grade(f3, 1.15)
-    f3 = f3.filter(ImageFilter.UnsharpMask(radius=1.4, percent=95, threshold=2))
-    return [f0, f1, f2, f3]
+    # f3 — peak bob/reach (hard)
+    f3 = punch_reach(base, 2.0)
+    f3 = squash_stretch(f3, 1.04, 0.97)
+    f3 = affine_frame(f3, 0.075, -0.03, 1.09, -hshift(base, 0.052), 1.8)
+    f3 = ImageEnhance.Sharpness(f3).enhance(1.12)
+    f3 = ImageEnhance.Contrast(f3).enhance(1.16)
+    f3 = ImageEnhance.Color(f3).enhance(1.14)
+    f3 = warm_grade(f3, 1.25)
+    f3 = painterly(f3, 0.78)
+    f3 = vignette(f3, 0.36)
+
+    # f4 — alternate peak (opposite shear, hottest grade) for intensity apex
+    f4 = punch_reach(base, 2.45)
+    f4 = squash_stretch(f4, 0.95, 1.035)
+    f4 = affine_frame(f4, -0.08, 0.04, 1.1, -hshift(base, 0.06), -1.6)
+    f4 = ImageEnhance.Brightness(f4).enhance(1.06)
+    f4 = ImageEnhance.Sharpness(f4).enhance(1.16)
+    f4 = ImageEnhance.Contrast(f4).enhance(1.18)
+    f4 = ImageEnhance.Color(f4).enhance(1.18)
+    f4 = warm_grade(f4, 1.45)
+    f4 = painterly(f4, 0.92)
+    f4 = vignette(f4, 0.42)
+    return [f0, f1, f2, f3, f4]
 
 
 def main() -> None:
@@ -129,13 +206,13 @@ def main() -> None:
             print(f"wrote {dest.relative_to(ROOT)} ({fr.size[0]}x{fr.size[1]})")
     manifest = {
         "clip": "tickle",
-        "frames": ["f0", "f1", "f2", "f3"],
+        "frames": ["f0", "f1", "f2", "f3", "f4"],
         "characters": [c[0] for c in CHARS],
         "files": files,
         "note": (
-            "f0 = metal-free A-pose still; f1–f3 = deepened lean/reach/bob "
-            "(stronger transforms for intensity-weighted cycle). "
-            "Not full painterly. Elara jewelry exception only."
+            "f0 = metal-free A-pose still; f1–f4 = deepened lean/reach/bob + "
+            "painterly grade (oil smear / warm push / vignette) for intensity-"
+            "weighted cycle. Elara jewelry exception only."
         ),
     }
     (OUT / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n")

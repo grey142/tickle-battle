@@ -13,11 +13,12 @@
   "elbowAmp": 0.429,
   "weaponWag": 0.4752,
   "billWag": 0.0646,
-  "billRate": 27.14,
+  "billRate": 28.23,
   "frames": [
     "frames/BriarKnox_f0.jpg",
     "frames/BriarKnox_f1.jpg",
     "frames/BriarKnox_f2.jpg",
-    "frames/BriarKnox_f3.jpg"
+    "frames/BriarKnox_f3.jpg",
+    "frames/BriarKnox_f4.jpg"
   ]
 }

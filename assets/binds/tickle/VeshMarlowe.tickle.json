@@ -13,11 +13,12 @@
   "elbowAmp": 0.495,
   "weaponWag": 0.5724,
   "billWag": 0.0845,
-  "billRate": 29.47,
+  "billRate": 30.65,
   "frames": [
     "frames/VeshMarlowe_f0.jpg",
     "frames/VeshMarlowe_f1.jpg",
     "frames/VeshMarlowe_f2.jpg",
-    "frames/VeshMarlowe_f3.jpg"
+    "frames/VeshMarlowe_f3.jpg",
+    "frames/VeshMarlowe_f4.jpg"
   ]
 }

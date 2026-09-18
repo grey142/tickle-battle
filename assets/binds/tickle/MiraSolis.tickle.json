@@ -13,11 +13,12 @@
   "elbowAmp": 0.4565,
   "weaponWag": 0.5076,
   "billWag": 0.0732,
-  "billRate": 28.2,
+  "billRate": 29.33,
   "frames": [
     "frames/MiraSolis_f0.jpg",
     "frames/MiraSolis_f1.jpg",
     "frames/MiraSolis_f2.jpg",
-    "frames/MiraSolis_f3.jpg"
+    "frames/MiraSolis_f3.jpg",
+    "frames/MiraSolis_f4.jpg"
   ]
 }

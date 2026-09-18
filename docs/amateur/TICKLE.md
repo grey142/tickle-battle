@@ -7,7 +7,7 @@ Per-look `assets/binds/tickle/<Slug>.tickle.json` files tune the shared **tickli
 ## Files
 
 - `assets/binds/tickle/{Slug}.tickle.json`
-- `assets/binds/tickle/frames/{Slug}_f0.jpg` … `_f3.jpg` — four-frame tickle cycle (f0 = metal-free A-pose still; f1–f3 = deepened lean/reach/bob with stronger transforms + warm grade)
+- `assets/binds/tickle/frames/{Slug}_f0.jpg` … `_f4.jpg` — five-frame tickle cycle (f0 = metal-free A-pose still; f1–f4 = deepened lean/reach/bob + painterly grade)
 - `assets/binds/tickle/frames/MANIFEST.json`
 - Loader: `src/game/tickleBind.ts` (`tickleFrameUrls(bind)`)
 - Generator: `scripts/gen_tickle_frames.py`
@@ -16,14 +16,14 @@ Per-look `assets/binds/tickle/<Slug>.tickle.json` files tune the shared **tickli
 
 - Pose: `rate`, `twistRate`, `spineBase`, `spineAmp`, `chestAmp`, `shoulderAmp`, `elbowAmp`, `weaponWag`
 - Billboard: `billWag`, `billRate`
-- `frames`: `["frames/Slug_f0.jpg", … "_f3.jpg"]`
+- `frames`: `["frames/Slug_f0.jpg", … "_f4.jpg"]`
 
 ## Wiring
 
 - Humanoid 3D tickle pose uses bind rate/amps (slightly stronger secondary twist for readability).
-- AI tickler billboards wag from `billWag`/`billRate` **and** cycle the four production frames with **intensity-weighted** windows (mirrors laugh #23 stamina pick):
-  - Game stamps `Fighter.tickleIntensity` from victim stamina (low stam → high intensity → harder f2/f3).
-  - Mild (`<30`): f0–f1; mid: f0–f2; hard: f1–f3; peak (`≥80`): f2–f3.
+- AI tickler billboards wag from `billWag`/`billRate` **and** cycle the five production frames with **intensity-weighted** windows (mirrors laugh stamina pick):
+  - Game stamps `Fighter.tickleIntensity` from victim stamina (low stam → high intensity → harder f3/f4).
+  - Soft (`<22`): f0–f1; low-mid: f0–f2; mid: f1–f3; hard: f2–f4; peak (`≥82`): f3–f4.
   - Cycle FPS scales with `billRate` and intensity.
   - Restore keyed A-pose still when not tickling.
 - FP HUD `#player-portrait` swaps to the active tickle frame while the player is tickler/nudge.
@@ -33,4 +33,4 @@ Metal-free Amateur AI; Elara jewelry exception only (`playerOnly` / `metalExcept
 
 ## Deferred
 
-True painterly multi-frame / stage production stills and blendshapes for tickle (beyond deepened A-pose adaptations) are **not** in this ship.
+True multi-clip mesh anims / morph blendshapes for tickle (beyond deepened painterly A-pose still adaptations) are **not** in this ship.

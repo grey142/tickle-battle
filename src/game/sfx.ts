@@ -1,4 +1,4 @@
-/** Amateur Team Quick SFX — short sample pack + oscillator fallbacks. */
+/** Amateur Team Quick SFX — deepened procedural sample pack + oscillator fallbacks. */
 
 type CueId =
   | "tickle-lock"
