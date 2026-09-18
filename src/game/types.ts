@@ -57,11 +57,24 @@ export function normalizeSave(raw: Partial<SaveData> | null | undefined): SaveDa
       tickle: clampInt(blocks.tickle ?? 0, 0, 10),
     },
     look: clampInt(raw.look ?? 0, 0, 12),
-    weapon: Number(raw.weapon) || 0,
-    armor: Number(raw.armor) || 0,
-    // Equipped loadout always stays owned so Look/Skills/Shop reloads stay consistent.
-    ownedWeapons: uniqueIds([0, ...ownedW, Number(raw.weapon) || 0]),
-    ownedArmors: uniqueIds([0, ...ownedA, Number(raw.armor) || 0]),
+    ownedWeapons: (() => {
+      const w = Number(raw.weapon) || 0;
+      return uniqueIds([0, ...ownedW, w]);
+    })(),
+    ownedArmors: (() => {
+      const a = Number(raw.armor) || 0;
+      return uniqueIds([0, ...ownedA, a]);
+    })(),
+    weapon: (() => {
+      const w = Number(raw.weapon) || 0;
+      const owned = uniqueIds([0, ...ownedW, w]);
+      return owned.includes(w) ? w : 0;
+    })(),
+    armor: (() => {
+      const a = Number(raw.armor) || 0;
+      const owned = uniqueIds([0, ...ownedA, a]);
+      return owned.includes(a) ? a : 0;
+    })(),
   };
 }
 

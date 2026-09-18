@@ -80,6 +80,10 @@ export class Fighter {
   idleStillTex?: THREE.Texture;
   idleFrame = 0;
   private idleFrameAcc = 0;
+  /** Soft crossfade partner for idle sheet (beyond hard UV swaps). */
+  private idleFadeSprite?: THREE.Sprite;
+  private idleFadeTex?: THREE.Texture;
+  private idlePhase = 0;
   headMat: THREE.MeshStandardMaterial;
   skinMat: THREE.MeshStandardMaterial;
   rim: THREE.PointLight;
@@ -179,8 +183,13 @@ export class Fighter {
     this.portraitUrl = url;
     // Drop prior idle sheet so Look swaps don't keep the old slug cycling.
     this.idleSheetTex = undefined;
+    this.idleFadeTex = undefined;
     this.idleFrame = 0;
     this.idleFrameAcc = 0;
+    this.idlePhase = 0;
+    if (this.idleFadeSprite) {
+      this.idleFadeSprite.visible = false;
+    }
     if (!url) return;
     if (!this.isPlayer) this.body.visible = false;
     lookFromStill(url).then((kit) => {
@@ -252,26 +261,69 @@ export class Fighter {
     if (!bill) return;
     const mat = bill.material as THREE.SpriteMaterial;
     if (!playing || !sheet) {
+      if (this.idleFadeSprite) this.idleFadeSprite.visible = false;
       if (this.idleStillTex && mat.map !== this.idleStillTex) {
         mat.map = this.idleStillTex;
         mat.needsUpdate = true;
       }
+      mat.opacity = 1;
       return;
     }
     const bind = idleBindForSlug(this.slug);
     const frames = Math.max(1, bind.frames ?? 8);
     const fps = Math.max(4, bind.fps ?? 8);
-    this.idleFrameAcc += dt * fps;
-    while (this.idleFrameAcc >= 1) {
-      this.idleFrameAcc -= 1;
-      this.idleFrame = (this.idleFrame + 1) % frames;
-    }
+    this.idlePhase += dt * fps;
+    const frameF = this.idlePhase;
+    const f0 = Math.floor(frameF) % frames;
+    const f1 = (f0 + 1) % frames;
+    const u = frameF - Math.floor(frameF);
+    // Smoothstep blend — no hard UV snap between sheet cells.
+    const blend = u * u * (3 - 2 * u);
+    this.idleFrame = f0;
+    this.idleFrameAcc = u;
+
     sheet.repeat.set(1 / frames, 1);
-    sheet.offset.set(this.idleFrame / frames, 0);
+    sheet.offset.set(f0 / frames, 0);
     if (mat.map !== sheet) {
       mat.map = sheet;
       mat.needsUpdate = true;
     }
+    mat.transparent = true;
+    mat.opacity = 1 - blend;
+    mat.depthWrite = false;
+
+    let fade = this.idleFadeSprite;
+    if (!fade) {
+      const fadeTex = sheet.clone();
+      fadeTex.needsUpdate = true;
+      fadeTex.colorSpace = sheet.colorSpace;
+      fadeTex.wrapS = sheet.wrapS;
+      fadeTex.wrapT = sheet.wrapT;
+      this.idleFadeTex = fadeTex;
+      const fadeMat = new THREE.SpriteMaterial({
+        map: fadeTex,
+        transparent: true,
+        depthTest: true,
+        depthWrite: false,
+        alphaTest: 0.05,
+        opacity: 0,
+      });
+      fade = new THREE.Sprite(fadeMat);
+      fade.scale.copy(bill.scale);
+      fade.position.copy(bill.position);
+      fade.renderOrder = (bill.renderOrder || 1) + 1;
+      this.group.add(fade);
+      this.idleFadeSprite = fade;
+    }
+    const fadeMat = fade.material as THREE.SpriteMaterial;
+    const fadeTex = this.idleFadeTex ?? (fadeMat.map as THREE.Texture);
+    fadeTex.repeat.set(1 / frames, 1);
+    fadeTex.offset.set(f1 / frames, 0);
+    fadeMat.opacity = blend;
+    fade.visible = blend > 0.02;
+    fade.scale.copy(bill.scale);
+    fade.position.copy(bill.position);
+    fadeMat.rotation = mat.rotation;
   }
 
   recalc() {
@@ -322,31 +374,26 @@ export class Fighter {
     }
     const urls = laughFrameUrls(bind);
     if (urls.length < 2) return false;
-    // Stamina-weighted window (mirrors tickle intensity windows, inverted):
-    // high stamina stays soft f0–f1; mid opens mid; low locks harder onto f2–f4 / f3–f4.
+    // Stamina-weighted window: low stamina favors harder laugh frames (f2/f3).
     const pct = Math.max(0, Math.min(100, staminaPct ?? 100));
     const n = urls.length;
     let lo = 0;
     let hi = n - 1;
-    if (pct >= 72) {
+    if (pct >= 70) {
       lo = 0;
       hi = Math.min(1, n - 1);
-    } else if (pct >= 48) {
+    } else if (pct >= 40) {
       lo = 0;
       hi = Math.min(2, n - 1);
-    } else if (pct >= 28) {
+    } else if (pct >= 15) {
       lo = Math.min(1, n - 1);
-      hi = Math.min(3, n - 1);
-    } else if (pct >= 12) {
-      lo = Math.min(2, n - 1);
       hi = n - 1;
     } else {
-      lo = Math.min(3, n - 1);
+      lo = Math.min(2, n - 1);
       hi = n - 1;
     }
     const span = Math.max(1, hi - lo + 1);
-    // FPS climbs aggressively as stamina drops (billRate × stamina factor).
-    const fps = Math.max(8, Math.round((stageParams?.billRate || 14) * (0.48 + (100 - pct) * 0.0075)));
+    const fps = Math.max(7, Math.round((stageParams?.billRate || 14) * (0.55 + (100 - pct) * 0.004)));
     const idx = lo + (Math.floor(this.animT * fps) % span);
     if (idx === this.laughFrameApplied && this.laughFramePortrait) return true;
     const want = idx;
@@ -644,6 +691,11 @@ export class Fighter {
       bill.scale.set(w, h, 1);
       bill.position.set(x, y, 0);
       mat.rotation = rot;
+      if (this.idleFadeSprite?.visible) {
+        this.idleFadeSprite.scale.copy(bill.scale);
+        this.idleFadeSprite.position.copy(bill.position);
+        (this.idleFadeSprite.material as THREE.SpriteMaterial).rotation = rot;
+      }
       return;
     }
     this.applyIdleSheetFrame(dt, false);
