@@ -5,18 +5,18 @@
   "playerOnly": false,
   "metalException": false,
   "walk": {
-    "rate": 8.145,
-    "amp": 0.553,
-    "lean": 0.072,
-    "billBob": 0.041,
-    "billRate": 9.787
+    "rate": 8.96,
+    "amp": 0.608,
+    "lean": 0.078,
+    "billBob": 0.047,
+    "billRate": 10.766
   },
   "run": {
-    "rate": 12.443,
-    "amp": 0.829,
-    "lean": 0.215,
-    "billBob": 0.095,
-    "billRate": 14.968
+    "rate": 13.687,
+    "amp": 0.912,
+    "lean": 0.232,
+    "billBob": 0.108,
+    "billRate": 16.465
   },
   "runSpeed": 4.4,
   "walkSpeed": 0.4,

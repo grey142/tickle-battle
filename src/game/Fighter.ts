@@ -563,8 +563,9 @@ export class Fighter {
     }
     const urls = runFrameUrls(runBind);
     if (urls.length < 2) return;
-    // FPS from bind.run.billRate (production clip rate); walk still cycles the same sheet.
-    const fps = Math.max(1, runBind.run.billRate || 12);
+    // FPS from loco billRate — walk uses walk.billRate, run uses run.billRate.
+    const locoBill = clip === "run" ? runBind.run : runBind.walk;
+    const fps = Math.max(1, locoBill.billRate || (clip === "run" ? 12 : 9));
     const idx = Math.floor(this.animT * fps) % urls.length;
     if (idx === this.runFrameApplied && this.runFramePortrait) return;
     const want = idx;
@@ -689,12 +690,12 @@ export class Fighter {
       const bob = loco?.billBob ?? (clip === "run" ? 0.078 : 0.036);
       const s = Math.sin(t * rate);
       const s2 = Math.sin(t * rate * 2);
-      // Stronger stride bob / sway / squash on the billboard cycle.
-      w = BILL_W * (1 + s * bob * 0.55 + Math.abs(s2) * bob * 0.12);
-      h = BILL_H * (1 + Math.abs(s) * bob * 0.42 - Math.abs(s2) * bob * 0.18);
-      x = s * bob * 0.7;
-      y = BILL_Y + Math.abs(s) * bob * 1.35;
-      rot = s * bob * 0.75;
+      // Follow-up deepen: punchier stride bob / sway / squash beyond #30.
+      w = BILL_W * (1 + s * bob * 0.62 + Math.abs(s2) * bob * 0.16);
+      h = BILL_H * (1 + Math.abs(s) * bob * 0.48 - Math.abs(s2) * bob * 0.22);
+      x = s * bob * 0.82;
+      y = BILL_Y + Math.abs(s) * bob * 1.5;
+      rot = s * bob * 0.88;
     } else {
       // Multi-frame sheet + deeper dual-phase breathe / weight-shift (beyond flat sheet swap).
       this.applyIdleSheetFrame(dt, true);
