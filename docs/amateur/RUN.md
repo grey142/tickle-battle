@@ -5,7 +5,7 @@ Per-look locomotion binds for **Elara Case** (player kit) and the **Amateur 12**
 ## Files
 
 - `assets/binds/run/{Slug}.run.json`
-- `assets/binds/run/frames/{Slug}_f0.jpg` … `_f3.jpg` — four-frame run cycle (f0 = A-pose still; f1–f3 = keyed-friendly bob/sway/squash stride)
+- `assets/binds/run/frames/{Slug}_f0.jpg` … `_f3.jpg` — four-frame run cycle (f0 = A-pose still; f1–f3 = deepened bob/sway/squash stride)
 - `assets/binds/run/frames/MANIFEST.json`
 - Loader: `src/game/runBind.ts` (`runFrameUrls(bind)`)
 
@@ -19,7 +19,7 @@ Per-look locomotion binds for **Elara Case** (player kit) and the **Amateur 12**
 
 - Free fighters pick idle / walk / run by speed.
 - Humanoid 3D pose uses bind rate/amp/lean.
-- AI woman billboards bob while walking/running **and** cycle the four production frames at `bind.run.billRate` FPS; restore keyed A-pose still when idle/busy.
+- AI woman billboards bob (stronger sway/squash) while walking/running **and** cycle the four production frames at `bind.run.billRate` FPS; restore keyed A-pose still when idle/busy. Humanoid 3D stride bob/sway/squash also deepened.
 - FP HUD `#player-portrait` gets `data-clip` + `.running` / `.walking`; meta shows the clip name; portrait src also cycles run frames when walk/run.
 
 Metal-free Amateur AI; Elara jewelry exception only (`playerOnly` / `metalException`). She is not in the Amateur bikini glob.

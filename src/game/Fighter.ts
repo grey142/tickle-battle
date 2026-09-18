@@ -612,14 +612,16 @@ export class Fighter {
       rot = 0.35;
     } else if (clip === "run" || clip === "walk") {
       const loco = runBind ? (clip === "run" ? runBind.run : runBind.walk) : undefined;
-      const rate = loco?.billRate ?? (clip === "run" ? 13 : 8.5);
-      const bob = loco?.billBob ?? (clip === "run" ? 0.055 : 0.025);
+      const rate = loco?.billRate ?? (clip === "run" ? 14.5 : 9.2);
+      const bob = loco?.billBob ?? (clip === "run" ? 0.078 : 0.036);
       const s = Math.sin(t * rate);
-      w = BILL_W * (1 + s * bob * 0.35);
-      h = BILL_H * (1 + Math.abs(s) * bob * 0.25);
-      x = s * bob * 0.4;
-      y = BILL_Y + Math.abs(s) * bob;
-      rot = s * bob * 0.5;
+      const s2 = Math.sin(t * rate * 2);
+      // Stronger stride bob / sway / squash on the billboard cycle.
+      w = BILL_W * (1 + s * bob * 0.55 + Math.abs(s2) * bob * 0.12);
+      h = BILL_H * (1 + Math.abs(s) * bob * 0.42 - Math.abs(s2) * bob * 0.18);
+      x = s * bob * 0.7;
+      y = BILL_Y + Math.abs(s) * bob * 1.35;
+      rot = s * bob * 0.75;
     } else {
       // Multi-frame sheet + deeper dual-phase breathe / weight-shift (beyond flat sheet swap).
       this.applyIdleSheetFrame(dt, true);
