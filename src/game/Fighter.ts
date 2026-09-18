@@ -705,12 +705,12 @@ export class Fighter {
       const bob = loco?.billBob ?? (clip === "run" ? 0.078 : 0.036);
       const s = Math.sin(t * rate);
       const s2 = Math.sin(t * rate * 2);
-      // Follow-up deepen: punchier stride bob / sway / squash beyond #30.
-      w = BILL_W * (1 + s * bob * 0.62 + Math.abs(s2) * bob * 0.16);
-      h = BILL_H * (1 + Math.abs(s) * bob * 0.48 - Math.abs(s2) * bob * 0.22);
-      x = s * bob * 0.82;
-      y = BILL_Y + Math.abs(s) * bob * 1.5;
-      rot = s * bob * 0.88;
+      // Further deepen beyond #33: punchier stride bob / sway / squash.
+      w = BILL_W * (1 + s * bob * 0.7 + Math.abs(s2) * bob * 0.2);
+      h = BILL_H * (1 + Math.abs(s) * bob * 0.54 - Math.abs(s2) * bob * 0.26);
+      x = s * bob * 0.92;
+      y = BILL_Y + Math.abs(s) * bob * 1.65;
+      rot = s * bob * 0.98;
     } else {
       // Crossfade sheets + stronger dual-phase breathe / weight-shift (past #32).
       this.applyIdleSheetFrame(dt, true);
