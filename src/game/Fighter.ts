@@ -177,6 +177,10 @@ export class Fighter {
     this.look = lookIdx;
     const url = stillUrlFor(slug);
     this.portraitUrl = url;
+    // Drop prior idle sheet so Look swaps don't keep the old slug cycling.
+    this.idleSheetTex = undefined;
+    this.idleFrame = 0;
+    this.idleFrameAcc = 0;
     if (!url) return;
     if (!this.isPlayer) this.body.visible = false;
     lookFromStill(url).then((kit) => {
@@ -612,16 +616,19 @@ export class Fighter {
       y = BILL_Y + Math.abs(s) * bob;
       rot = s * bob * 0.5;
     } else {
-      // Multi-frame A-pose sheet + light bind breathe (beyond single keyed still).
+      // Multi-frame sheet + deeper dual-phase breathe / weight-shift (beyond flat sheet swap).
       this.applyIdleSheetFrame(dt, true);
       const idle = idleBindForSlug(this.slug);
-      const b = Math.sin(t * idle.breatheRate) * idle.breatheAmp * 0.55;
-      const s = Math.sin(t * idle.breatheRate * 0.65) * idle.sway * 0.55;
-      w = BILL_W * (1 + Math.sin(t * idle.breatheRate) * idle.scalePulse * 0.55);
-      h = BILL_H * (1 + b * 0.5);
+      const rate = idle.breatheRate;
+      const b = Math.sin(t * rate) * idle.breatheAmp;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 0.45;
+      const shift = idle.weightShift ?? idle.sway;
+      const s = Math.sin(t * rate * 0.62) * idle.sway + Math.sin(t * rate * 0.31) * shift * 0.55;
+      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse + Math.sin(t * rate * 1.7) * idle.scalePulse * 0.35);
+      h = BILL_H * (1 + (b + b2) * 0.85);
       x = s;
-      y = BILL_Y + b;
-      rot = s * 0.35;
+      y = BILL_Y + b + b2 * 0.5;
+      rot = s * 0.55;
       bill.scale.set(w, h, 1);
       bill.position.set(x, y, 0);
       mat.rotation = rot;

@@ -662,6 +662,12 @@ export class Game {
       this.plazaPreview.yaw = Math.PI * 0.92;
       this.plazaPreview.syncMesh();
       this.plazaPreview.settle();
+      // Hub mannequin: no floating name plate over the idle sheet.
+      for (const ch of [...this.plazaPreview.group.children]) {
+        if (ch instanceof THREE.Sprite && ch !== this.plazaPreview.portraitSprite) {
+          ch.visible = false;
+        }
+      }
       this.scene.add(this.plazaPreview.group);
     } else {
       this.plazaPreview.applyGear(this.save.weapon, this.save.armor);

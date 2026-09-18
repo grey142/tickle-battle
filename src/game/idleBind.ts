@@ -12,6 +12,10 @@ export interface IdleBind {
   breatheAmp: number;
   sway: number;
   scalePulse: number;
+  /** Extra lateral weight shift on billboard / capsule idle. */
+  weightShift?: number;
+  /** Soft head nod amp for capsule idle. */
+  headNod?: number;
   frames?: number;
   sheetLayout?: string;
   fps?: number;
@@ -48,13 +52,15 @@ const FALLBACK: IdleBind = {
   slug: "default",
   display: "Default",
   pose: "a_pose",
-  breatheRate: 2.2,
-  breatheAmp: 0.02,
-  sway: 0.015,
-  scalePulse: 0.015,
+  breatheRate: 2.05,
+  breatheAmp: 0.029,
+  sway: 0.024,
+  scalePulse: 0.023,
+  weightShift: 0.026,
+  headNod: 0.018,
   frames: 8,
   sheetLayout: "horizontal",
-  fps: 8,
+  fps: 7,
 };
 
 export function idleBindForSlug(slug?: string): IdleBind {
