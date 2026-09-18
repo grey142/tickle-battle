@@ -761,7 +761,7 @@ export class Game {
     if (!man || this.mode === "play") return;
     const inPlaza = this.mode === "hub" && this.hub.room === "plaza";
     // Track plaza feet tightly; ease softer into Home/Shop hall pose so idle phase keeps rolling.
-    const rate = inPlaza ? 14 : 4.8;
+    const rate = inPlaza ? 16.5 : 4.2;
     const k = 1 - Math.exp(-dt * rate);
     const before = man.pos.clone();
     man.pos.lerp(this.plazaPoseTarget, k);
