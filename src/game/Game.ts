@@ -96,6 +96,9 @@ export class Game {
   matchWeapon = 0;
   matchArmor = 0;
   plazaPreview: Fighter | null = null;
+  /** Soft hall/plaza pose targets so mannequin idle doesn't hard-snap between rooms. */
+  private plazaPoseTarget = new THREE.Vector3(0, 0, 1.35);
+  private plazaYawTarget = Math.PI * 0.92;
   /** First-person walk pose while hub.room === plaza (flat floor). */
   hubPos = new THREE.Vector3(0, 0, -2.4);
   hubYaw = Math.PI; // face +z toward Arena
@@ -710,13 +713,34 @@ export class Game {
       }
     }
     if (inPlaza) {
-      this.plazaPreview.pos.copy(this.hubPos);
-      this.plazaPreview.yaw = this.hubYaw;
+      this.plazaPoseTarget.copy(this.hubPos);
+      this.plazaYawTarget = this.hubYaw;
     } else if (this.mode === "hub" || this.mode === "results") {
-      this.plazaPreview.pos.set(0, 0, 1.35);
-      this.plazaPreview.yaw = Math.PI * 0.92;
+      this.plazaPoseTarget.set(0, 0, 1.35);
+      this.plazaYawTarget = Math.PI * 0.92;
+    }
+    // First spawn / huge jumps snap; otherwise ease in tickPlazaMannequinContinuity.
+    if (this.plazaPreview.pos.distanceToSquared(this.plazaPoseTarget) > 36) {
+      this.plazaPreview.pos.copy(this.plazaPoseTarget);
+      this.plazaPreview.yaw = this.plazaYawTarget;
+      this.plazaPreview.settle();
     }
     this.plazaPreview.group.visible = show;
+  }
+
+  /** Ease mannequin between plaza feet and hall preview without resetting idle phase. */
+  private tickPlazaMannequinContinuity(dt: number) {
+    const man = this.plazaPreview;
+    if (!man || this.mode === "play") return;
+    const k = 1 - Math.exp(-dt * 7.5);
+    const before = man.pos.clone();
+    man.pos.lerp(this.plazaPoseTarget, k);
+    let dy = this.plazaYawTarget - man.yaw;
+    while (dy > Math.PI) dy -= Math.PI * 2;
+    while (dy < -Math.PI) dy += Math.PI * 2;
+    man.yaw += dy * k;
+    // Large teleports (door room change) settle so walk→idle sheet doesn't spike.
+    if (before.distanceToSquared(man.pos) > 1.0) man.settle();
   }
 
   private isFfa(): boolean {
@@ -762,11 +786,12 @@ export class Game {
       }
       this.syncPlazaHall();
       this.syncPlazaPreview();
+      this.tickPlazaMannequinContinuity(Math.min(0.05, wallDt));
       if (this.plazaPreview) {
         this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
         if (this.hub.laughing) {
           // Preview harder laugh morph/frames (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.16);
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.28);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
         }
@@ -793,11 +818,12 @@ export class Game {
         return;
       }
       this.syncPlazaPreview();
+      this.tickPlazaMannequinContinuity(Math.min(0.05, wallDt));
       if (this.plazaPreview) {
         this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
         if (this.hub.laughing) {
           // Preview harder laugh morph/frames (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.16);
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.28);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
         }
