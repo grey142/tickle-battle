@@ -266,10 +266,10 @@ export class Humanoid {
 
     if (clip === "idle") {
       // Stronger dual-phase breathe + weight shift (past #28/#32).
-      const rate = 1.95;
-      const b = Math.sin(t * rate) * 0.04;
-      const b2 = Math.sin(t * rate * 0.53 + 0.7) * 0.019;
-      const shift = Math.sin(t * rate * 0.35) * 0.034 + Math.sin(t * rate * 0.18) * 0.014;
+      const rate = 1.9;
+      const b = Math.sin(t * rate) * 0.045;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * 0.022;
+      const shift = Math.sin(t * rate * 0.35) * 0.038 + Math.sin(t * rate * 0.18) * 0.016;
       this.spine.rotation.x = b + b2;
       this.spine.rotation.z = shift * 0.42;
       this.chest.position.y = 0.22 + (b + b2) * 0.65;

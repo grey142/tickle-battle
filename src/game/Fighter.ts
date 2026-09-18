@@ -84,6 +84,8 @@ export class Fighter {
   private idleFadeSprite?: THREE.Sprite;
   private idleFadeTex?: THREE.Texture;
   private idlePhase = 0;
+  /** 0→1 ramp when a Look sheet first lands (no hard pop). */
+  private idleSheetEnter = 1;
   headMat: THREE.MeshStandardMaterial;
   skinMat: THREE.MeshStandardMaterial;
   rim: THREE.PointLight;
@@ -191,7 +193,8 @@ export class Fighter {
     this.idleFadeTex = undefined;
     this.idleFrame = 0;
     this.idleFrameAcc = 0;
-    this.idlePhase = 0;
+    // Keep idlePhase so Look swaps don't restart the breathe clock cold.
+    this.idleSheetEnter = 0;
     if (this.idleFadeSprite) {
       this.idleFadeSprite.visible = false;
     }
@@ -257,6 +260,13 @@ export class Fighter {
       this.idleSheetTex = tex;
       this.idleFrame = 0;
       this.idleFrameAcc = 0;
+      this.idleSheetEnter = 0;
+      // Fresh fade tex for the new Look sheet.
+      this.idleFadeTex = undefined;
+      if (this.idleFadeSprite) {
+        this.group.remove(this.idleFadeSprite);
+        this.idleFadeSprite = undefined;
+      }
     });
   }
 
@@ -293,8 +303,10 @@ export class Fighter {
       mat.map = sheet;
       mat.needsUpdate = true;
     }
+    this.idleSheetEnter = Math.min(1, this.idleSheetEnter + dt * 2.8);
+    const enter = this.idleSheetEnter * this.idleSheetEnter * (3 - 2 * this.idleSheetEnter);
     mat.transparent = true;
-    mat.opacity = 1 - blend;
+    mat.opacity = (1 - blend) * enter;
     mat.depthWrite = false;
 
     let fade = this.idleFadeSprite;
@@ -324,8 +336,8 @@ export class Fighter {
     const fadeTex = this.idleFadeTex ?? (fadeMat.map as THREE.Texture);
     fadeTex.repeat.set(1 / frames, 1);
     fadeTex.offset.set(f1 / frames, 0);
-    fadeMat.opacity = blend;
-    fade.visible = blend > 0.02;
+    fadeMat.opacity = blend * enter;
+    fade.visible = blend > 0.02 && enter > 0.02;
     fade.scale.copy(bill.scale);
     fade.position.copy(bill.position);
     fadeMat.rotation = mat.rotation;
@@ -715,22 +727,22 @@ export class Fighter {
       y = BILL_Y + Math.abs(s) * bob * 1.82;
       rot = s * bob * 1.08;
     } else {
-      // Past #36: punchier breathe / weight-shift on top of sheet crossfade.
+      // Past #40: Look sheet soft-enter + stronger breathe / weight-shift.
       this.applyIdleSheetFrame(dt, true);
       const idle = idleBindForSlug(this.slug);
       const rate = idle.breatheRate;
-      const b = Math.sin(t * rate) * idle.breatheAmp * 1.28;
-      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 0.62;
+      const b = Math.sin(t * rate) * idle.breatheAmp * 1.38;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 0.7;
       const shift = idle.weightShift ?? idle.sway;
       const s =
-        Math.sin(t * rate * 0.62) * idle.sway * 1.35 +
-        Math.sin(t * rate * 0.31 + 0.4) * shift * 0.9 +
-        Math.sin(t * rate * 0.17) * shift * 0.35;
-      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 1.28 + Math.sin(t * rate * 1.7) * idle.scalePulse * 0.55);
-      h = BILL_H * (1 + (b + b2) * 1.05);
+        Math.sin(t * rate * 0.62) * idle.sway * 1.45 +
+        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.0 +
+        Math.sin(t * rate * 0.17) * shift * 0.42;
+      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 1.35 + Math.sin(t * rate * 1.7) * idle.scalePulse * 0.62);
+      h = BILL_H * (1 + (b + b2) * 1.12);
       x = s;
-      y = BILL_Y + b + b2 * 0.65;
-      rot = s * 0.7;
+      y = BILL_Y + b + b2 * 0.7;
+      rot = s * 0.75;
       bill.scale.set(w, h, 1);
       bill.position.set(x, y, 0);
       mat.rotation = rot;
