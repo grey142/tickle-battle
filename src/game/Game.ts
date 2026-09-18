@@ -105,6 +105,8 @@ export class Game {
   hubPitch = 0;
   hubNear: "home" | "shop" | "arena" | null = null;
   private hubPrompted: "home" | "shop" | "arena" | null = null;
+  /** Ignore pad/click confirm briefly after Leave/Return so A does not re-queue Arena. */
+  private hubConfirmGrace = 0;
   result = "";
   toastT = 0;
   toast = "";
@@ -214,7 +216,7 @@ export class Game {
 
   private bindUi() {
     bindAudioUnlock(document);
-    this.overlay.querySelector("#again")?.addEventListener("click", () => this.showHub());
+    this.overlay.querySelector("#again")?.addEventListener("click", () => this.returnToPlaza("click"));
     this.overlay.querySelector("#btn-leave")?.addEventListener("click", () => this.bailCountdown());
     this.renderer.domElement.addEventListener("click", (e) => {
       if (this.tryPlazaDoor(e.clientX, e.clientY)) return;
@@ -318,10 +320,7 @@ export class Game {
     this.resetMatchEphemeral();
     this.clearFighters();
     this.say("Left during countdown — no coins, no XP");
-    this.showHub();
-    document.exitPointerLock?.();
-    // Consume back/confirm so pad B does not bounce or re-open rooms.
-    this.input.endFrame();
+    this.returnToPlaza("leave");
   }
 
   /** Clear countdown/combat maps so Leave → plaza never leaks match state into hub. */
@@ -342,10 +341,24 @@ export class Game {
     this.nudgeIds = [];
     this.liveT = 0;
     this.result = "";
+    this.matchLoadout = "";
+    this.lookPitch = 0;
+    this.fpArmT = 0;
+    this.wallPrev = performance.now();
+  }
+
+  /** Shared Leave / results Return edge — wipe ephemeral, reload disk, grace pad A. */
+  private returnToPlaza(_reason: "leave" | "return" | "click") {
+    this.showHub();
+    document.exitPointerLock?.();
+    // Consume back/confirm so pad B/A does not bounce into Arena or re-open rooms.
+    this.input.endFrame();
+    this.hubConfirmGrace = 0.45;
   }
 
   private beginMatch(fromPad: boolean) {
     if (this.mode === "play") return;
+    if (this.hubConfirmGrace > 0) return;
     resumeAudio();
     if (!fromPad && !this.input.padActive) this.renderer.domElement.requestPointerLock?.();
     this.startMatch();
@@ -353,6 +366,7 @@ export class Game {
 
   private showHub() {
     this.mode = "hub";
+    this.countdown = 0;
     this.clearFighters();
     this.map.group.visible = false;
     this.plaza.group.visible = true;
@@ -381,6 +395,7 @@ export class Game {
     this.syncPlazaPreview();
     this.plaza.setHover(null);
     this.plaza.setNear(null);
+    this.plaza.setNearStrength(0);
     // Idempotent wipe if Return/Leave raced; disk save already reloaded above.
     this.resetMatchEphemeral();
     this.persistSave();
@@ -426,6 +441,15 @@ export class Game {
     this.hubPos.y = 0;
     this.hubNear = this.plaza.nearDoor(this.hubPos.x, this.hubPos.z);
     this.plaza.setNear(this.hubNear);
+    if (this.hubNear) {
+      const d = this.plaza.doors[this.hubNear];
+      const dist = Math.hypot(this.hubPos.x - d.x, this.hubPos.z - d.z);
+      // Soft approach ramp inside PLAZA_DOOR_REACH (beyond binary near from #33).
+      const reach = 3.2;
+      this.plaza.setNearStrength(1 - Math.min(1, dist / reach));
+    } else {
+      this.plaza.setNearStrength(0);
+    }
     if (this.hubNear !== this.hubPrompted) {
       this.hubPrompted = this.hubNear;
       if (this.hubNear === "arena") {
@@ -770,16 +794,23 @@ export class Game {
     if (this.input.justConnected) this.say(`${this.input.padLabel} ready — LS move, RS look`);
 
     if (this.mode === "hub") {
+      if (this.hubConfirmGrace > 0) this.hubConfirmGrace = Math.max(0, this.hubConfirmGrace - wallDt);
       const consumed = this.hub.handlePad(this.input);
       if (this.hub.room === "plaza") {
         if (!consumed) this.tickHubWalk(dt);
-        if (this.input.confirm && !consumed) {
+        const grace = this.hubConfirmGrace > 0;
+        if (this.input.confirm && !consumed && !grace) {
           this.interactHubDoor(true);
           this.input.endFrame();
           return;
         }
-        if (!consumed && this.hubNear && this.input.keys.has("KeyE")) {
+        if (!consumed && !grace && this.hubNear && this.input.keys.has("KeyE")) {
           this.interactHubDoor(false);
+          this.input.keys.delete("KeyE");
+          this.input.endFrame();
+          return;
+        }
+        if (grace && (this.input.confirm || this.input.keys.has("KeyE"))) {
           this.input.keys.delete("KeyE");
           this.input.endFrame();
           return;
@@ -814,8 +845,7 @@ export class Game {
     }
     if (this.mode === "results") {
       if (this.input.back || this.input.confirm) {
-        this.showHub();
-        this.input.endFrame();
+        this.returnToPlaza("return");
         return;
       }
       this.syncPlazaPreview();
