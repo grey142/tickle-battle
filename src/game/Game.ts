@@ -353,7 +353,7 @@ export class Game {
     document.exitPointerLock?.();
     // Consume back/confirm so pad B/A does not bounce into Arena or re-open rooms.
     this.input.endFrame();
-    this.hubConfirmGrace = 0.45;
+    this.hubConfirmGrace = 0.55;
   }
 
   private beginMatch(fromPad: boolean) {
@@ -444,9 +444,11 @@ export class Game {
     if (this.hubNear) {
       const d = this.plaza.doors[this.hubNear];
       const dist = Math.hypot(this.hubPos.x - d.x, this.hubPos.z - d.z);
-      // Soft approach ramp inside PLAZA_DOOR_REACH (beyond binary near from #33).
-      const reach = 3.2;
-      this.plaza.setNearStrength(1 - Math.min(1, dist / reach));
+      // Smoothstep approach past #38 linear ramp — snappier near-door CTA.
+      const reach = 3.35;
+      const lin = 1 - Math.min(1, dist / reach);
+      const ease = lin * lin * (3 - 2 * lin);
+      this.plaza.setNearStrength(ease);
     } else {
       this.plaza.setNearStrength(0);
     }

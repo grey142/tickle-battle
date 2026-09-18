@@ -704,16 +704,16 @@ export class Fighter {
       rot = 0.35;
     } else if (clip === "run" || clip === "walk") {
       const loco = runBind ? (clip === "run" ? runBind.run : runBind.walk) : undefined;
-      const rate = loco?.billRate ?? (clip === "run" ? 14.5 : 9.2);
-      const bob = loco?.billBob ?? (clip === "run" ? 0.078 : 0.036);
+      const rate = loco?.billRate ?? (clip === "run" ? 15.4 : 9.75);
+      const bob = loco?.billBob ?? (clip === "run" ? 0.086 : 0.04);
       const s = Math.sin(t * rate);
       const s2 = Math.sin(t * rate * 2);
-      // Further deepen beyond #33: punchier stride bob / sway / squash.
-      w = BILL_W * (1 + s * bob * 0.7 + Math.abs(s2) * bob * 0.2);
-      h = BILL_H * (1 + Math.abs(s) * bob * 0.54 - Math.abs(s2) * bob * 0.26);
-      x = s * bob * 0.92;
-      y = BILL_Y + Math.abs(s) * bob * 1.65;
-      rot = s * bob * 0.98;
+      // v2 deepen past #38: punchier stride bob / sway / squash on billboards.
+      w = BILL_W * (1 + s * bob * 0.78 + Math.abs(s2) * bob * 0.24);
+      h = BILL_H * (1 + Math.abs(s) * bob * 0.6 - Math.abs(s2) * bob * 0.3);
+      x = s * bob * 1.02;
+      y = BILL_Y + Math.abs(s) * bob * 1.82;
+      rot = s * bob * 1.08;
     } else {
       // Past #36: punchier breathe / weight-shift on top of sheet crossfade.
       this.applyIdleSheetFrame(dt, true);
