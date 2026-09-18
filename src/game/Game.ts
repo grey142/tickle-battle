@@ -311,13 +311,33 @@ export class Game {
     stingCountdownTick(0.48, 2);
     // Harden Leave: clear match state first, keep save untouched, then plaza.
     this.countdown = 0;
-    this.countdownTickCeil = -1;
-    this.vanishTickCeil = -1;
-    this.combatAnnounced = false;
+    this.resetMatchEphemeral();
     this.clearFighters();
     this.say("Left during countdown — no coins, no XP");
     this.showHub();
     document.exitPointerLock?.();
+    // Consume back/confirm so pad B does not bounce or re-open rooms.
+    this.input.endFrame();
+  }
+
+  /** Clear countdown/combat maps so Leave → plaza never leaks match state into hub. */
+  private resetMatchEphemeral() {
+    this.countdownTickCeil = -1;
+    this.vanishTickCeil = -1;
+    this.combatAnnounced = false;
+    this.coinsEarned = 0;
+    this.payouts = [];
+    this.joinList.clear();
+    this.firstTickler.clear();
+    this.ffaScore.clear();
+    this.pairCd.clear();
+    this.contactHold.clear();
+    this.tapScore = [0, 0];
+    this.timedLeft = 0;
+    this.nudgeT = 0;
+    this.nudgeIds = [];
+    this.liveT = 0;
+    this.result = "";
   }
 
   private beginMatch(fromPad: boolean) {
@@ -357,6 +377,8 @@ export class Game {
     this.syncPlazaPreview();
     this.plaza.setHover(null);
     this.plaza.setNear(null);
+    // Idempotent wipe if Return/Leave raced; disk save already reloaded above.
+    this.resetMatchEphemeral();
     this.persistSave();
   }
 
