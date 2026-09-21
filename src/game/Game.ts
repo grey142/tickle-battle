@@ -354,7 +354,7 @@ export class Game {
     document.exitPointerLock?.();
     // Consume back/confirm so pad B/A does not bounce into Arena or re-open rooms.
     this.input.endFrame();
-    this.hubConfirmGrace = 0.65;
+    this.hubConfirmGrace = 0.75;
   }
 
   private beginMatch(fromPad: boolean) {
@@ -445,11 +445,12 @@ export class Game {
     if (this.hubNear) {
       const d = this.plaza.doors[this.hubNear];
       const dist = Math.hypot(this.hubPos.x - d.x, this.hubPos.z - d.z);
-      // Smoothstep + bias past #41 — snappier near-door CTA / Leave feel.
+      // Triple-biased smoothstep past #48 — snappier near-door CTA / Leave feel.
       const reach = PLAZA_DOOR_REACH;
       const lin = 1 - Math.min(1, dist / reach);
       const ease = lin * lin * (3 - 2 * lin);
-      this.plaza.setNearStrength(ease * ease * (3 - 2 * ease));
+      const bias = ease * ease * (3 - 2 * ease);
+      this.plaza.setNearStrength(bias * bias * (3 - 2 * bias));
     } else {
       this.plaza.setNearStrength(0);
     }
