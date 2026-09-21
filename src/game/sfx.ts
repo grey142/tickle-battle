@@ -1,4 +1,4 @@
-/** Amateur Team Quick SFX — procedural sample pack + oscillator fallbacks (vanish-v7). */
+/** Amateur Team Quick SFX — procedural sample pack + oscillator fallbacks (vanish-v8). */
 
 type CueId =
   | "tickle-lock"
@@ -197,16 +197,17 @@ export function stingStart() {
 
 /** Nearby reappear tell — bright rising ping (`public/sfx/reappear`). */
 export function stingReappear() {
-  playCue("reappear", 0.88, () => {
-    sting(1040, 0.06, "sine", 0.036, 0, 2200);
-    sting(1760, 0.055, "sine", 0.068, 0.008);
-    sting(2640, 0.07, "triangle", 0.048, 0.02);
-    sting(3520, 0.05, "sine", 0.034, 0.036);
-    sting(4400, 0.04, "sine", 0.024, 0.054);
-    sting(5280, 0.028, "sine", 0.014, 0.074);
-    sting(6160, 0.02, "sine", 0.01, 0.094);
-    sting(7040, 0.014, "sine", 0.006, 0.112);
-    sting(7920, 0.01, "sine", 0.004, 0.128);
+  playCue("reappear", 0.92, () => {
+    sting(1120, 0.055, "sine", 0.038, 0, 2400);
+    sting(1920, 0.05, "sine", 0.072, 0.006);
+    sting(2880, 0.065, "triangle", 0.052, 0.016);
+    sting(3840, 0.045, "sine", 0.038, 0.03);
+    sting(4800, 0.036, "sine", 0.028, 0.046);
+    sting(5760, 0.026, "sine", 0.016, 0.064);
+    sting(6720, 0.018, "sine", 0.012, 0.082);
+    sting(7680, 0.012, "sine", 0.008, 0.098);
+    sting(8640, 0.009, "sine", 0.005, 0.112);
+    sting(9600, 0.006, "sine", 0.003, 0.124);
   });
 }
 
@@ -225,17 +226,18 @@ export function stingEscape() {
 
 /** Falling whoosh-out — vanish (`public/sfx/vanish`). */
 export function stingVanish() {
-  playCue("vanish", 0.92, () => {
-    sting(32, 0.22, "sine", 0.07);
-    sting(980, 0.6, "sine", 0.072, 0.01, 20);
-    sting(640, 0.46, "triangle", 0.052, 0.03, 16);
-    sting(400, 0.4, "sawtooth", 0.032, 0.06, 12);
-    sting(250, 0.34, "sine", 0.026, 0.1, 10);
-    sting(165, 0.28, "sine", 0.02, 0.14, 8);
-    sting(115, 0.24, "sine", 0.016, 0.19, 6);
-    sting(78, 0.2, "sine", 0.012, 0.24, 4.5);
-    sting(55, 0.16, "sine", 0.008, 0.29, 3.5);
-    sting(38, 0.12, "sine", 0.005, 0.34, 2.5);
+  playCue("vanish", 0.96, () => {
+    sting(28, 0.24, "sine", 0.074);
+    sting(1040, 0.64, "sine", 0.076, 0.008, 16);
+    sting(680, 0.5, "triangle", 0.056, 0.026, 14);
+    sting(420, 0.44, "sawtooth", 0.034, 0.052, 10);
+    sting(260, 0.38, "sine", 0.028, 0.09, 8);
+    sting(170, 0.32, "sine", 0.022, 0.128, 6.5);
+    sting(120, 0.28, "sine", 0.018, 0.17, 5);
+    sting(82, 0.24, "sine", 0.014, 0.22, 4);
+    sting(58, 0.2, "sine", 0.01, 0.27, 3);
+    sting(40, 0.16, "sine", 0.007, 0.32, 2.2);
+    sting(28, 0.12, "sine", 0.004, 0.37, 1.6);
   });
 }
 
@@ -246,41 +248,43 @@ export function stingVanish() {
  * @param soft vanish-clock mode: slightly lower pitch so it stays a tell vs spawn alarm
  */
 export function stingCountdownTick(gain = 0.48, step = 2, soft = false) {
-  // Wider rate ladder than #57 so 3→2→1 is unmistakable.
-  let rate = step <= 1 ? 1.72 : step === 2 ? 1.0 : 0.54;
-  let freq = step <= 1 ? 1200 : step === 2 ? 700 : 340;
+  // Wider rate ladder than #59 so 3→2→1 is unmistakable.
+  let rate = step <= 1 ? 1.82 : step === 2 ? 1.0 : 0.48;
+  let freq = step <= 1 ? 1280 : step === 2 ? 700 : 300;
   if (soft) {
     // Stronger soft-mode detune so vanish clock stays a tell vs spawn alarm.
-    rate *= 0.74;
-    freq *= 0.7;
+    rate *= 0.68;
+    freq *= 0.64;
   }
   playCue(
     "countdown-tick",
     gain,
     () => {
-      sting(freq, 0.042, "sine", Math.min(0.072, gain * 0.14));
-      sting(freq * 1.5, 0.022, "triangle", Math.min(0.042, gain * 0.076), 0.008);
+      sting(freq, 0.04, "sine", Math.min(0.076, gain * 0.145));
+      sting(freq * 1.5, 0.02, "triangle", Math.min(0.044, gain * 0.078), 0.007);
       if (step <= 1) {
-        sting(freq * 2, 0.018, "sine", soft ? 0.006 : 0.036, 0.02);
-        sting(freq * 2.5, 0.014, "triangle", soft ? 0.004 : 0.024, 0.034);
+        sting(freq * 2, 0.016, "sine", soft ? 0.005 : 0.04, 0.018);
+        sting(freq * 2.5, 0.012, "triangle", soft ? 0.003 : 0.028, 0.03);
         if (!soft) {
-          sting(freq * 3, 0.012, "sine", 0.018, 0.046);
-          sting(freq * 3.5, 0.01, "triangle", 0.014, 0.058);
-          sting(freq * 4, 0.009, "sine", 0.01, 0.07);
-          sting(freq * 4.5, 0.008, "sine", 0.007, 0.082);
-          sting(freq * 5, 0.006, "triangle", 0.004, 0.094);
+          sting(freq * 3, 0.011, "sine", 0.02, 0.042);
+          sting(freq * 3.5, 0.009, "triangle", 0.016, 0.054);
+          sting(freq * 4, 0.008, "sine", 0.012, 0.066);
+          sting(freq * 4.5, 0.007, "sine", 0.009, 0.078);
+          sting(freq * 5, 0.006, "triangle", 0.006, 0.09);
+          sting(freq * 5.5, 0.005, "sine", 0.004, 0.1);
         }
       } else if (step === 2) {
-        sting(freq * 2, 0.014, "sine", soft ? 0.004 : 0.022, 0.022);
+        sting(freq * 2, 0.012, "sine", soft ? 0.003 : 0.024, 0.02);
         if (!soft) {
-          sting(freq * 2.5, 0.012, "triangle", 0.016, 0.036);
-          sting(freq * 3, 0.01, "sine", 0.011, 0.05);
-          sting(freq * 3.5, 0.008, "triangle", 0.007, 0.062);
-          sting(freq * 4, 0.006, "sine", 0.004, 0.074);
+          sting(freq * 2.5, 0.011, "triangle", 0.018, 0.034);
+          sting(freq * 3, 0.009, "sine", 0.013, 0.048);
+          sting(freq * 3.5, 0.007, "triangle", 0.009, 0.06);
+          sting(freq * 4, 0.006, "sine", 0.006, 0.072);
+          sting(freq * 4.5, 0.005, "triangle", 0.004, 0.084);
         }
       } else if (!soft) {
         // Step 3: soft wood body only — no upper sparkle.
-        sting(freq * 0.5, 0.048, "triangle", Math.min(0.028, gain * 0.052), 0.005);
+        sting(freq * 0.5, 0.05, "triangle", Math.min(0.03, gain * 0.054), 0.004);
       }
     },
     rate,
