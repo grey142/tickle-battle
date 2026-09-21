@@ -761,7 +761,7 @@ export class Game {
     if (!man || this.mode === "play") return;
     const inPlaza = this.mode === "hub" && this.hub.room === "plaza";
     // Track plaza feet tightly; ease softer into Home/Shop hall pose so idle phase keeps rolling.
-    const rate = inPlaza ? 16.5 : 4.2;
+    const rate = inPlaza ? 18 : 3.8;
     const k = 1 - Math.exp(-dt * rate);
     const before = man.pos.clone();
     man.pos.lerp(this.plazaPoseTarget, k);
@@ -827,8 +827,8 @@ export class Game {
       if (this.plazaPreview) {
         this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
         if (this.hub.laughing) {
-          // Preview harder laugh morph/frames past #44 (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.05);
+          // Preview harder laugh morph/frames past #39 (not full stamina mild window).
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.08);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
         }
@@ -858,8 +858,8 @@ export class Game {
       if (this.plazaPreview) {
         this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
         if (this.hub.laughing) {
-          // Preview harder laugh morph/frames past #44 (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.05);
+          // Preview harder laugh morph/frames past #39 (not full stamina mild window).
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.08);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
         }
