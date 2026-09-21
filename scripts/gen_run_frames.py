@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate deepened four-frame run stills from metal-free A-poses (Amateur 12 + Elara).
 
-f0 = A-pose still; f1–f3 = production-leaning stride bob/sway/squash with oil-paint
-grade beyond #38. Full painterly production run art is still deferred.
+f0 = A-pose still; f1–f3 = deeper opposite-leg stride punch + oil-paint grade
+past #41. Full painterly production run art is still deferred.
 Requires: Pillow, numpy
 """
 from __future__ import annotations
@@ -64,9 +64,9 @@ def affine_frame(
 def punch_stride(im: Image.Image, amount: float) -> Image.Image:
     """Vertical crop push — reads as stride squash / extension."""
     w, h = im.size
-    inset_x = int(w * 0.018 * amount)
-    inset_top = int(h * 0.016 * amount)
-    inset_bot = int(h * 0.068 * amount)
+    inset_x = int(w * 0.02 * amount)
+    inset_top = int(h * 0.018 * amount)
+    inset_bot = int(h * 0.074 * amount)
     box = (inset_x, inset_top, w - inset_x, h - inset_bot)
     return im.crop(box).resize((w, h), Image.BICUBIC)
 
@@ -74,9 +74,9 @@ def punch_stride(im: Image.Image, amount: float) -> Image.Image:
 def cool_grade(im: Image.Image, amount: float) -> Image.Image:
     """Cool energy push so run frames read faster than idle."""
     arr = np.asarray(im).astype(np.float32)
-    arr[..., 0] = np.clip(arr[..., 0] * (1.0 - 0.024 * amount), 0, 255)
-    arr[..., 1] = np.clip(arr[..., 1] * (1.0 + 0.018 * amount), 0, 255)
-    arr[..., 2] = np.clip(arr[..., 2] * (1.0 + 0.055 * amount), 0, 255)
+    arr[..., 0] = np.clip(arr[..., 0] * (1.0 - 0.028 * amount), 0, 255)
+    arr[..., 1] = np.clip(arr[..., 1] * (1.0 + 0.022 * amount), 0, 255)
+    arr[..., 2] = np.clip(arr[..., 2] * (1.0 + 0.062 * amount), 0, 255)
     return Image.fromarray(arr.astype(np.uint8))
 
 
@@ -85,8 +85,8 @@ def vignette(im: Image.Image, amount: float) -> Image.Image:
     w, h = im.size
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
     cx, cy = w / 2.0, h * 0.55
-    r = np.sqrt(((xx - cx) / (w * 0.6)) ** 2 + ((yy - cy) / (h * 0.7)) ** 2)
-    factor = np.clip(1.0 - np.clip(r - 0.5, 0, 1) * 0.3 * amount, 0.7, 1.0)
+    r = np.sqrt(((xx - cx) / (w * 0.58)) ** 2 + ((yy - cy) / (h * 0.68)) ** 2)
+    factor = np.clip(1.0 - np.clip(r - 0.48, 0, 1) * 0.34 * amount, 0.66, 1.0)
     arr = np.asarray(im).astype(np.float32)
     arr *= factor[..., None]
     return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
@@ -97,55 +97,55 @@ def painterly(im: Image.Image, strength: float) -> Image.Image:
     if strength <= 0:
         return im
     w, h = im.size
-    small = im.resize((max(8, w // 5), max(8, h // 5)), Image.BILINEAR)
+    small = im.resize((max(8, w // 4), max(8, h // 4)), Image.BILINEAR)
     smeared = small.resize((w, h), Image.BILINEAR)
     edges = ImageOps.autocontrast(im.convert("L").filter(ImageFilter.FIND_EDGES))
     edge_mask = (np.asarray(edges).astype(np.float32) / 255.0)[..., None]
     base = np.asarray(im).astype(np.float32)
     paint = np.asarray(smeared).astype(np.float32)
-    mix = paint * (1.0 - edge_mask * 0.65) + base * (edge_mask * 0.65)
+    mix = paint * (1.0 - edge_mask * 0.7) + base * (edge_mask * 0.7)
     out = Image.fromarray(np.clip(mix, 0, 255).astype(np.uint8))
-    out = out.filter(ImageFilter.MedianFilter(size=3 if strength > 0.45 else 3))
-    out = Image.blend(im, out, min(0.85, 0.35 + strength * 0.45))
-    out = out.filter(ImageFilter.UnsharpMask(radius=1.2, percent=int(70 + strength * 50), threshold=2))
+    out = out.filter(ImageFilter.MedianFilter(size=3))
+    out = Image.blend(im, out, min(0.88, 0.38 + strength * 0.48))
+    out = out.filter(ImageFilter.UnsharpMask(radius=1.3, percent=int(75 + strength * 55), threshold=2))
     return out
 
 
 def make_frames(src: Path) -> list[Image.Image]:
-    """v2 deepen past #38: clearer opposite-leg f1/f2 + peak f3 + oil grade."""
+    """v3 deepen past #41: punchier opposite-leg f1/f2 + peak f3 stride + oil grade."""
     base = Image.open(src).convert("RGB")
-    f0 = ImageEnhance.Sharpness(base).enhance(1.08)
-    f0 = ImageEnhance.Contrast(f0).enhance(1.05)
-    f0 = cool_grade(f0, 0.22)
-    f0 = painterly(f0, 0.12)
+    f0 = ImageEnhance.Sharpness(base).enhance(1.1)
+    f0 = ImageEnhance.Contrast(f0).enhance(1.06)
+    f0 = cool_grade(f0, 0.28)
+    f0 = painterly(f0, 0.16)
 
-    # f1 — plant / opposite sway
-    f1 = punch_stride(base, 1.85)
-    f1 = affine_frame(f1, 0.118, -0.034, 1.042, 0.925, -hshift(base, 0.038), -4.15)
-    f1 = ImageEnhance.Contrast(f1).enhance(1.12)
-    f1 = cool_grade(f1, 0.9)
-    f1 = painterly(f1, 0.42)
-    f1 = vignette(f1, 0.78)
+    # f1 — plant / opposite sway (clearer opposite-leg punch past #41)
+    f1 = punch_stride(base, 2.05)
+    f1 = affine_frame(f1, 0.132, -0.038, 1.05, 0.912, -hshift(base, 0.044), -4.55)
+    f1 = ImageEnhance.Contrast(f1).enhance(1.14)
+    f1 = cool_grade(f1, 1.05)
+    f1 = painterly(f1, 0.5)
+    f1 = vignette(f1, 0.9)
 
     # f2 — opposite plant / stronger extension
-    f2 = punch_stride(base, 2.55)
-    f2 = affine_frame(f2, -0.142, 0.04, 1.072, 0.875, -hshift(base, 0.062), 4.65)
-    f2 = ImageEnhance.Brightness(f2).enhance(1.05)
-    f2 = ImageEnhance.Contrast(f2).enhance(1.16)
-    f2 = cool_grade(f2, 1.4)
-    f2 = painterly(f2, 0.62)
-    f2 = f2.filter(ImageFilter.UnsharpMask(radius=1.4, percent=105, threshold=2))
-    f2 = vignette(f2, 1.08)
+    f2 = punch_stride(base, 2.8)
+    f2 = affine_frame(f2, -0.158, 0.046, 1.085, 0.855, -hshift(base, 0.07), 5.15)
+    f2 = ImageEnhance.Brightness(f2).enhance(1.055)
+    f2 = ImageEnhance.Contrast(f2).enhance(1.18)
+    f2 = cool_grade(f2, 1.55)
+    f2 = painterly(f2, 0.7)
+    f2 = f2.filter(ImageFilter.UnsharpMask(radius=1.5, percent=115, threshold=2))
+    f2 = vignette(f2, 1.2)
 
     # f3 — peak bob / squash / forward lean
-    f3 = punch_stride(base, 2.35)
-    f3 = affine_frame(f3, 0.085, -0.048, 1.1, 0.835, -hshift(base, 0.082), 2.05)
-    f3 = ImageEnhance.Sharpness(f3).enhance(1.22)
-    f3 = ImageEnhance.Contrast(f3).enhance(1.18)
-    f3 = cool_grade(f3, 1.75)
-    f3 = painterly(f3, 0.78)
-    f3 = f3.filter(ImageFilter.UnsharpMask(radius=1.65, percent=120, threshold=2))
-    f3 = vignette(f3, 1.28)
+    f3 = punch_stride(base, 2.6)
+    f3 = affine_frame(f3, 0.096, -0.054, 1.118, 0.812, -hshift(base, 0.092), 2.35)
+    f3 = ImageEnhance.Sharpness(f3).enhance(1.26)
+    f3 = ImageEnhance.Contrast(f3).enhance(1.2)
+    f3 = cool_grade(f3, 1.95)
+    f3 = painterly(f3, 0.88)
+    f3 = f3.filter(ImageFilter.UnsharpMask(radius=1.75, percent=130, threshold=2))
+    f3 = vignette(f3, 1.4)
     return [f0, f1, f2, f3]
 
 
@@ -168,8 +168,8 @@ def main() -> None:
         "characters": [c[0] for c in CHARS],
         "files": files,
         "note": (
-            "f0 = metal-free A-pose still; f1–f3 = production-leaning stride bob/sway/squash "
-            "+ oil-paint grade beyond #38. Not full painterly. Elara jewelry exception only."
+            "f0 = metal-free A-pose still; f1–f3 = deeper opposite-leg stride punch "
+            "+ oil-paint grade past #41. Not full painterly. Elara jewelry exception only."
         ),
     }
     (OUT / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n")
