@@ -56,10 +56,10 @@ const FALLBACK: LaughBind = {
   slug: "default",
   display: "Default",
   stages: {
-    s0: { staminaMin: 70, rate: 14.25, amp: 0.0735, lean: 0.0907, billShake: 0.0562, billRate: 18.0, blend: { jaw: 0.501, cheek: 0.272, eye: 0.408, brow: 0.174 } },
-    s1: { staminaMin: 40, rate: 19.75, amp: 0.13, lean: 0.164, billShake: 0.113, billRate: 23.5, blend: { jaw: 0.98, cheek: 0.667, eye: 0.881, brow: 0.394 } },
-    s2: { staminaMin: 15, rate: 25.05, amp: 0.186, lean: 0.219, billShake: 0.17, billRate: 28.8, blend: { jaw: 1.0, cheek: 1.0, eye: 1.0, brow: 0.68 } },
-    s3: { staminaMin: 0, rate: 28.75, amp: 0.24, lean: 0.273, billShake: 0.224, billRate: 34.45, blend: { jaw: 1.0, cheek: 1.0, eye: 1.0, brow: 1.0 } },
+    s0: { staminaMin: 70, rate: 15.4, amp: 0.0794, lean: 0.098, billShake: 0.0607, billRate: 19.45, blend: { jaw: 0.541, cheek: 0.294, eye: 0.441, brow: 0.188 } },
+    s1: { staminaMin: 40, rate: 21.35, amp: 0.1405, lean: 0.177, billShake: 0.122, billRate: 25.4, blend: { jaw: 1.0, cheek: 0.72, eye: 0.951, brow: 0.426 } },
+    s2: { staminaMin: 15, rate: 27.05, amp: 0.201, lean: 0.237, billShake: 0.184, billRate: 31.1, blend: { jaw: 1.0, cheek: 1.0, eye: 1.0, brow: 0.735 } },
+    s3: { staminaMin: 0, rate: 31.05, amp: 0.259, lean: 0.295, billShake: 0.242, billRate: 37.2, blend: { jaw: 1.0, cheek: 1.0, eye: 1.0, brow: 1.0 } },
   },
   hubPreviewMs: 2000,
 };

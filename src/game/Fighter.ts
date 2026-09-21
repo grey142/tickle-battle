@@ -86,7 +86,7 @@ export class Fighter {
   private idlePhase = 0;
   /** 0→1 ramp when a Look sheet first lands (no hard pop). */
   private idleSheetEnter = 1;
-  private idleEnterRate = 3.8;
+  private idleEnterRate = 4.0;
   headMat: THREE.MeshStandardMaterial;
   skinMat: THREE.MeshStandardMaterial;
   rim: THREE.PointLight;
@@ -196,7 +196,7 @@ export class Fighter {
     this.idleFrameAcc = 0;
     // Keep idlePhase so Look swaps don't restart the breathe clock cold.
     this.idleSheetEnter = 0;
-    this.idleEnterRate = 3.8;
+    this.idleEnterRate = 4.0;
     if (this.idleFadeSprite) {
       this.idleFadeSprite.visible = false;
     }
@@ -263,7 +263,7 @@ export class Fighter {
       this.idleFrame = 0;
       this.idleFrameAcc = 0;
       this.idleSheetEnter = 0;
-      this.idleEnterRate = 3.8;
+      this.idleEnterRate = 4.0;
       // Fresh fade tex for the new Look sheet.
       this.idleFadeTex = undefined;
       if (this.idleFadeSprite) {
@@ -274,10 +274,10 @@ export class Fighter {
   }
 
   /** Soft re-enter sheet after laugh/Look so still-under path can run again. */
-  softenIdleSheetEnter(cap = 0.22) {
+  softenIdleSheetEnter(cap = 0.18) {
     this.idleSheetEnter = Math.min(this.idleSheetEnter, cap);
-    // Slower still-under ramp after laugh so the sheet eases back in.
-    this.idleEnterRate = 2.55;
+    // Past #55: even slower still-under ramp after laugh so the sheet eases back in.
+    this.idleEnterRate = 2.2;
   }
 
   private applyIdleSheetFrame(dt: number, playing: boolean) {
@@ -302,8 +302,8 @@ export class Fighter {
     const f0 = Math.floor(frameF) % frames;
     const f1 = (f0 + 1) % frames;
     const u = frameF - Math.floor(frameF);
-    // Smoothstep blend — no hard UV snap between sheet cells.
-    const blend = u * u * (3 - 2 * u);
+    // Smootherstep crossfade — gentler mid-frame hold past #55.
+    const blend = u * u * u * (u * (u * 6 - 15) + 10);
     this.idleFrame = f0;
     this.idleFrameAcc = u;
 
@@ -760,22 +760,22 @@ export class Fighter {
       y = BILL_Y + Math.abs(s) * bob * 2.6;
       rot = s * bob * 1.48;
     } else {
-      // Past #50: softer laugh→idle re-enter + punchier breathe / weight-shift.
+      // Past #55: smootherstep crossfade + stronger breathe / slower laugh→idle re-enter.
       this.applyIdleSheetFrame(dt, true);
       const idle = idleBindForSlug(this.slug);
       const rate = idle.breatheRate;
-      const b = Math.sin(t * rate) * idle.breatheAmp * 1.62;
-      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 0.92;
+      const b = Math.sin(t * rate) * idle.breatheAmp * 1.7;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 0.98;
       const shift = idle.weightShift ?? idle.sway;
       const s =
-        Math.sin(t * rate * 0.62) * idle.sway * 1.72 +
-        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.25 +
-        Math.sin(t * rate * 0.17) * shift * 0.58;
-      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 1.55 + Math.sin(t * rate * 1.7) * idle.scalePulse * 0.85);
-      h = BILL_H * (1 + (b + b2) * 1.28);
+        Math.sin(t * rate * 0.62) * idle.sway * 1.8 +
+        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.32 +
+        Math.sin(t * rate * 0.17) * shift * 0.62;
+      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 1.62 + Math.sin(t * rate * 1.7) * idle.scalePulse * 0.9);
+      h = BILL_H * (1 + (b + b2) * 1.32);
       x = s;
-      y = BILL_Y + b + b2 * 0.85;
-      rot = s * 0.9;
+      y = BILL_Y + b + b2 * 0.9;
+      rot = s * 0.95;
       bill.scale.set(w, h, 1);
       bill.position.set(x, y, 0);
       mat.rotation = rot;
