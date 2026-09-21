@@ -1,4 +1,4 @@
-/** Amateur Team Quick SFX — procedural sample pack + oscillator fallbacks (vanish-v9). */
+/** Amateur Team Quick SFX — procedural sample pack + oscillator fallbacks (vanish-v10). */
 
 type CueId =
   | "tickle-lock"
@@ -197,7 +197,7 @@ export function stingStart() {
 
 /** Nearby reappear tell — bright rising ping (`public/sfx/reappear`). */
 export function stingReappear() {
-  playCue("reappear", 0.96, () => {
+  playCue("reappear", 0.98, () => {
     sting(1200, 0.05, "sine", 0.04, 0, 2600);
     sting(2080, 0.045, "sine", 0.076, 0.005);
     sting(3120, 0.06, "triangle", 0.056, 0.014);
@@ -226,13 +226,13 @@ export function stingEscape() {
 
 /** Falling whoosh-out — vanish (`public/sfx/vanish`). */
 export function stingVanish() {
-  playCue("vanish", 1.0, () => {
-    sting(24, 0.26, "sine", 0.078);
-    sting(1100, 0.68, "sine", 0.08, 0.006, 14);
-    sting(720, 0.54, "triangle", 0.06, 0.022, 12);
-    sting(440, 0.48, "sawtooth", 0.036, 0.046, 9);
-    sting(270, 0.42, "sine", 0.03, 0.08, 7);
-    sting(175, 0.36, "sine", 0.024, 0.116, 5.5);
+  playCue("vanish", 1.04, () => {
+    sting(24, 0.26, "sine", 0.082);
+    sting(1100, 0.68, "sine", 0.084, 0.006, 14);
+    sting(720, 0.54, "triangle", 0.063, 0.022, 12);
+    sting(440, 0.48, "sawtooth", 0.04, 0.046, 9);
+    sting(270, 0.42, "sine", 0.032, 0.08, 7);
+    sting(175, 0.36, "sine", 0.025, 0.116, 5.5);
     sting(125, 0.3, "sine", 0.02, 0.156, 4.5);
     sting(88, 0.26, "sine", 0.016, 0.2, 3.5);
     sting(62, 0.22, "sine", 0.012, 0.25, 2.6);
