@@ -294,8 +294,8 @@ export class Game {
       const ceil = Math.ceil(this.countdown);
       if (ceil <= 3 && ceil >= 1 && ceil !== this.countdownTickCeil) {
         this.countdownTickCeil = ceil;
-        // Louder + higher pitch toward 1 (past #51).
-        const gain = ceil === 1 ? 0.96 : ceil === 2 ? 0.64 : 0.26;
+        // Louder + higher pitch toward 1 (past #57).
+        const gain = ceil === 1 ? 0.98 : ceil === 2 ? 0.66 : 0.22;
         stingCountdownTick(gain, ceil);
       }
     }
@@ -305,7 +305,7 @@ export class Game {
       if (vCeil <= 3 && vCeil >= 1 && vCeil !== this.vanishTickCeil) {
         this.vanishTickCeil = vCeil;
         // Quieter + soft-mode pitch so vanish clock stays a tell, not an alarm.
-        const gain = vCeil === 1 ? 0.4 : vCeil === 2 ? 0.28 : 0.18;
+        const gain = vCeil === 1 ? 0.36 : vCeil === 2 ? 0.24 : 0.14;
         stingCountdownTick(gain, vCeil, true);
       }
     } else {
@@ -950,7 +950,7 @@ export class Game {
     this.updateVisibility();
     for (const f of this.fighters) {
       // Intensity for tickle frame windows: low victim stamina → harder f3/f4.
-      // Stronger contrast stretch than #51 so soft/hard ends map clearer.
+      // Stronger contrast stretch than #57 so soft/hard ends map clearer.
       if (
         (f.occupancy === "tickler" || (f.occupancy === "nudge" && f.joinOn >= 0)) &&
         f.joinOn >= 0
@@ -959,7 +959,7 @@ export class Game {
         if (v && v.maxStamina > 0) {
           const raw = Math.max(0, Math.min(100, 100 - (100 * v.stamina) / v.maxStamina)) / 100;
           const contrasted =
-            raw < 0.5 ? 0.5 * Math.pow(raw * 2, 1.96) : 1 - 0.5 * Math.pow((1 - raw) * 2, 1.96);
+            raw < 0.5 ? 0.5 * Math.pow(raw * 2, 2.1) : 1 - 0.5 * Math.pow((1 - raw) * 2, 2.1);
           f.tickleIntensity = contrasted * 100;
         } else {
           f.tickleIntensity = 0;
