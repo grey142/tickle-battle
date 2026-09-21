@@ -2,4 +2,4 @@
 
 Beyond keyed stills: `assets/binds/idle/sheets/<Slug>.png` are 8-frame horizontal A-pose breathe sheets for Elara + Amateur 12.
 
-While free/idle, AI + plaza mannequin billboards use a longer-hold smootherstep sheet crossfade and punchier dual-phase breathe / weight-shift (past #58). Look soft-enter keeps the keyed still under the sheet; ending a Look/plaza laugh preview soft-re-enters more slowly. Idle-lane only — does not edit laugh morph or tickle runtime.
+While free/idle, AI + plaza mannequin billboards use a longer-hold crossfade and punchier dual-phase breathe / weight-shift (past #63). Look soft-enter keeps the keyed still under the sheet; ending a Look/plaza laugh preview soft-re-enters more slowly. Idle-lane only — no Humanoid / laugh morph / tickle / persist-schema edits.
