@@ -157,51 +157,52 @@ def make_tickle(rng: np.random.Generator) -> np.ndarray:
 
 
 def make_vanish(rng: np.random.Generator) -> np.ndarray:
-    """Escape breakout whoosh — deepest falling veil (v5: clearer vs reappear ping)."""
-    dur = 1.62
+    """Escape breakout whoosh — deepest falling veil (v6: clearer vs reappear ping)."""
+    dur = 1.72
     n = int(SR * dur)
     t = np.arange(n) / SR
-    whoosh = bandpass(noise(n, rng), 55, 3000)
-    am = 0.34 + 0.66 * np.sin(2 * math.pi * 4.4 * t * (1 - t / dur))
-    whoosh *= am * env_adsr(n, 0.045, 0.26, 0.56, 0.7, 0.46)
-    whoosh2 = bandpass(noise(n, rng), 180, 4000) * 0.24
-    whoosh2 *= env_adsr(n, 0.065, 0.22, 0.4, 0.72, 0.32)
+    whoosh = bandpass(noise(n, rng), 45, 2600)
+    am = 0.32 + 0.68 * np.sin(2 * math.pi * 4.0 * t * (1 - t / dur))
+    whoosh *= am * env_adsr(n, 0.05, 0.28, 0.58, 0.74, 0.44)
+    whoosh2 = bandpass(noise(n, rng), 150, 3400) * 0.22
+    whoosh2 *= env_adsr(n, 0.07, 0.24, 0.42, 0.76, 0.3)
     # Stronger descending veil — no rising tones (contrast vs reappear).
     veil = soft_clip(
-        sweep_tone(n, 860, 28) * 0.6
-        + sweep_tone(n, 560, 20) * 0.42
-        + sweep_tone(n, 360, 16) * 0.28
-        + sweep_tone(n, 230, 12) * 0.18
-        + sweep_tone(n, 155, 10) * 0.12
-        + sweep_tone(n, 105, 8) * 0.08
-        + sweep_tone(n, 72, 6) * 0.05
-        + fm_tone(n, 110, 7, 4.2) * 0.18
+        sweep_tone(n, 920, 24) * 0.62
+        + sweep_tone(n, 600, 18) * 0.44
+        + sweep_tone(n, 380, 14) * 0.3
+        + sweep_tone(n, 240, 11) * 0.2
+        + sweep_tone(n, 160, 9) * 0.14
+        + sweep_tone(n, 110, 7) * 0.1
+        + sweep_tone(n, 75, 5) * 0.06
+        + sweep_tone(n, 52, 4) * 0.035
+        + fm_tone(n, 95, 6, 4.6) * 0.2
     )
-    veil *= env_adsr(n, 0.02, 0.18, 0.46, 0.78, 0.34)
+    veil *= env_adsr(n, 0.022, 0.2, 0.48, 0.82, 0.32)
     # Soft air burst at start, not a bright ping.
-    spark_n = int(0.22 * SR)
-    spark = bandpass(noise(spark_n, rng), 450, 2800) * 0.16
-    spark *= env_adsr(spark_n, 0.007, 0.05, 0.026, 0.12, 0.1)
+    spark_n = int(0.24 * SR)
+    spark = bandpass(noise(spark_n, rng), 380, 2400) * 0.14
+    spark *= env_adsr(spark_n, 0.008, 0.055, 0.028, 0.13, 0.09)
     trail = np.zeros(n)
-    for i, (d, g) in enumerate(((0.24, 0.12), (0.46, 0.09), (0.7, 0.06), (0.96, 0.038), (1.2, 0.022), (1.4, 0.012), (1.52, 0.008))):
-        sn = int(0.12 * SR)
+    for i, (d, g) in enumerate(((0.26, 0.11), (0.5, 0.085), (0.76, 0.055), (1.02, 0.034), (1.28, 0.02), (1.48, 0.012), (1.6, 0.007))):
+        sn = int(0.13 * SR)
         start = int(d * SR)
         if start + sn > n:
             continue
         # Trail stays mid/low — avoid reappear-like sparkle.
-        grain = bandpass(noise(sn, rng), 320 + i * 150, 2600) * g
-        grain *= env_adsr(sn, 0.003, 0.026, 0.012, 0.065, 0.1)
+        grain = bandpass(noise(sn, rng), 280 + i * 130, 2200) * g
+        grain *= env_adsr(sn, 0.003, 0.028, 0.012, 0.07, 0.09)
         trail[start : start + sn] += grain
-    rumble = one_pole_lp(noise(n, rng), 70) * env_adsr(n, 0.06, 0.28, 0.52, 0.7, 0.38) * 0.54
-    thump_n = int(0.2 * SR)
-    thump = soft_clip(sweep_tone(thump_n, 48, 20) * 0.76)
-    thump *= env_adsr(thump_n, 0.004, 0.05, 0.032, 0.1, 0.16)
-    out = whoosh * 0.66 + whoosh2 * 0.26 + veil * 0.9 + rumble
+    rumble = one_pole_lp(noise(n, rng), 58) * env_adsr(n, 0.065, 0.3, 0.54, 0.74, 0.36) * 0.58
+    thump_n = int(0.22 * SR)
+    thump = soft_clip(sweep_tone(thump_n, 40, 16) * 0.8)
+    thump *= env_adsr(thump_n, 0.004, 0.055, 0.034, 0.11, 0.14)
+    out = whoosh * 0.64 + whoosh2 * 0.24 + veil * 0.94 + rumble
     out[:spark_n] += spark
-    out[:thump_n] += thump * 0.76
+    out[:thump_n] += thump * 0.8
     out += trail
-    out = soft_clip(one_pole_lp(out, 3400) * 0.84)
-    return fade_edges(out, 18) * 0.8
+    out = soft_clip(one_pole_lp(out, 3000) * 0.82)
+    return fade_edges(out, 20) * 0.82
 
 
 def make_tap_out(rng: np.random.Generator) -> np.ndarray:
@@ -238,41 +239,43 @@ def make_tap_out(rng: np.random.Generator) -> np.ndarray:
 
 
 def make_reappear(rng: np.random.Generator) -> np.ndarray:
-    """Nearby reappear tell — brightest rising ping (v5: no low whoosh bleed)."""
-    dur = 0.2
+    """Nearby reappear tell — brightest rising ping (v6: no low whoosh bleed)."""
+    dur = 0.185
     n = int(SR * dur)
     # Pure rising sweeps — opposite of vanish veil.
     rise = soft_clip(
-        sweep_tone(n, 880, 1860) * 0.54
-        + sweep_tone(n, 1280, 2500) * 0.34
-        + sweep_tone(n, 1600, 2960) * 0.18
-        + sweep_tone(n, 1880, 3500) * 0.1
-        + sweep_tone(n, 2100, 4000) * 0.05
+        sweep_tone(n, 960, 2000) * 0.56
+        + sweep_tone(n, 1400, 2700) * 0.36
+        + sweep_tone(n, 1760, 3200) * 0.2
+        + sweep_tone(n, 2040, 3800) * 0.12
+        + sweep_tone(n, 2300, 4400) * 0.06
+        + sweep_tone(n, 2500, 5000) * 0.03
     )
-    rise *= env_adsr(n, 0.0008, 0.018, 0.022, 0.09, 0.18)
+    rise *= env_adsr(n, 0.0006, 0.016, 0.02, 0.08, 0.16)
     ping = soft_clip(
-        tone(n, 1480) * 0.64
-        + tone(n, 2220) * 0.48
-        + tone(n, 2960) * 0.26
-        + tone(n, 3700) * 0.14
-        + tone(n, 4400) * 0.08
-        + tone(n, 5200) * 0.04
+        tone(n, 1600) * 0.66
+        + tone(n, 2400) * 0.5
+        + tone(n, 3200) * 0.28
+        + tone(n, 4000) * 0.16
+        + tone(n, 4800) * 0.1
+        + tone(n, 5600) * 0.05
+        + tone(n, 6400) * 0.025
     )
-    ping *= env_adsr(n, 0.0006, 0.018, 0.016, 0.1, 0.12)
-    spark = bandpass(noise(n, rng), 6400, 17000) * 0.52
-    spark *= env_adsr(n, 0.0005, 0.01, 0.004, 0.06, 0.07)
+    ping *= env_adsr(n, 0.0005, 0.016, 0.014, 0.09, 0.11)
+    spark = bandpass(noise(n, rng), 7200, 18000) * 0.56
+    spark *= env_adsr(n, 0.0004, 0.009, 0.0035, 0.055, 0.06)
     echo = np.zeros(n)
-    for off_s, g, f in ((0.02, 0.74, 2220), (0.048, 0.48, 2960), (0.078, 0.3, 3700), (0.11, 0.16, 4400), (0.14, 0.08, 5200)):
+    for off_s, g, f in ((0.018, 0.78, 2400), (0.042, 0.52, 3200), (0.07, 0.34, 4000), (0.1, 0.18, 4800), (0.128, 0.1, 5600), (0.152, 0.05, 6400)):
         off = int(off_s * SR)
         rem = n - off
         if rem <= 0:
             continue
-        note = soft_clip(tone(rem, f) * 0.38 + tone(rem, f * 1.5) * 0.16)
-        note *= env_adsr(rem, 0.0006, 0.014, 0.005, 0.055, 0.09)
+        note = soft_clip(tone(rem, f) * 0.4 + tone(rem, f * 1.5) * 0.18)
+        note *= env_adsr(rem, 0.0005, 0.012, 0.004, 0.05, 0.08)
         echo[off:] += note * g
     # High-pass-ish mix: keep bright, strip any rumble.
-    out = soft_clip(one_pole_lp(one_pole_hp(rise * 0.66 + ping * 1.02 + spark + echo * 0.92, 480), 15000) * 0.95)
-    return fade_edges(out, 2.2) * 0.72
+    out = soft_clip(one_pole_lp(one_pole_hp(rise * 0.64 + ping * 1.05 + spark + echo * 0.94, 560), 16000) * 0.95)
+    return fade_edges(out, 1.8) * 0.74
 
 
 def make_escape(rng: np.random.Generator) -> np.ndarray:
@@ -396,30 +399,31 @@ def make_spend(rng: np.random.Generator) -> np.ndarray:
 
 
 def make_countdown_tick(rng: np.random.Generator) -> np.ndarray:
-    """Last-3s countdown beat — pitched body + sharp tip (v5: widest rate-stretch ladder)."""
-    dur = 0.085
+    """Last-3s countdown beat — pitched body + sharp tip (v6: widest rate-stretch ladder)."""
+    dur = 0.08
     n = int(SR * dur)
-    # Clean fundamental @ 700Hz so playbackRate 0.66/1.0/1.52 reads as 3/2/1.
+    # Clean fundamental @ 700Hz so playbackRate 0.60/1.0/1.62 reads as 3/2/1.
     body = soft_clip(
-        tone(n, 700) * 0.66
-        + tone(n, 1050) * 0.24
-        + tone(n, 350) * 0.06
-        + tone(n, 1400) * 0.16
-        + tone(n, 2100) * 0.07
-        + tone(n, 2800) * 0.04
-        + tone(n, 3500) * 0.02
+        tone(n, 700) * 0.68
+        + tone(n, 1050) * 0.22
+        + tone(n, 350) * 0.05
+        + tone(n, 1400) * 0.18
+        + tone(n, 2100) * 0.08
+        + tone(n, 2800) * 0.05
+        + tone(n, 3500) * 0.03
+        + tone(n, 4200) * 0.015
     )
-    body *= env_adsr(n, 0.0005, 0.01, 0.008, 0.04, 0.12)
-    tip = bandpass(noise(n, rng), 3600, 13000) * 0.46
-    tip *= env_adsr(n, 0.0003, 0.006, 0.0035, 0.02, 0.07)
-    wood = bandpass(noise(n, rng), 160, 900) * 0.08
-    wood *= env_adsr(n, 0.0007, 0.009, 0.005, 0.024, 0.09)
-    click_n = max(1, int(0.0035 * SR))
-    click = bandpass(noise(click_n, rng), 4500, 14000) * 0.65
-    click *= env_adsr(click_n, 0.00015, 0.0009, 0.0004, 0.0015, 0.12)
-    out = soft_clip(one_pole_lp(body * 0.98 + tip + wood, 10500) * 0.95)
+    body *= env_adsr(n, 0.0004, 0.009, 0.007, 0.036, 0.11)
+    tip = bandpass(noise(n, rng), 4000, 14000) * 0.5
+    tip *= env_adsr(n, 0.00025, 0.0055, 0.003, 0.018, 0.06)
+    wood = bandpass(noise(n, rng), 140, 800) * 0.07
+    wood *= env_adsr(n, 0.0006, 0.008, 0.0045, 0.022, 0.08)
+    click_n = max(1, int(0.003 * SR))
+    click = bandpass(noise(click_n, rng), 5000, 15000) * 0.7
+    click *= env_adsr(click_n, 0.00012, 0.0008, 0.00035, 0.0012, 0.1)
+    out = soft_clip(one_pole_lp(body * 0.99 + tip + wood, 11000) * 0.95)
     out[:click_n] += click
-    return fade_edges(out, 1.6) * 0.66
+    return fade_edges(out, 1.4) * 0.68
 
 
 def encode_web(name: str) -> None:
@@ -439,7 +443,7 @@ def encode_web(name: str) -> None:
 
 
 def main() -> None:
-    rng = np.random.default_rng(20260918_5)
+    rng = np.random.default_rng(20260918_6)
     cues = {
         "tickle-lock": make_tickle_lock(rng),
         "tickle": make_tickle(rng),
