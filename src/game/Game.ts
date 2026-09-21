@@ -99,6 +99,7 @@ export class Game {
   /** Soft hall/plaza pose targets so mannequin idle doesn't hard-snap between rooms. */
   private plazaPoseTarget = new THREE.Vector3(0, 0, 1.35);
   private plazaYawTarget = Math.PI * 0.92;
+  private hubLaughWas = false;
   /** First-person walk pose while hub.room === plaza (flat floor). */
   hubPos = new THREE.Vector3(0, 0, -2.4);
   hubYaw = Math.PI; // face +z toward Arena
@@ -825,13 +826,17 @@ export class Game {
       this.syncPlazaPreview();
       this.tickPlazaMannequinContinuity(Math.min(0.05, wallDt));
       if (this.plazaPreview) {
-        this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
-        if (this.hub.laughing) {
-          // Preview harder laugh morph/frames past #46 (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.03);
+        const laughing = this.hub.laughing;
+        this.plazaPreview.occupancy = laughing ? "ticklee" : "free";
+        if (laughing) {
+          // Preview harder laugh morph/frames past #39 (not full stamina mild window).
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.08);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
+          // Soft still-under re-enter when Look/plaza laugh preview ends.
+          if (this.hubLaughWas) this.plazaPreview.softenIdleSheetEnter(0.3);
         }
+        this.hubLaughWas = laughing;
         this.plazaPreview.tickAnim(Math.min(0.05, wallDt));
         this.plazaPreview.syncMesh();
       }
@@ -856,13 +861,17 @@ export class Game {
       this.syncPlazaPreview();
       this.tickPlazaMannequinContinuity(Math.min(0.05, wallDt));
       if (this.plazaPreview) {
-        this.plazaPreview.occupancy = this.hub.laughing ? "ticklee" : "free";
-        if (this.hub.laughing) {
-          // Preview harder laugh morph/frames past #46 (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.03);
+        const laughing = this.hub.laughing;
+        this.plazaPreview.occupancy = laughing ? "ticklee" : "free";
+        if (laughing) {
+          // Preview harder laugh morph/frames past #39 (not full stamina mild window).
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.08);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
+          // Soft still-under re-enter when Look/plaza laugh preview ends.
+          if (this.hubLaughWas) this.plazaPreview.softenIdleSheetEnter(0.3);
         }
+        this.hubLaughWas = laughing;
         this.plazaPreview.tickAnim(Math.min(0.05, wallDt));
         this.plazaPreview.syncMesh();
       }
