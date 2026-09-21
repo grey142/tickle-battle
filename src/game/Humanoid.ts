@@ -288,37 +288,37 @@ export class Humanoid {
       return;
     }
     if (clip === "walk" || clip === "run") {
-      // v2 deepen past #38: punchier stride bob / sway / squash with production binds.
+      // v3 deepen past #41: punchier opposite-leg stride bob / sway / squash.
       const run = clip === "run";
       const loco = mods as { rate: number; amp: number; lean: number } | undefined;
-      const rate = loco?.rate ?? (run ? 12.9 : 8.0);
-      const amp = loco?.amp ?? (run ? 0.87 : 0.57);
-      const lean = loco?.lean ?? (run ? 0.235 : 0.08);
+      const rate = loco?.rate ?? (run ? 13.6 : 8.45);
+      const amp = loco?.amp ?? (run ? 0.92 : 0.6);
+      const lean = loco?.lean ?? (run ? 0.25 : 0.086);
       const p = t * rate;
       const s = Math.sin(p);
       const s2 = Math.sin(p * 2);
       const sOpp = Math.sin(p + Math.PI);
       this.lHip.rotation.x = s * amp;
       this.rHip.rotation.x = sOpp * amp;
-      this.lHip.rotation.z = 0.045 + s * (run ? 0.092 : 0.045);
-      this.rHip.rotation.z = -0.045 - sOpp * (run ? 0.092 : 0.045);
-      this.lKnee.rotation.x = 0.165 + Math.max(0, -s) * (run ? 1.38 : 0.82);
-      this.rKnee.rotation.x = 0.165 + Math.max(0, -sOpp) * (run ? 1.38 : 0.82);
-      this.lShoulder.rotation.x = sOpp * (run ? 1.08 : 0.62);
-      this.rShoulder.rotation.x = s * (run ? 1.08 : 0.62);
-      this.lShoulder.rotation.z = 0.165 + s * (run ? 0.148 : 0.074);
-      this.rShoulder.rotation.z = -0.165 - s * (run ? 0.148 : 0.074);
-      this.lElbow.rotation.x = 0.5 + (run ? 0.78 : 0.33);
-      this.rElbow.rotation.x = 0.5 + (run ? 0.78 : 0.33);
-      this.spine.rotation.x = lean + Math.abs(s2) * (run ? 0.066 : 0.034);
-      this.spine.rotation.z = s * (run ? 0.07 : 0.036);
-      this.chest.rotation.y = s * (run ? 0.235 : 0.115);
-      this.chest.rotation.x = Math.abs(s2) * (run ? 0.055 : 0.028);
-      this.hips.rotation.y = s * (run ? 0.108 : 0.054);
-      // Production-lean bob + squash past #38.
-      this.root.position.y = Math.abs(s2) * (run ? 0.142 : 0.066);
-      const squash = 1 - Math.abs(s2) * (run ? 0.056 : 0.029);
-      this.chest.scale.set(1 + (1 - squash) * 0.55, squash, 1 + (1 - squash) * 0.32);
+      this.lHip.rotation.z = 0.05 + s * (run ? 0.102 : 0.05);
+      this.rHip.rotation.z = -0.05 - sOpp * (run ? 0.102 : 0.05);
+      this.lKnee.rotation.x = 0.175 + Math.max(0, -s) * (run ? 1.48 : 0.88);
+      this.rKnee.rotation.x = 0.175 + Math.max(0, -sOpp) * (run ? 1.48 : 0.88);
+      this.lShoulder.rotation.x = sOpp * (run ? 1.16 : 0.66);
+      this.rShoulder.rotation.x = s * (run ? 1.16 : 0.66);
+      this.lShoulder.rotation.z = 0.175 + s * (run ? 0.162 : 0.082);
+      this.rShoulder.rotation.z = -0.175 - s * (run ? 0.162 : 0.082);
+      this.lElbow.rotation.x = 0.54 + (run ? 0.84 : 0.36);
+      this.rElbow.rotation.x = 0.54 + (run ? 0.84 : 0.36);
+      this.spine.rotation.x = lean + Math.abs(s2) * (run ? 0.074 : 0.038);
+      this.spine.rotation.z = s * (run ? 0.078 : 0.04);
+      this.chest.rotation.y = s * (run ? 0.255 : 0.125);
+      this.chest.rotation.x = Math.abs(s2) * (run ? 0.062 : 0.032);
+      this.hips.rotation.y = s * (run ? 0.12 : 0.06);
+      // Stride punch bob + squash past #41.
+      this.root.position.y = Math.abs(s2) * (run ? 0.158 : 0.074);
+      const squash = 1 - Math.abs(s2) * (run ? 0.064 : 0.033);
+      this.chest.scale.set(1 + (1 - squash) * 0.62, squash, 1 + (1 - squash) * 0.36);
       return;
     }
     if (clip === "tickle") {

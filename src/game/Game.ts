@@ -49,7 +49,7 @@ import {
 } from "./sfx";
 import { tickleBindForSlug } from "./tickleBind";
 import { Hub } from "./Hub";
-import { HubPlaza } from "./HubPlaza";
+import { HubPlaza, PLAZA_DOOR_REACH } from "./HubPlaza";
 import { rollBotKit } from "./botLoadout";
 import { gearLabel } from "./gear";
 import {
@@ -353,7 +353,7 @@ export class Game {
     document.exitPointerLock?.();
     // Consume back/confirm so pad B/A does not bounce into Arena or re-open rooms.
     this.input.endFrame();
-    this.hubConfirmGrace = 0.55;
+    this.hubConfirmGrace = 0.65;
   }
 
   private beginMatch(fromPad: boolean) {
@@ -444,11 +444,11 @@ export class Game {
     if (this.hubNear) {
       const d = this.plaza.doors[this.hubNear];
       const dist = Math.hypot(this.hubPos.x - d.x, this.hubPos.z - d.z);
-      // Smoothstep approach past #38 linear ramp — snappier near-door CTA.
-      const reach = 3.35;
+      // Smoothstep + bias past #41 — snappier near-door CTA / Leave feel.
+      const reach = PLAZA_DOOR_REACH;
       const lin = 1 - Math.min(1, dist / reach);
       const ease = lin * lin * (3 - 2 * lin);
-      this.plaza.setNearStrength(ease);
+      this.plaza.setNearStrength(ease * ease * (3 - 2 * ease));
     } else {
       this.plaza.setNearStrength(0);
     }
