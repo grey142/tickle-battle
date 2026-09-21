@@ -86,6 +86,7 @@ export class Fighter {
   private idlePhase = 0;
   /** 0→1 ramp when a Look sheet first lands (no hard pop). */
   private idleSheetEnter = 1;
+  private idleEnterRate = 3.8;
   headMat: THREE.MeshStandardMaterial;
   skinMat: THREE.MeshStandardMaterial;
   rim: THREE.PointLight;
@@ -195,6 +196,7 @@ export class Fighter {
     this.idleFrameAcc = 0;
     // Keep idlePhase so Look swaps don't restart the breathe clock cold.
     this.idleSheetEnter = 0;
+    this.idleEnterRate = 3.8;
     if (this.idleFadeSprite) {
       this.idleFadeSprite.visible = false;
     }
@@ -261,6 +263,7 @@ export class Fighter {
       this.idleFrame = 0;
       this.idleFrameAcc = 0;
       this.idleSheetEnter = 0;
+      this.idleEnterRate = 3.8;
       // Fresh fade tex for the new Look sheet.
       this.idleFadeTex = undefined;
       if (this.idleFadeSprite) {
@@ -271,8 +274,10 @@ export class Fighter {
   }
 
   /** Soft re-enter sheet after laugh/Look so still-under path can run again. */
-  softenIdleSheetEnter(cap = 0.28) {
+  softenIdleSheetEnter(cap = 0.22) {
     this.idleSheetEnter = Math.min(this.idleSheetEnter, cap);
+    // Slower still-under ramp after laugh so the sheet eases back in.
+    this.idleEnterRate = 2.55;
   }
 
   private applyIdleSheetFrame(dt: number, playing: boolean) {
@@ -304,7 +309,7 @@ export class Fighter {
 
     sheet.repeat.set(1 / frames, 1);
     sheet.offset.set(f0 / frames, 0);
-    this.idleSheetEnter = Math.min(1, this.idleSheetEnter + dt * 3.8);
+    this.idleSheetEnter = Math.min(1, this.idleSheetEnter + dt * this.idleEnterRate);
     const enter = this.idleSheetEnter * this.idleSheetEnter * (3 - 2 * this.idleSheetEnter);
     mat.transparent = true;
     mat.depthWrite = false;
@@ -415,22 +420,22 @@ export class Fighter {
     }
     const urls = laughFrameUrls(bind);
     if (urls.length < 2) return false;
-    // Tighter stamina→frame past #49: high soft-locks f0–f1 earlier; mid f1–f2;
+    // Tighter stamina→frame past #39: high soft-locks f0–f1 earlier; mid f1–f2;
     // low opens f2–f3; peak biases f3–f4 / f4 soft-lock. FPS climbs harder with drain.
     const pct = Math.max(0, Math.min(100, staminaPct ?? 100));
     const n = urls.length;
     let lo = 0;
     let hi = n - 1;
-    if (pct >= 32) {
+    if (pct >= 58) {
       lo = 0;
       hi = Math.min(1, n - 1);
-    } else if (pct >= 12) {
+    } else if (pct >= 34) {
       lo = Math.min(1, n - 1);
       hi = Math.min(2, n - 1);
-    } else if (pct >= 3) {
+    } else if (pct >= 14) {
       lo = Math.min(2, n - 1);
       hi = Math.min(3, n - 1);
-    } else if (pct >= 0.5) {
+    } else if (pct >= 4) {
       lo = Math.min(3, n - 1);
       hi = n - 1;
     } else {
@@ -438,7 +443,7 @@ export class Fighter {
       hi = n - 1;
     }
     const span = Math.max(1, hi - lo + 1);
-    const fps = Math.max(17, Math.round((stageParams?.billRate || 14) * (0.52 + (100 - pct) * 0.018)));
+    const fps = Math.max(11, Math.round((stageParams?.billRate || 14) * (0.32 + (100 - pct) * 0.0125)));
     const idx = lo + (Math.floor(this.animT * fps) % span);
     if (idx === this.laughFrameApplied && this.laughFramePortrait) return true;
     const want = idx;
@@ -730,14 +735,14 @@ export class Fighter {
       const s2 = Math.sin(t * rate * 0.7);
       const s3 = Math.sin(t * rate * 1.35);
       const pulse = 0.55 + 0.45 * Math.abs(s3);
-      // Billboard morph-feel past #49: cheek widens, jaw opens (taller), eye squint shortens.
-      const morphW = 1 + cheek * 0.22 * pulse + s * shake * 1.28;
-      const morphH = 1 + jaw * 0.26 * pulse - eye * 0.155 * pulse - s * shake * 0.64;
+      // Billboard morph-feel: cheek widens, jaw opens (taller), eye squint shortens.
+      const morphW = 1 + cheek * 0.12 * pulse + s * shake * 0.85;
+      const morphH = 1 + jaw * 0.14 * pulse - eye * 0.08 * pulse - s * shake * 0.4;
       w = BILL_W * morphW;
       h = BILL_H * morphH;
-      x = s * shake * 1.78 + s2 * cheek * 0.08;
-      y = BILL_Y + Math.abs(s2) * shake * 1.12 + jaw * 0.08 * pulse;
-      rot = s2 * shake * 1.55 + s * cheek * 0.095;
+      x = s * shake * 1.2 + s2 * cheek * 0.04;
+      y = BILL_Y + Math.abs(s2) * shake * 0.65 + jaw * 0.04 * pulse;
+      rot = s2 * shake * 1.05 + s * cheek * 0.05;
     } else if (this.occupancy === "tapped") {
       h = BILL_H * 0.72;
       y = BILL_Y * 0.55;
@@ -755,22 +760,22 @@ export class Fighter {
       y = BILL_Y + Math.abs(s) * bob * 2.4;
       rot = s * bob * 1.38;
     } else {
-      // Past #47: still-under Look/laugh re-enter + punchier breathe / weight-shift.
+      // Past #50: softer laugh→idle re-enter + punchier breathe / weight-shift.
       this.applyIdleSheetFrame(dt, true);
       const idle = idleBindForSlug(this.slug);
       const rate = idle.breatheRate;
-      const b = Math.sin(t * rate) * idle.breatheAmp * 1.55;
-      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 0.85;
+      const b = Math.sin(t * rate) * idle.breatheAmp * 1.62;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 0.92;
       const shift = idle.weightShift ?? idle.sway;
       const s =
-        Math.sin(t * rate * 0.62) * idle.sway * 1.65 +
-        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.18 +
-        Math.sin(t * rate * 0.17) * shift * 0.52;
-      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 1.5 + Math.sin(t * rate * 1.7) * idle.scalePulse * 0.78);
-      h = BILL_H * (1 + (b + b2) * 1.22);
+        Math.sin(t * rate * 0.62) * idle.sway * 1.72 +
+        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.25 +
+        Math.sin(t * rate * 0.17) * shift * 0.58;
+      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 1.55 + Math.sin(t * rate * 1.7) * idle.scalePulse * 0.85);
+      h = BILL_H * (1 + (b + b2) * 1.28);
       x = s;
-      y = BILL_Y + b + b2 * 0.8;
-      rot = s * 0.85;
+      y = BILL_Y + b + b2 * 0.85;
+      rot = s * 0.9;
       bill.scale.set(w, h, 1);
       bill.position.set(x, y, 0);
       mat.rotation = rot;
