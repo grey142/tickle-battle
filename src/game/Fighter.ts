@@ -749,16 +749,16 @@ export class Fighter {
       rot = 0.35;
     } else if (clip === "run" || clip === "walk") {
       const loco = runBind ? (clip === "run" ? runBind.run : runBind.walk) : undefined;
-      const rate = loco?.billRate ?? (clip === "run" ? 19.1 : 12.1);
-      const bob = loco?.billBob ?? (clip === "run" ? 0.116 : 0.055);
+      const rate = loco?.billRate ?? (clip === "run" ? 20.15 : 12.75);
+      const bob = loco?.billBob ?? (clip === "run" ? 0.122 : 0.058);
       const s = Math.sin(t * rate);
       const s2 = Math.sin(t * rate * 2);
-      // v6 deepen past #53: punchier stride bob / sway / squash on billboards.
-      w = BILL_W * (1 + s * bob * 1.08 + Math.abs(s2) * bob * 0.4);
-      h = BILL_H * (1 + Math.abs(s) * bob * 0.84 - Math.abs(s2) * bob * 0.46);
-      x = s * bob * 1.4;
-      y = BILL_Y + Math.abs(s) * bob * 2.6;
-      rot = s * bob * 1.48;
+      // v7 deepen past #56: punchier stride bob / sway / squash on billboards.
+      w = BILL_W * (1 + s * bob * 1.14 + Math.abs(s2) * bob * 0.44);
+      h = BILL_H * (1 + Math.abs(s) * bob * 0.9 - Math.abs(s2) * bob * 0.5);
+      x = s * bob * 1.48;
+      y = BILL_Y + Math.abs(s) * bob * 2.8;
+      rot = s * bob * 1.58;
     } else {
       // Past #55: smootherstep crossfade + stronger breathe / slower laugh→idle re-enter.
       this.applyIdleSheetFrame(dt, true);
