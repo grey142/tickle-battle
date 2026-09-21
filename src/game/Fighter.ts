@@ -299,15 +299,20 @@ export class Fighter {
 
     sheet.repeat.set(1 / frames, 1);
     sheet.offset.set(f0 / frames, 0);
-    if (mat.map !== sheet) {
-      mat.map = sheet;
-      mat.needsUpdate = true;
-    }
-    this.idleSheetEnter = Math.min(1, this.idleSheetEnter + dt * 2.8);
+    this.idleSheetEnter = Math.min(1, this.idleSheetEnter + dt * 3.4);
     const enter = this.idleSheetEnter * this.idleSheetEnter * (3 - 2 * this.idleSheetEnter);
     mat.transparent = true;
-    mat.opacity = (1 - blend) * enter;
     mat.depthWrite = false;
+    // Past #43: keyed still stays under the sheet during Look soft-enter (no blank flash).
+    if (enter < 0.999 && this.idleStillTex) {
+      mat.map = this.idleStillTex;
+      mat.opacity = 1;
+      mat.needsUpdate = true;
+    } else {
+      mat.map = sheet;
+      mat.opacity = 1 - blend;
+      mat.needsUpdate = true;
+    }
 
     let fade = this.idleFadeSprite;
     if (!fade) {
@@ -334,10 +339,24 @@ export class Fighter {
     }
     const fadeMat = fade.material as THREE.SpriteMaterial;
     const fadeTex = this.idleFadeTex ?? (fadeMat.map as THREE.Texture);
-    fadeTex.repeat.set(1 / frames, 1);
-    fadeTex.offset.set(f1 / frames, 0);
-    fadeMat.opacity = blend * enter;
-    fade.visible = blend > 0.02 && enter > 0.02;
+    // During enter: sheet rides on fade sprite over the still; after enter: normal f0/f1 crossfade.
+    if (enter < 0.999) {
+      fadeTex.repeat.set(1 / frames, 1);
+      fadeTex.offset.set(f0 / frames, 0);
+      fadeMat.map = fadeTex;
+      fadeMat.opacity = enter;
+      fade.visible = true;
+    } else {
+      fadeTex.repeat.set(1 / frames, 1);
+      fadeTex.offset.set(f1 / frames, 0);
+      fadeMat.opacity = blend;
+      fade.visible = blend > 0.02;
+      if (mat.map !== sheet) {
+        mat.map = sheet;
+        mat.needsUpdate = true;
+      }
+      mat.opacity = 1 - blend;
+    }
     fade.scale.copy(bill.scale);
     fade.position.copy(bill.position);
     fadeMat.rotation = mat.rotation;
@@ -391,22 +410,22 @@ export class Fighter {
     }
     const urls = laughFrameUrls(bind);
     if (urls.length < 2) return false;
-    // Tighter stamina→frame past #44: high soft-locks f0–f1 earlier; mid f1–f2;
+    // Tighter stamina→frame past #39: high soft-locks f0–f1 earlier; mid f1–f2;
     // low opens f2–f3; peak biases f3–f4 / f4 soft-lock. FPS climbs harder with drain.
     const pct = Math.max(0, Math.min(100, staminaPct ?? 100));
     const n = urls.length;
     let lo = 0;
     let hi = n - 1;
-    if (pct >= 50) {
+    if (pct >= 58) {
       lo = 0;
       hi = Math.min(1, n - 1);
-    } else if (pct >= 26) {
+    } else if (pct >= 34) {
       lo = Math.min(1, n - 1);
       hi = Math.min(2, n - 1);
-    } else if (pct >= 10) {
+    } else if (pct >= 14) {
       lo = Math.min(2, n - 1);
       hi = Math.min(3, n - 1);
-    } else if (pct >= 2) {
+    } else if (pct >= 4) {
       lo = Math.min(3, n - 1);
       hi = n - 1;
     } else {
@@ -414,7 +433,7 @@ export class Fighter {
       hi = n - 1;
     }
     const span = Math.max(1, hi - lo + 1);
-    const fps = Math.max(13, Math.round((stageParams?.billRate || 14) * (0.38 + (100 - pct) * 0.014)));
+    const fps = Math.max(11, Math.round((stageParams?.billRate || 14) * (0.32 + (100 - pct) * 0.0125)));
     const idx = lo + (Math.floor(this.animT * fps) % span);
     if (idx === this.laughFrameApplied && this.laughFramePortrait) return true;
     const want = idx;
@@ -706,14 +725,14 @@ export class Fighter {
       const s2 = Math.sin(t * rate * 0.7);
       const s3 = Math.sin(t * rate * 1.35);
       const pulse = 0.55 + 0.45 * Math.abs(s3);
-      // Billboard morph-feel past #44: cheek widens, jaw opens (taller), eye squint shortens.
-      const morphW = 1 + cheek * 0.145 * pulse + s * shake * 0.95;
-      const morphH = 1 + jaw * 0.17 * pulse - eye * 0.1 * pulse - s * shake * 0.45;
+      // Billboard morph-feel: cheek widens, jaw opens (taller), eye squint shortens.
+      const morphW = 1 + cheek * 0.12 * pulse + s * shake * 0.85;
+      const morphH = 1 + jaw * 0.14 * pulse - eye * 0.08 * pulse - s * shake * 0.4;
       w = BILL_W * morphW;
       h = BILL_H * morphH;
-      x = s * shake * 1.35 + s2 * cheek * 0.05;
-      y = BILL_Y + Math.abs(s2) * shake * 0.78 + jaw * 0.05 * pulse;
-      rot = s2 * shake * 1.18 + s * cheek * 0.062;
+      x = s * shake * 1.2 + s2 * cheek * 0.04;
+      y = BILL_Y + Math.abs(s2) * shake * 0.65 + jaw * 0.04 * pulse;
+      rot = s2 * shake * 1.05 + s * cheek * 0.05;
     } else if (this.occupancy === "tapped") {
       h = BILL_H * 0.72;
       y = BILL_Y * 0.55;
@@ -731,22 +750,22 @@ export class Fighter {
       y = BILL_Y + Math.abs(s) * bob * 1.82;
       rot = s * bob * 1.08;
     } else {
-      // Past #40: Look sheet soft-enter + stronger breathe / weight-shift.
+      // Past #43: still-under Look enter + punchier breathe / weight-shift.
       this.applyIdleSheetFrame(dt, true);
       const idle = idleBindForSlug(this.slug);
       const rate = idle.breatheRate;
-      const b = Math.sin(t * rate) * idle.breatheAmp * 1.38;
-      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 0.7;
+      const b = Math.sin(t * rate) * idle.breatheAmp * 1.48;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 0.78;
       const shift = idle.weightShift ?? idle.sway;
       const s =
-        Math.sin(t * rate * 0.62) * idle.sway * 1.45 +
-        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.0 +
-        Math.sin(t * rate * 0.17) * shift * 0.42;
-      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 1.35 + Math.sin(t * rate * 1.7) * idle.scalePulse * 0.62);
-      h = BILL_H * (1 + (b + b2) * 1.12);
+        Math.sin(t * rate * 0.62) * idle.sway * 1.55 +
+        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.1 +
+        Math.sin(t * rate * 0.17) * shift * 0.48;
+      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 1.42 + Math.sin(t * rate * 1.7) * idle.scalePulse * 0.7);
+      h = BILL_H * (1 + (b + b2) * 1.18);
       x = s;
-      y = BILL_Y + b + b2 * 0.7;
-      rot = s * 0.75;
+      y = BILL_Y + b + b2 * 0.75;
+      rot = s * 0.8;
       bill.scale.set(w, h, 1);
       bill.position.set(x, y, 0);
       mat.rotation = rot;
