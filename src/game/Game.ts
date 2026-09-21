@@ -953,7 +953,7 @@ export class Game {
     this.updateVisibility();
     for (const f of this.fighters) {
       // Intensity for tickle frame windows: low victim stamina → harder f3/f4.
-      // Stronger contrast stretch than #65 so soft/hard ends map clearer.
+      // Stronger contrast stretch than #68 so soft/hard ends map clearer.
       if (
         (f.occupancy === "tickler" || (f.occupancy === "nudge" && f.joinOn >= 0)) &&
         f.joinOn >= 0
@@ -962,7 +962,7 @@ export class Game {
         if (v && v.maxStamina > 0) {
           const raw = Math.max(0, Math.min(100, 100 - (100 * v.stamina) / v.maxStamina)) / 100;
           const contrasted =
-            raw < 0.5 ? 0.5 * Math.pow(raw * 2, 2.38) : 1 - 0.5 * Math.pow((1 - raw) * 2, 2.38);
+            raw < 0.5 ? 0.5 * Math.pow(raw * 2, 2.55) : 1 - 0.5 * Math.pow((1 - raw) * 2, 2.55);
           f.tickleIntensity = contrasted * 100;
         } else {
           f.tickleIntensity = 0;

@@ -157,21 +157,21 @@ def make_tickle(rng: np.random.Generator) -> np.ndarray:
 
 
 def make_vanish(rng: np.random.Generator) -> np.ndarray:
-    """Escape breakout whoosh — deepest falling veil (v9: clearer vs reappear ping)."""
+    """Escape breakout whoosh — deepest falling veil (v10: clearer + heavier)."""
     dur = 2.02
     n = int(SR * dur)
     t = np.arange(n) / SR
-    whoosh = bandpass(noise(n, rng), 28, 1800)
+    whoosh = bandpass(noise(n, rng), 28, 1650)
     am = 0.26 + 0.74 * np.sin(2 * math.pi * 2.9 * t * (1 - t / dur))
     whoosh *= am * env_adsr(n, 0.065, 0.34, 0.64, 0.86, 0.38)
     whoosh2 = bandpass(noise(n, rng), 95, 2300) * 0.16
     whoosh2 *= env_adsr(n, 0.085, 0.3, 0.48, 0.88, 0.24)
     # Stronger descending veil — no rising tones (contrast vs reappear).
     veil = soft_clip(
-        sweep_tone(n, 1100, 14) * 0.68
-        + sweep_tone(n, 720, 12) * 0.5
-        + sweep_tone(n, 440, 9) * 0.36
-        + sweep_tone(n, 270, 7) * 0.26
+        sweep_tone(n, 1100, 14) * 0.72
+        + sweep_tone(n, 720, 12) * 0.54
+        + sweep_tone(n, 440, 9) * 0.4
+        + sweep_tone(n, 270, 7) * 0.27
         + sweep_tone(n, 175, 5.5) * 0.18
         + sweep_tone(n, 125, 4.5) * 0.13
         + sweep_tone(n, 88, 3.5) * 0.09
@@ -196,16 +196,16 @@ def make_vanish(rng: np.random.Generator) -> np.ndarray:
         grain = bandpass(noise(sn, rng), 170 + i * 85, 1400) * g
         grain *= env_adsr(sn, 0.003, 0.034, 0.012, 0.085, 0.065)
         trail[start : start + sn] += grain
-    rumble = one_pole_lp(noise(n, rng), 34) * env_adsr(n, 0.08, 0.36, 0.6, 0.86, 0.3) * 0.7
+    rumble = one_pole_lp(noise(n, rng), 34) * env_adsr(n, 0.08, 0.36, 0.6, 0.86, 0.3) * 0.65
     thump_n = int(0.28 * SR)
     thump = soft_clip(sweep_tone(thump_n, 24, 10) * 0.92)
     thump *= env_adsr(thump_n, 0.004, 0.07, 0.04, 0.14, 0.1)
-    out = whoosh * 0.58 + whoosh2 * 0.18 + veil * 1.06 + rumble
+    out = whoosh * 0.56 + whoosh2 * 0.18 + veil * 1.1 + rumble
     out[:spark_n] += spark
     out[:thump_n] += thump * 0.92
     out += trail
-    out = soft_clip(one_pole_lp(out, 2200) * 0.76)
-    return fade_edges(out, 26) * 0.88
+    out = soft_clip(one_pole_lp(out, 2600) * 0.78)
+    return fade_edges(out, 26) * 0.9
 
 
 def make_tap_out(rng: np.random.Generator) -> np.ndarray:
@@ -406,7 +406,7 @@ def make_spend(rng: np.random.Generator) -> np.ndarray:
 
 
 def make_countdown_tick(rng: np.random.Generator) -> np.ndarray:
-    """Last-3s countdown beat — pitched body + sharp tip (v9: widest rate-stretch ladder)."""
+    """Last-3s countdown beat — pitched body + sharp tip (v10: widest rate-stretch ladder)."""
     dur = 0.065
     n = int(SR * dur)
     # Clean fundamental @ 700Hz so playbackRate 0.42/1.0/1.92 reads as 3/2/1.
