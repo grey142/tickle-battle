@@ -7,56 +7,56 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 19.0284,
-      "amp": 0.0905,
-      "lean": 0.1449,
-      "billShake": 0.0973,
-      "billRate": 23.2665,
+      "rate": 20.1701,
+      "amp": 0.0959,
+      "lean": 0.1536,
+      "billShake": 0.1031,
+      "billRate": 24.6625,
       "still": "stages/MiraSolis_s0.jpg",
       "blend": {
-        "jaw": 0.7,
-        "cheek": 0.377,
-        "eye": 0.572,
-        "brow": 0.253
+        "jaw": 0.742,
+        "cheek": 0.4,
+        "eye": 0.606,
+        "brow": 0.268
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 27.6778,
-      "amp": 0.151,
-      "lean": 0.2536,
-      "billShake": 0.1945,
-      "billRate": 29.914,
+      "rate": 29.3385,
+      "amp": 0.1601,
+      "lean": 0.2688,
+      "billShake": 0.2062,
+      "billRate": 31.7088,
       "still": "stages/MiraSolis_s1.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.845,
+        "cheek": 0.896,
         "eye": 1.0,
-        "brow": 0.481
+        "brow": 0.51
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 34.5976,
-      "amp": 0.2014,
-      "lean": 0.3626,
-      "billShake": 0.2783,
-      "billRate": 33.2385,
+      "rate": 36.6735,
+      "amp": 0.2135,
+      "lean": 0.3844,
+      "billShake": 0.295,
+      "billRate": 35.2328,
       "still": "stages/MiraSolis_s2.jpg",
       "blend": {
         "jaw": 1.0,
         "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.871
+        "brow": 0.923
       }
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 39.7878,
-      "amp": 0.2516,
-      "lean": 0.435,
-      "billShake": 0.3757,
-      "billRate": 39.8859,
+      "rate": 42.1751,
+      "amp": 0.2667,
+      "lean": 0.4611,
+      "billShake": 0.3982,
+      "billRate": 42.2791,
       "still": "stages/MiraSolis_s3.jpg",
       "blend": {
         "jaw": 1.0,

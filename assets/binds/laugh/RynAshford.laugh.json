@@ -7,56 +7,56 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 17.7605,
-      "amp": 0.1229,
-      "lean": 0.1053,
-      "billShake": 0.106,
-      "billRate": 29.4796,
+      "rate": 18.8261,
+      "amp": 0.1303,
+      "lean": 0.1116,
+      "billShake": 0.1124,
+      "billRate": 31.2484,
       "still": "stages/RynAshford_s0.jpg",
       "blend": {
-        "jaw": 0.685,
-        "cheek": 0.374,
-        "eye": 0.561,
-        "brow": 0.246
+        "jaw": 0.726,
+        "cheek": 0.396,
+        "eye": 0.595,
+        "brow": 0.261
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 25.8323,
-      "amp": 0.2047,
-      "lean": 0.1847,
-      "billShake": 0.2123,
-      "billRate": 37.8881,
+      "rate": 27.3822,
+      "amp": 0.217,
+      "lean": 0.1958,
+      "billShake": 0.225,
+      "billRate": 40.1614,
       "still": "stages/RynAshford_s1.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.922,
+        "cheek": 0.977,
         "eye": 1.0,
-        "brow": 0.528
+        "brow": 0.56
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 32.2905,
-      "amp": 0.2727,
-      "lean": 0.2636,
-      "billShake": 0.3035,
-      "billRate": 42.103,
+      "rate": 34.2279,
+      "amp": 0.2891,
+      "lean": 0.2794,
+      "billShake": 0.3217,
+      "billRate": 44.6292,
       "still": "stages/RynAshford_s2.jpg",
       "blend": {
         "jaw": 1.0,
         "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.94
+        "brow": 0.996
       }
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 37.1331,
-      "amp": 0.341,
-      "lean": 0.3164,
-      "billShake": 0.4064,
-      "billRate": 50.5308,
+      "rate": 39.3611,
+      "amp": 0.3615,
+      "lean": 0.3354,
+      "billShake": 0.4308,
+      "billRate": 53.5626,
       "still": "stages/RynAshford_s3.jpg",
       "blend": {
         "jaw": 1.0,
