@@ -38,7 +38,7 @@ export const CONTACT_GRACE = 0.25;
 export const REAPPEAR_IGNORE = 0.85;
 /** Nearby band for reappear sound + white rim flash (not rose). */
 export const REAPPEAR_TELL = 12;
-export const REAPPEAR_FLASH = 0.48;
+export const REAPPEAR_FLASH = 0.56;
 
 export const BASE = { stamina: 3, struggle: 3, tickle: 3 };
 export const K_STAMINA = 28;
