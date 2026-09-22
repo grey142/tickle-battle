@@ -274,10 +274,10 @@ export class Fighter {
   }
 
   /** Soft re-enter sheet after laugh/Look so still-under path can run again. */
-  softenIdleSheetEnter(cap = 0.08) {
+  softenIdleSheetEnter(cap = 0.07) {
     this.idleSheetEnter = Math.min(this.idleSheetEnter, cap);
-    // Past #71: softer still-under ramp after laugh so the sheet eases back in.
-    this.idleEnterRate = 1.4;
+    // Past #75: softer still-under ramp after laugh so the sheet eases back in.
+    this.idleEnterRate = 1.25;
   }
 
   private applyIdleSheetFrame(dt: number, playing: boolean) {
@@ -302,12 +302,13 @@ export class Fighter {
     const f0 = Math.floor(frameF) % frames;
     const f1 = (f0 + 1) % frames;
     const u = frameF - Math.floor(frameF);
-    // Past #71: smootherstep × ease⁴ — longer readable mid-frame hold / sheet clarity.
+    // Past #75: smootherstep × ease⁵ — longer readable mid-frame hold / sheet clarity.
     const s = u * u * u * (u * (u * 6 - 15) + 10);
     const e = s * s * (3 - 2 * s);
     const e2 = e * e * (3 - 2 * e);
     const e3 = e2 * e2 * (3 - 2 * e2);
-    const blend = e3 * e3 * (3 - 2 * e3);
+    const e4 = e3 * e3 * (3 - 2 * e3);
+    const blend = e4 * e4 * (3 - 2 * e4);
     this.idleFrame = f0;
     this.idleFrameAcc = u;
 
@@ -341,7 +342,7 @@ export class Fighter {
         transparent: true,
         depthTest: true,
         depthWrite: false,
-        alphaTest: 0.08,
+        alphaTest: 0.1,
         opacity: 0,
       });
       fade = new THREE.Sprite(fadeMat);
@@ -764,22 +765,22 @@ export class Fighter {
       y = BILL_Y + Math.abs(s) * bob * 2.8;
       rot = s * bob * 1.58;
     } else {
-      // Past #71: idle-only (longer crossfade / softer re-enter / breathe / sheet clarity).
+      // Past #75: idle-only (crossfade / re-enter / breathe / sheet clarity).
       this.applyIdleSheetFrame(dt, true);
       const idle = idleBindForSlug(this.slug);
       const rate = idle.breatheRate;
-      const b = Math.sin(t * rate) * idle.breatheAmp * 1.98;
-      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 1.22;
+      const b = Math.sin(t * rate) * idle.breatheAmp * 2.05;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 1.28;
       const shift = idle.weightShift ?? idle.sway;
       const s =
-        Math.sin(t * rate * 0.62) * idle.sway * 2.05 +
-        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.6 +
-        Math.sin(t * rate * 0.17) * shift * 0.82;
-      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 1.85 + Math.sin(t * rate * 1.7) * idle.scalePulse * 1.08);
-      h = BILL_H * (1 + (b + b2) * 1.48);
+        Math.sin(t * rate * 0.62) * idle.sway * 2.12 +
+        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.68 +
+        Math.sin(t * rate * 0.17) * shift * 0.88;
+      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 1.9 + Math.sin(t * rate * 1.7) * idle.scalePulse * 1.12);
+      h = BILL_H * (1 + (b + b2) * 1.52);
       x = s;
-      y = BILL_Y + b + b2 * 1.08;
-      rot = s * 1.1;
+      y = BILL_Y + b + b2 * 1.12;
+      rot = s * 1.12;
       bill.scale.set(w, h, 1);
       bill.position.set(x, y, 0);
       mat.rotation = rot;
