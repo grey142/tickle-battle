@@ -7,41 +7,41 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 31.004,
-      "amp": 0.1444,
-      "lean": 0.2101,
-      "billShake": 0.1689,
-      "billRate": 37.0831,
+      "rate": 32.8642,
+      "amp": 0.1531,
+      "lean": 0.2227,
+      "billShake": 0.179,
+      "billRate": 39.3081,
       "still": "stages/JunoHale_s0.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.611,
-        "eye": 0.913,
-        "brow": 0.418
+        "cheek": 0.648,
+        "eye": 0.968,
+        "brow": 0.443
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 45.0943,
-      "amp": 0.2407,
-      "lean": 0.3678,
-      "billShake": 0.3387,
-      "billRate": 47.6783,
+      "rate": 47.8,
+      "amp": 0.2551,
+      "lean": 0.3899,
+      "billShake": 0.359,
+      "billRate": 50.539,
       "still": "stages/JunoHale_s1.jpg",
       "blend": {
         "jaw": 1.0,
         "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.78
+        "brow": 0.827
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 56.3674,
-      "amp": 0.3211,
-      "lean": 0.5251,
-      "billShake": 0.4831,
-      "billRate": 52.9772,
+      "rate": 59.7494,
+      "amp": 0.3404,
+      "lean": 0.5566,
+      "billShake": 0.5121,
+      "billRate": 56.1558,
       "still": "stages/JunoHale_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 64.8254,
-      "amp": 0.4011,
-      "lean": 0.6306,
-      "billShake": 0.6477,
-      "billRate": 63.572,
+      "rate": 68.7149,
+      "amp": 0.4252,
+      "lean": 0.6684,
+      "billShake": 0.6866,
+      "billRate": 67.3863,
       "still": "stages/JunoHale_s3.jpg",
       "blend": {
         "jaw": 1.0,
