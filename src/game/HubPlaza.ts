@@ -182,8 +182,8 @@ export class HubPlaza {
   resolve(x: number, z: number, radius = CAPSULE_R): { x: number; z: number } {
     let px = x;
     let pz = z;
-    // Five X/Z passes — AABB slide; clears Home/Shop/Arena jamb corners beyond #33.
-    for (let pass = 0; pass < 5; pass++) {
+    // Six X/Z passes — AABB slide; clears Home/Shop/Arena jamb corners beyond #69.
+    for (let pass = 0; pass < 6; pass++) {
       for (const w of this.walls) {
         if (pz <= w.minz - radius || pz >= w.maxz + radius) continue;
         if (px > w.minx - radius && px < w.maxx + radius) {
@@ -220,9 +220,9 @@ export class HubPlaza {
     const halfD = 11;
     const doorW = 2.4;
     const half = doorW / 2;
-    const jamb = 0.75;
+    const jamb = 0.82;
     const open = half + jamb;
-    const tip = radius + 0.38;
+    const tip = radius + 0.44;
     const zFront = halfD - thick / 2;
     const xLeft = -(halfW - thick / 2);
     const xRight = halfW - thick / 2;
@@ -263,7 +263,7 @@ export class HubPlaza {
     const frontLen = halfW - half;
     const sideLen = halfD - half;
 
-    const jamb = 0.75; // jamb slack deepen past #64 — Home/Shop/Arena tips slide clean
+    const jamb = 0.82; // v11: wider jamb slack keeps Leave/door approach from corner-catching
     this.addWall(-halfW, halfW, zBack - thick / 2, zBack + thick / 2);
     this.addWall(-(half + frontLen), -half - jamb, zFront - thick / 2, zFront + thick / 2);
     this.addWall(half + jamb, half + frontLen, zFront - thick / 2, zFront + thick / 2);
@@ -504,6 +504,18 @@ export class HubPlaza {
     outer.position.set(0, 0.023, 1.6);
     frame.add(outer);
     this.doorOuterSillMats.set(room, outerMat);
+
+    // Narrow inner jamb fins — give each opening a readable threshold edge while
+    // keeping the collision opening clear. They share the same pulse as the sill.
+    const jambLMat = glowMat(tint, room === "arena" ? 0.24 : 0.2);
+    jambLMat.userData.doorGlow = true;
+    const jambL = new THREE.Mesh(new THREE.BoxGeometry(0.055, doorH - 0.38, 0.06), jambLMat);
+    jambL.position.set(-doorW / 2 + 0.17, doorH / 2, 0.23);
+    const jambRMat = jambLMat.clone();
+    jambRMat.userData.doorGlow = true;
+    const jambR = new THREE.Mesh(new THREE.BoxGeometry(0.055, doorH - 0.38, 0.06), jambRMat);
+    jambR.position.set(doorW / 2 - 0.17, doorH / 2, 0.23);
+    frame.add(jambL, jambR);
 
     // Lintel underside accent — reads as door header glow with pulse.
     const lintelGlow = glowMat(tint, room === "arena" ? 0.3 : 0.26);
