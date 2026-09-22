@@ -6,12 +6,12 @@
   "metalException": false,
   "pose": "a_pose",
   "breatheRate": 2.25,
-  "breatheAmp": 0.1191,
-  "sway": 0.051,
-  "scalePulse": 0.0684,
+  "breatheAmp": 0.1227,
+  "sway": 0.0525,
+  "scalePulse": 0.0701,
   "frames": 8,
   "sheetLayout": "horizontal",
-  "fps": 6.52,
-  "weightShift": 0.0633,
+  "fps": 6.39,
+  "weightShift": 0.0655,
   "headNod": 0.0276
 }
