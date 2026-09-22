@@ -7,41 +7,41 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 25.1935,
-      "amp": 0.1549,
-      "lean": 0.168,
-      "billShake": 0.1132,
-      "billRate": 37.4119,
+      "rate": 26.7051,
+      "amp": 0.1642,
+      "lean": 0.1781,
+      "billShake": 0.12,
+      "billRate": 39.6566,
       "still": "stages/EmberLang_s0.jpg",
       "blend": {
-        "jaw": 0.972,
-        "cheek": 0.53,
-        "eye": 0.797,
-        "brow": 0.351
+        "jaw": 1.0,
+        "cheek": 0.562,
+        "eye": 0.845,
+        "brow": 0.372
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 36.6436,
-      "amp": 0.2522,
-      "lean": 0.2948,
-      "billShake": 0.2263,
-      "billRate": 48.1039,
+      "rate": 38.8422,
+      "amp": 0.2673,
+      "lean": 0.3125,
+      "billShake": 0.2399,
+      "billRate": 50.9901,
       "still": "stages/EmberLang_s1.jpg",
       "blend": {
         "jaw": 1.0,
         "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.75
+        "brow": 0.795
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 45.8047,
-      "amp": 0.3362,
-      "lean": 0.4208,
-      "billShake": 0.3229,
-      "billRate": 53.4373,
+      "rate": 48.553,
+      "amp": 0.3564,
+      "lean": 0.446,
+      "billShake": 0.3423,
+      "billRate": 56.6435,
       "still": "stages/EmberLang_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 52.6742,
-      "amp": 0.4206,
-      "lean": 0.5046,
-      "billShake": 0.436,
-      "billRate": 64.129,
+      "rate": 55.8347,
+      "amp": 0.4458,
+      "lean": 0.5349,
+      "billShake": 0.4622,
+      "billRate": 67.9767,
       "still": "stages/EmberLang_s3.jpg",
       "blend": {
         "jaw": 1.0,
