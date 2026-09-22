@@ -7,41 +7,41 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 23.4885,
-      "amp": 0.1143,
-      "lean": 0.1495,
-      "billShake": 0.1008,
-      "billRate": 29.3734,
+      "rate": 24.8978,
+      "amp": 0.1212,
+      "lean": 0.1585,
+      "billShake": 0.1068,
+      "billRate": 31.1358,
       "still": "stages/ElaraCase_s0.jpg",
       "blend": {
-        "jaw": 0.874,
-        "cheek": 0.475,
-        "eye": 0.712,
-        "brow": 0.319
+        "jaw": 0.926,
+        "cheek": 0.503,
+        "eye": 0.755,
+        "brow": 0.338
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 34.1658,
-      "amp": 0.1907,
-      "lean": 0.2624,
-      "billShake": 0.2014,
-      "billRate": 37.7657,
+      "rate": 36.2157,
+      "amp": 0.2021,
+      "lean": 0.2781,
+      "billShake": 0.2135,
+      "billRate": 40.0316,
       "still": "stages/ElaraCase_s1.jpg",
       "blend": {
         "jaw": 1.0,
         "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.601
+        "brow": 0.637
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 42.7084,
-      "amp": 0.2543,
-      "lean": 0.3745,
-      "billShake": 0.2874,
-      "billRate": 41.9629,
+      "rate": 45.2709,
+      "amp": 0.2696,
+      "lean": 0.397,
+      "billShake": 0.3046,
+      "billRate": 44.4807,
       "still": "stages/ElaraCase_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 49.1151,
-      "amp": 0.3177,
-      "lean": 0.4491,
-      "billShake": 0.388,
-      "billRate": 50.355,
+      "rate": 52.062,
+      "amp": 0.3368,
+      "lean": 0.476,
+      "billShake": 0.4113,
+      "billRate": 53.3763,
       "still": "stages/ElaraCase_s3.jpg",
       "blend": {
         "jaw": 1.0,
