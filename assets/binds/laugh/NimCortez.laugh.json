@@ -7,41 +7,41 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 23.168,
-      "amp": 0.1368,
-      "lean": 0.1726,
-      "billShake": 0.137,
-      "billRate": 33.2486,
+      "rate": 24.5581,
+      "amp": 0.145,
+      "lean": 0.183,
+      "billShake": 0.1452,
+      "billRate": 35.2435,
       "still": "stages/NimCortez_s0.jpg",
       "blend": {
-        "jaw": 0.838,
-        "cheek": 0.456,
-        "eye": 0.682,
-        "brow": 0.312
+        "jaw": 0.888,
+        "cheek": 0.483,
+        "eye": 0.723,
+        "brow": 0.331
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 33.6972,
-      "amp": 0.228,
-      "lean": 0.302,
-      "billShake": 0.2738,
-      "billRate": 42.746,
+      "rate": 35.719,
+      "amp": 0.2417,
+      "lean": 0.3201,
+      "billShake": 0.2902,
+      "billRate": 45.3108,
       "still": "stages/NimCortez_s1.jpg",
       "blend": {
         "jaw": 1.0,
         "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.583
+        "brow": 0.618
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 42.121,
-      "amp": 0.3036,
-      "lean": 0.432,
-      "billShake": 0.3916,
-      "billRate": 47.5047,
+      "rate": 44.6483,
+      "amp": 0.3218,
+      "lean": 0.4579,
+      "billShake": 0.4151,
+      "billRate": 50.355,
       "still": "stages/NimCortez_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 48.4412,
-      "amp": 0.3796,
-      "lean": 0.5181,
-      "billShake": 0.484,
-      "billRate": 57.002,
+      "rate": 51.3477,
+      "amp": 0.4024,
+      "lean": 0.5492,
+      "billShake": 0.513,
+      "billRate": 60.4221,
       "still": "stages/NimCortez_s3.jpg",
       "blend": {
         "jaw": 1.0,

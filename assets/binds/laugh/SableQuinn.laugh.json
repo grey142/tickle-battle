@@ -7,41 +7,41 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 21.153,
-      "amp": 0.1078,
-      "lean": 0.157,
-      "billShake": 0.1053,
-      "billRate": 27.7108,
+      "rate": 22.4222,
+      "amp": 0.1143,
+      "lean": 0.1664,
+      "billShake": 0.1116,
+      "billRate": 29.3734,
       "still": "stages/SableQuinn_s0.jpg",
       "blend": {
-        "jaw": 0.816,
-        "cheek": 0.445,
-        "eye": 0.669,
-        "brow": 0.294
+        "jaw": 0.865,
+        "cheek": 0.472,
+        "eye": 0.709,
+        "brow": 0.312
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 30.7666,
-      "amp": 0.1799,
-      "lean": 0.2749,
-      "billShake": 0.2108,
-      "billRate": 35.628,
+      "rate": 32.6126,
+      "amp": 0.1907,
+      "lean": 0.2914,
+      "billShake": 0.2234,
+      "billRate": 37.7657,
       "still": "stages/SableQuinn_s1.jpg",
       "blend": {
         "jaw": 1.0,
         "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.63
+        "brow": 0.668
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 38.4585,
-      "amp": 0.2399,
-      "lean": 0.3924,
-      "billShake": 0.3007,
-      "billRate": 39.5876,
+      "rate": 40.766,
+      "amp": 0.2543,
+      "lean": 0.4159,
+      "billShake": 0.3187,
+      "billRate": 41.9629,
       "still": "stages/SableQuinn_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 44.2262,
-      "amp": 0.2997,
-      "lean": 0.4711,
-      "billShake": 0.4064,
-      "billRate": 47.5047,
+      "rate": 46.8798,
+      "amp": 0.3177,
+      "lean": 0.4994,
+      "billShake": 0.4308,
+      "billRate": 50.355,
       "still": "stages/SableQuinn_s3.jpg",
       "blend": {
         "jaw": 1.0,

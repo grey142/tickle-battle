@@ -425,22 +425,22 @@ export class Fighter {
     }
     const urls = laughFrameUrls(bind);
     if (urls.length < 2) return false;
-    // Tighter stamina→frame past #54: high soft-locks f0–f1 earlier; mid f1–f2;
+    // Tighter stamina→frame past #74: high soft-locks f0–f1 earlier; mid f1–f2;
     // low opens f2–f3; peak biases f3–f4 / f4 soft-lock. FPS climbs harder with drain.
     const pct = Math.max(0, Math.min(100, staminaPct ?? 100));
     const n = urls.length;
     let lo = 0;
     let hi = n - 1;
-    if (pct >= 22) {
+    if (pct >= 0.55) {
       lo = 0;
       hi = Math.min(1, n - 1);
-    } else if (pct >= 7) {
+    } else if (pct >= 0.085) {
       lo = Math.min(1, n - 1);
       hi = Math.min(2, n - 1);
-    } else if (pct >= 1.5) {
+    } else if (pct >= 0.012) {
       lo = Math.min(2, n - 1);
       hi = Math.min(3, n - 1);
-    } else if (pct >= 0.2) {
+    } else if (pct >= 0.001) {
       lo = Math.min(3, n - 1);
       hi = n - 1;
     } else {
@@ -448,7 +448,7 @@ export class Fighter {
       hi = n - 1;
     }
     const span = Math.max(1, hi - lo + 1);
-    const fps = Math.max(20, Math.round((stageParams?.billRate || 14) * (0.6 + (100 - pct) * 0.021)));
+    const fps = Math.max(42, Math.round((stageParams?.billRate || 14) * (1.32 + (100 - pct) * 0.046)));
     const idx = lo + (Math.floor(this.animT * fps) % span);
     if (idx === this.laughFrameApplied && this.laughFramePortrait) return true;
     const want = idx;
@@ -740,14 +740,14 @@ export class Fighter {
       const s2 = Math.sin(t * rate * 0.7);
       const s3 = Math.sin(t * rate * 1.35);
       const pulse = 0.55 + 0.45 * Math.abs(s3);
-      // Billboard morph-feel past #54: cheek widens, jaw opens (taller), eye squint shortens.
-      const morphW = 1 + cheek * 0.27 * pulse + s * shake * 1.48;
-      const morphH = 1 + jaw * 0.315 * pulse - eye * 0.185 * pulse - s * shake * 0.76;
+      // Billboard morph-feel past #74: cheek widens, jaw opens (taller), eye squint shortens.
+      const morphW = 1 + cheek * 0.58 * pulse + s * shake * 3.05;
+      const morphH = 1 + jaw * 0.65 * pulse - eye * 0.42 * pulse - s * shake * 1.58;
       w = BILL_W * morphW;
       h = BILL_H * morphH;
-      x = s * shake * 2.05 + s2 * cheek * 0.1;
-      y = BILL_Y + Math.abs(s2) * shake * 1.32 + jaw * 0.1 * pulse;
-      rot = s2 * shake * 1.8 + s * cheek * 0.118;
+      x = s * shake * 4.1 + s2 * cheek * 0.235;
+      y = BILL_Y + Math.abs(s2) * shake * 2.75 + jaw * 0.235 * pulse;
+      rot = s2 * shake * 3.75 + s * cheek * 0.25;
     } else if (this.occupancy === "tapped") {
       h = BILL_H * 0.72;
       y = BILL_Y * 0.55;
