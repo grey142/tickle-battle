@@ -158,7 +158,7 @@ def make_tickle(rng: np.random.Generator) -> np.ndarray:
 
 
 def make_vanish(rng: np.random.Generator) -> np.ndarray:
-    """Escape breakout whoosh — deepest falling veil (v17: clearer + heavier)."""
+    """Escape breakout whoosh — deepest falling veil (v18: clearer + heavier)."""
     dur = 2.52
     n = int(SR * dur)
     t = np.arange(n) / SR
@@ -248,7 +248,7 @@ def make_tap_out(rng: np.random.Generator) -> np.ndarray:
 
 
 def make_reappear(rng: np.random.Generator) -> np.ndarray:
-    """Nearby reappear tell — brightest rising ping (v17: no low whoosh bleed)."""
+    """Nearby reappear tell — brightest rising ping (v18: no low whoosh bleed)."""
     dur = 0.23
     n = int(SR * dur)
     # Pure rising sweeps — opposite of vanish veil.
@@ -421,7 +421,7 @@ def make_spend(rng: np.random.Generator) -> np.ndarray:
 
 
 def make_countdown_tick(rng: np.random.Generator) -> np.ndarray:
-    """Last-3s countdown beat — pitched body + sharp tip (v17: widest rate-stretch ladder)."""
+    """Last-3s countdown beat — pitched body + sharp tip (v18: widest rate-stretch ladder)."""
     dur = 0.08
     n = int(SR * dur)
     # Clean fundamental @ 700Hz so playbackRate 0.12/1.0/3.0 reads as 3/2/1.
@@ -473,7 +473,7 @@ def encode_web(name: str) -> None:
 
 
 def main() -> None:
-    rng = np.random.default_rng(20260922_17)
+    rng = np.random.default_rng(20260922_18)
     makers = {
         "tickle-lock": make_tickle_lock,
         "tickle": make_tickle,
