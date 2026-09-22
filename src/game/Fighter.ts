@@ -225,7 +225,7 @@ export class Fighter {
         map: tex,
         transparent: true,
         depthTest: true,
-        alphaTest: 0.15,
+        alphaTest: 0.155,
       });
       const bill = new THREE.Sprite(mat);
       bill.scale.set(BILL_W, BILL_H, 1);
@@ -274,10 +274,10 @@ export class Fighter {
   }
 
   /** Soft re-enter sheet after laugh/Look so still-under path can run again. */
-  softenIdleSheetEnter(cap = 0.035) {
+  softenIdleSheetEnter(cap = 0.03) {
     this.idleSheetEnter = Math.min(this.idleSheetEnter, cap);
-    // Past #94: softer still-under ramp after laugh so the sheet eases back in.
-    this.idleEnterRate = 0.82;
+    // Past #98: softer still-under ramp after laugh so the sheet eases back in.
+    this.idleEnterRate = 0.78;
   }
 
   private applyIdleSheetFrame(dt: number, playing: boolean) {
@@ -302,9 +302,9 @@ export class Fighter {
     const f0 = Math.floor(frameF) % frames;
     const f1 = (f0 + 1) % frames;
     const u = frameF - Math.floor(frameF);
-    // Past #94: smootherstep then higher-power plateau — longer mid-frame hold / sheet clarity.
+    // Past #98: smootherstep then higher-power plateau — longer mid-frame hold / sheet clarity.
     const s = u * u * u * (u * (u * 6 - 15) + 10);
-    const blend = Math.pow(s, 14);
+    const blend = Math.pow(s, 16);
     this.idleFrame = f0;
     this.idleFrameAcc = u;
 
@@ -338,7 +338,7 @@ export class Fighter {
         transparent: true,
         depthTest: true,
         depthWrite: false,
-        alphaTest: 0.15,
+        alphaTest: 0.155,
         opacity: 0,
       });
       fade = new THREE.Sprite(fadeMat);
@@ -421,22 +421,22 @@ export class Fighter {
     }
     const urls = laughFrameUrls(bind);
     if (urls.length < 2) return false;
-    // Tighter stamina→frame past #97: high soft-locks f0–f1 earlier; mid f1–f2;
+    // Tighter stamina→frame past #93: high soft-locks f0–f1 earlier; mid f1–f2;
     // low opens f2–f3; peak biases f3–f4 / f4 soft-lock. FPS climbs harder with drain.
     const pct = Math.max(0, Math.min(100, staminaPct ?? 100));
     const n = urls.length;
     let lo = 0;
     let hi = n - 1;
-    if (pct >= 0.0000018) {
+    if (pct >= 0.00011) {
       lo = 0;
       hi = Math.min(1, n - 1);
-    } else if (pct >= 0.00000028) {
+    } else if (pct >= 0.000017) {
       lo = Math.min(1, n - 1);
       hi = Math.min(2, n - 1);
-    } else if (pct >= 0.000000038) {
+    } else if (pct >= 0.0000023) {
       lo = Math.min(2, n - 1);
       hi = Math.min(3, n - 1);
-    } else if (pct >= 0.0000000035) {
+    } else if (pct >= 0.00000021) {
       lo = Math.min(3, n - 1);
       hi = n - 1;
     } else {
@@ -444,7 +444,7 @@ export class Fighter {
       hi = n - 1;
     }
     const span = Math.max(1, hi - lo + 1);
-    const fps = Math.max(155, Math.round((stageParams?.billRate || 14) * (3.38 + (100 - pct) * 0.155)));
+    const fps = Math.max(98, Math.round((stageParams?.billRate || 14) * (2.38 + (100 - pct) * 0.098)));
     const idx = lo + (Math.floor(this.animT * fps) % span);
     if (idx === this.laughFrameApplied && this.laughFramePortrait) return true;
     const want = idx;
@@ -736,14 +736,14 @@ export class Fighter {
       const s2 = Math.sin(t * rate * 0.7);
       const s3 = Math.sin(t * rate * 1.35);
       const pulse = 0.55 + 0.45 * Math.abs(s3);
-      // Billboard morph-feel past #97: cheek widens, jaw opens (taller), eye squint shortens.
-      const morphW = 1 + cheek * 1.56 * pulse + s * shake * 8.26;
-      const morphH = 1 + jaw * 1.79 * pulse - eye * 1.19 * pulse - s * shake * 4.35;
+      // Billboard morph-feel past #93: cheek widens, jaw opens (taller), eye squint shortens.
+      const morphW = 1 + cheek * 1.1 * pulse + s * shake * 5.82;
+      const morphH = 1 + jaw * 1.26 * pulse - eye * 0.84 * pulse - s * shake * 3.06;
       w = BILL_W * morphW;
       h = BILL_H * morphH;
-      x = s * shake * 11.25 + s2 * cheek * 0.648;
-      y = BILL_Y + Math.abs(s2) * shake * 7.67 + jaw * 0.648 * pulse;
-      rot = s2 * shake * 10.56 + s * cheek * 0.68;
+      x = s * shake * 7.92 + s2 * cheek * 0.456;
+      y = BILL_Y + Math.abs(s2) * shake * 5.4 + jaw * 0.456 * pulse;
+      rot = s2 * shake * 7.44 + s * cheek * 0.48;
     } else if (this.occupancy === "tapped") {
       h = BILL_H * 0.72;
       y = BILL_Y * 0.55;
@@ -761,22 +761,22 @@ export class Fighter {
       y = BILL_Y + Math.abs(s) * bob * 2.8;
       rot = s * bob * 1.58;
     } else {
-      // Past #94: idle/skills/persist lane — crossfade / re-enter / sheet clarity. Persist profile-safe (no schema invent). Idle-scoped only.
+      // Past #98: idle/skills/persist lane — crossfade / re-enter / sheet clarity. Persist profile-safe (no schema invent). Idle-scoped only.
       this.applyIdleSheetFrame(dt, true);
       const idle = idleBindForSlug(this.slug);
       const rate = idle.breatheRate;
-      const b = Math.sin(t * rate) * idle.breatheAmp * 2.3;
-      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 1.45;
+      const b = Math.sin(t * rate) * idle.breatheAmp * 2.35;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 1.48;
       const shift = idle.weightShift ?? idle.sway;
       const s =
-        Math.sin(t * rate * 0.62) * idle.sway * 2.36 +
-        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.9 +
-        Math.sin(t * rate * 0.17) * shift * 1.02;
-      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 2.15 + Math.sin(t * rate * 1.7) * idle.scalePulse * 1.25);
-      h = BILL_H * (1 + (b + b2) * 1.68);
+        Math.sin(t * rate * 0.62) * idle.sway * 2.4 +
+        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.94 +
+        Math.sin(t * rate * 0.17) * shift * 1.04;
+      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 2.2 + Math.sin(t * rate * 1.7) * idle.scalePulse * 1.28);
+      h = BILL_H * (1 + (b + b2) * 1.7);
       x = s;
-      y = BILL_Y + b + b2 * 1.25;
-      rot = s * 1.25;
+      y = BILL_Y + b + b2 * 1.28;
+      rot = s * 1.28;
       bill.scale.set(w, h, 1);
       bill.position.set(x, y, 0);
       mat.rotation = rot;

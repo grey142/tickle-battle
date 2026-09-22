@@ -838,12 +838,12 @@ export class Game {
         const laughing = this.hub.laughing;
         this.plazaPreview.occupancy = laughing ? "ticklee" : "free";
         if (laughing) {
-          // Preview harder laugh morph/frames past #97 (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.0000000023);
+          // Preview harder laugh morph/frames past #93 (not full stamina mild window).
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.00000014);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
           // Soft still-under re-enter when Look/plaza laugh preview ends.
-          if (this.hubLaughWas) this.plazaPreview.softenIdleSheetEnter(0.035);
+          if (this.hubLaughWas) this.plazaPreview.softenIdleSheetEnter(0.03);
         }
         this.hubLaughWas = laughing;
         this.plazaPreview.tickAnim(Math.min(0.05, wallDt));
@@ -873,12 +873,12 @@ export class Game {
         const laughing = this.hub.laughing;
         this.plazaPreview.occupancy = laughing ? "ticklee" : "free";
         if (laughing) {
-          // Preview harder laugh morph/frames past #97 (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.0000000023);
+          // Preview harder laugh morph/frames past #93 (not full stamina mild window).
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.00000014);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
           // Soft still-under re-enter when Look/plaza laugh preview ends.
-          if (this.hubLaughWas) this.plazaPreview.softenIdleSheetEnter(0.035);
+          if (this.hubLaughWas) this.plazaPreview.softenIdleSheetEnter(0.03);
         }
         this.hubLaughWas = laughing;
         this.plazaPreview.tickAnim(Math.min(0.05, wallDt));
