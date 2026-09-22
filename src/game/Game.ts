@@ -294,8 +294,8 @@ export class Game {
       const ceil = Math.ceil(this.countdown);
       if (ceil <= 3 && ceil >= 1 && ceil !== this.countdownTickCeil) {
         this.countdownTickCeil = ceil;
-        // Louder + higher pitch toward 1 (past #79).
-        const gain = ceil === 1 ? 1.2 : ceil === 2 ? 0.84 : 0.08;
+        // Louder + higher pitch toward 1 (past #83).
+        const gain = ceil === 1 ? 1.28 : ceil === 2 ? 0.88 : 0.06;
         stingCountdownTick(gain, ceil);
       }
     }
@@ -305,7 +305,7 @@ export class Game {
       if (vCeil <= 3 && vCeil >= 1 && vCeil !== this.vanishTickCeil) {
         this.vanishTickCeil = vCeil;
         // Quieter + soft-mode pitch so vanish clock stays a tell, not an alarm.
-        const gain = vCeil === 1 ? 0.22 : vCeil === 2 ? 0.1 : 0.05;
+        const gain = vCeil === 1 ? 0.2 : vCeil === 2 ? 0.09 : 0.04;
         stingCountdownTick(gain, vCeil, true);
       }
     } else {
@@ -315,9 +315,9 @@ export class Game {
 
   private bailCountdown() {
     if (this.mode !== "play" || this.countdown <= 0) return;
-    stingCountdownTick(0.62, 2);
+    stingCountdownTick(0.66, 2);
     // Harden Leave: clear match state first, keep save untouched, then plaza.
-    // Reward-free + profile-safe: wipe coinsEarned before any persist path.
+    // Reward-free + profile-safe: wipe coinsEarned/payouts before any persist path (no coins/XP).
     this.countdown = 0;
     this.coinsEarned = 0;
     this.payouts = [];
@@ -956,7 +956,7 @@ export class Game {
     this.updateVisibility();
     for (const f of this.fighters) {
       // Intensity for tickle frame windows: low victim stamina → harder f3/f4.
-      // Stronger contrast stretch than #79 so soft/hard ends map clearer; pack size nudges ladder.
+      // Stronger contrast stretch than #83 so soft/hard ends map clearer; pack size nudges ladder.
       if (
         (f.occupancy === "tickler" || (f.occupancy === "nudge" && f.joinOn >= 0)) &&
         f.joinOn >= 0
@@ -965,10 +965,10 @@ export class Game {
         if (v && v.maxStamina > 0) {
           const raw = Math.max(0, Math.min(100, 100 - (100 * v.stamina) / v.maxStamina)) / 100;
           const contrasted =
-            raw < 0.5 ? 0.5 * Math.pow(raw * 2, 3.1) : 1 - 0.5 * Math.pow((1 - raw) * 2, 3.1);
+            raw < 0.5 ? 0.5 * Math.pow(raw * 2, 3.3) : 1 - 0.5 * Math.pow((1 - raw) * 2, 3.3);
           // Clearer pack-size boost so 1→5 ticklers climb the five-frame ladder with drain.
           const packN = (this.joinList.get(v.id) ?? []).length;
-          const packBoost = Math.min(0.26, Math.max(0, packN - 1) * 0.065);
+          const packBoost = Math.min(0.3, Math.max(0, packN - 1) * 0.075);
           f.tickleIntensity = Math.min(100, (contrasted + packBoost) * 100);
         } else {
           f.tickleIntensity = 0;
@@ -1737,8 +1737,8 @@ export class Game {
       }
       if (f.reappearFlash > 0) {
         f.reappearFlash = Math.max(0, f.reappearFlash - dt);
-        f.rim.color.set(0xfaf8f4);
-        f.rim.intensity = 9.2;
+        f.rim.color.set(0xfcfaf6);
+        f.rim.intensity = 10.0;
       }
       if (f.occupancy === "vanished") {
         f.vanishLeft = Math.max(0, f.vanishLeft - dt);
