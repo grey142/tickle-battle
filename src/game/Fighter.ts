@@ -225,7 +225,7 @@ export class Fighter {
         map: tex,
         transparent: true,
         depthTest: true,
-        alphaTest: 0.14,
+        alphaTest: 0.15,
       });
       const bill = new THREE.Sprite(mat);
       bill.scale.set(BILL_W, BILL_H, 1);
@@ -274,10 +274,10 @@ export class Fighter {
   }
 
   /** Soft re-enter sheet after laugh/Look so still-under path can run again. */
-  softenIdleSheetEnter(cap = 0.04) {
+  softenIdleSheetEnter(cap = 0.035) {
     this.idleSheetEnter = Math.min(this.idleSheetEnter, cap);
-    // Past #89: softer still-under ramp after laugh so the sheet eases back in.
-    this.idleEnterRate = 0.88;
+    // Past #94: softer still-under ramp after laugh so the sheet eases back in.
+    this.idleEnterRate = 0.82;
   }
 
   private applyIdleSheetFrame(dt: number, playing: boolean) {
@@ -302,9 +302,9 @@ export class Fighter {
     const f0 = Math.floor(frameF) % frames;
     const f1 = (f0 + 1) % frames;
     const u = frameF - Math.floor(frameF);
-    // Past #89: smootherstep then higher-power plateau — longer mid-frame hold / sheet clarity.
+    // Past #94: smootherstep then higher-power plateau — longer mid-frame hold / sheet clarity.
     const s = u * u * u * (u * (u * 6 - 15) + 10);
-    const blend = Math.pow(s, 12);
+    const blend = Math.pow(s, 14);
     this.idleFrame = f0;
     this.idleFrameAcc = u;
 
@@ -338,7 +338,7 @@ export class Fighter {
         transparent: true,
         depthTest: true,
         depthWrite: false,
-        alphaTest: 0.14,
+        alphaTest: 0.15,
         opacity: 0,
       });
       fade = new THREE.Sprite(fadeMat);
@@ -761,22 +761,22 @@ export class Fighter {
       y = BILL_Y + Math.abs(s) * bob * 2.8;
       rot = s * bob * 1.58;
     } else {
-      // Past #89: idle/skills/persist lane — crossfade / re-enter / sheet clarity. Persist profile-safe (no schema invent). Idle-scoped only.
+      // Past #94: idle/skills/persist lane — crossfade / re-enter / sheet clarity. Persist profile-safe (no schema invent). Idle-scoped only.
       this.applyIdleSheetFrame(dt, true);
       const idle = idleBindForSlug(this.slug);
       const rate = idle.breatheRate;
-      const b = Math.sin(t * rate) * idle.breatheAmp * 2.25;
-      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 1.42;
+      const b = Math.sin(t * rate) * idle.breatheAmp * 2.3;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 1.45;
       const shift = idle.weightShift ?? idle.sway;
       const s =
-        Math.sin(t * rate * 0.62) * idle.sway * 2.32 +
-        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.86 +
-        Math.sin(t * rate * 0.17) * shift * 1.0;
-      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 2.1 + Math.sin(t * rate * 1.7) * idle.scalePulse * 1.22);
-      h = BILL_H * (1 + (b + b2) * 1.65);
+        Math.sin(t * rate * 0.62) * idle.sway * 2.36 +
+        Math.sin(t * rate * 0.31 + 0.4) * shift * 1.9 +
+        Math.sin(t * rate * 0.17) * shift * 1.02;
+      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 2.15 + Math.sin(t * rate * 1.7) * idle.scalePulse * 1.25);
+      h = BILL_H * (1 + (b + b2) * 1.68);
       x = s;
-      y = BILL_Y + b + b2 * 1.22;
-      rot = s * 1.22;
+      y = BILL_Y + b + b2 * 1.25;
+      rot = s * 1.25;
       bill.scale.set(w, h, 1);
       bill.position.set(x, y, 0);
       mat.rotation = rot;
