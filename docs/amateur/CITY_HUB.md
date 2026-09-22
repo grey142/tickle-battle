@@ -4,7 +4,7 @@
 One hub mesh. Three rooms. Solo player can customize → gear up → queue Team Quick → return with coins → repeat. Same grimdark laser-tag / alien kit as map one.
 
 ## Hub layout
-- Central plaza — **walkable** first-person hub after boot and after matches. Soft biolume under team-rim brightness. Three marked doors: Home, Shop, Arena (shared near-door trim glow + pulse light + inner/outer threshold sills + lintel accent + octa-biased-smoothstep approach sign/sill feel + wider floor pads; Arena slight CTA lead; idle breath when far; stronger soft frame lift on approach; deepest jamb wall-slide + twelve-pass tip unjam). WASD / LS move, mouse / RS look (same locomotion feel as a match).
+- Central plaza — **walkable** first-person hub after boot and after matches. Soft biolume under team-rim brightness. Three marked doors: Home, Shop, Arena (shared near-door trim glow + pulse light + inner/outer threshold sills + lintel accent + octa-biased-smoothstep approach sign/sill feel + wider floor pads; Arena slight CTA lead; idle breath when far; stronger soft frame lift on approach; deepest jamb wall-slide + thirteen-pass tip unjam). WASD / LS move, mouse / RS look (same locomotion feel as a match).
 - Home (left) — walk up or click door / overlay → appearance, skill spend, loadout equip.
 - Shop (right) — walk up or click → buy Amateur weapons (6) and armors (8); prices on locked ladders.
 - Arena (forward) — walk up or click the 3D door to **start Amateur Team Quick** immediately. Overlay **Arena** button / pad RB still opens mode select (Timed + FFA). Tier Amateur, AI fill.
