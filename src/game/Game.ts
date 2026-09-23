@@ -62,7 +62,7 @@ import {
 } from "./combatUtil";
 
 const SAVE_KEY = "tb-amateur-save";
-const HUB_CONFIRM_GRACE = 1.5;
+const HUB_CONFIRM_GRACE = 1.85;
 
 export class Game {
   renderer: THREE.WebGLRenderer;
@@ -107,7 +107,7 @@ export class Game {
   hubPitch = 0;
   hubNear: "home" | "shop" | "arena" | null = null;
   private hubPrompted: "home" | "shop" | "arena" | null = null;
-  /** Ignore pad/click confirm briefly after Leave/Return so A does not re-queue Arena. */
+  /** Ignore pad/click confirm after Leave/Return so A does not re-queue Arena. */
   private hubConfirmGrace = 0;
   /** Prevent a repeated results edge from banking the same existing payout twice. */
   private matchRewardsCommitted = false;
@@ -360,6 +360,7 @@ export class Game {
     this.showHub();
     document.exitPointerLock?.();
     // Consume back/confirm so pad B/A does not bounce into Arena or re-open rooms.
+    // Keep the existing saved coins/XP untouched; only the transient match edge is gated.
     this.input.endFrame();
     this.hubConfirmGrace = HUB_CONFIRM_GRACE;
   }

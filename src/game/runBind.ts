@@ -56,8 +56,9 @@ export function runBindForLook(lookId: number): RunBind {
 }
 
 export function runClipForSpeed(bind: RunBind, speed: number): "idle" | "walk" | "run" {
-  if (speed > bind.runSpeed) return "run";
-  if (speed > bind.walkSpeed) return "walk";
+  // Bind thresholds are inclusive so a frame-locked stride does not flicker at the edge.
+  if (speed >= bind.runSpeed) return "run";
+  if (speed >= bind.walkSpeed) return "walk";
   return "idle";
 }
 
