@@ -7,26 +7,26 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 55.0239,
-      "amp": 0.3303,
-      "lean": 0.399,
-      "billShake": 0.2033,
-      "billRate": 79.7968,
+      "rate": 58.3253,
+      "amp": 0.3501,
+      "lean": 0.4229,
+      "billShake": 0.2155,
+      "billRate": 84.5846,
       "still": "stages/CassWynn_s0.jpg",
       "blend": {
         "jaw": 1.0,
         "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.7852
+        "brow": 0.8323
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 80.0196,
-      "amp": 0.5377,
-      "lean": 0.6983,
-      "billShake": 0.4322,
-      "billRate": 102.602,
+      "rate": 84.8208,
+      "amp": 0.57,
+      "lean": 0.7402,
+      "billShake": 0.4581,
+      "billRate": 108.7581,
       "still": "stages/CassWynn_s1.jpg",
       "blend": {
         "jaw": 1.0,
@@ -37,11 +37,11 @@
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 100.0282,
-      "amp": 0.7172,
-      "lean": 0.9968,
-      "billShake": 0.6113,
-      "billRate": 113.978,
+      "rate": 106.0299,
+      "amp": 0.7602,
+      "lean": 1.0566,
+      "billShake": 0.648,
+      "billRate": 120.8167,
       "still": "stages/CassWynn_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 115.0304,
-      "amp": 0.8971,
-      "lean": 1.1971,
-      "billShake": 0.8255,
-      "billRate": 136.7825,
+      "rate": 121.9322,
+      "amp": 0.9509,
+      "lean": 1.2689,
+      "billShake": 0.875,
+      "billRate": 144.9895,
       "still": "stages/CassWynn_s3.jpg",
       "blend": {
         "jaw": 1.0,

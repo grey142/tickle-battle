@@ -353,8 +353,8 @@ export class Humanoid {
       // Production laugh/squirm: joint squirm + face-card blendshapes (jaw/cheek/eye/brow).
       const loco = mods as LaughPoseParams | undefined;
       const rate = loco?.rate ?? 14;
-      const amp = (loco?.amp ?? 0.1) * 15.87;
-      const lean = (loco?.lean ?? 0.12) * 15.48;
+      const amp = (loco?.amp ?? 0.1) * 17.14;
+      const lean = (loco?.lean ?? 0.12) * 16.72;
       const blend = loco?.blend;
       const jaw = blend?.jaw ?? 0.45;
       const cheek = blend?.cheek ?? 0.3;
@@ -372,32 +372,32 @@ export class Humanoid {
       this.chest.rotation.x = Math.abs(s2) * lean * 0.48;
       this.chest.rotation.y = s4 * amp * 0.62;
       this.neck.rotation.set(s2 * lean * 0.48, s * lean * 0.62, s3 * amp * 0.8);
-      // Clearer head tilt for painterly morph past #128 (stable — no wild clipping).
+      // Clearer head tilt for painterly morph past #132 (stable — no wild clipping).
       this.head.rotation.set(
-        3.62 + s2 * lean * 13.41 + Math.abs(s4) * 1.548,
-        s * lean * 14.33,
-        s3 * lean * 8.33 + s2 * 0.746,
+        3.91 + s2 * lean * 14.48 + Math.abs(s4) * 1.672,
+        s * lean * 15.48,
+        s3 * lean * 9.00 + s2 * 0.806,
       );
-      // Soft head morph toward painterly/morph-target feel (capsule kit; another notch past #128).
+      // Soft head morph toward painterly/morph-target feel (capsule kit; another notch past #132).
       this.head.scale.set(
-        1 + cheek * 3.97 * laughPulse,
-        1 + jaw * 2.66 * laughPulse,
-        1 + cheek * 1.561 + eye * 0.700,
+        1 + cheek * 4.29 * laughPulse,
+        1 + jaw * 2.87 * laughPulse,
+        1 + cheek * 1.686 + eye * 0.756,
       );
       const jawOpen = jaw * laughPulse;
       const eyeSquint = eye * (0.55 + 0.45 * Math.abs(s2));
       // Face card: jaw open stretches Y, cheek widens X, eye squint compresses Y, brow lifts.
       this.face.scale.set(
-        1 + cheek * 3.18 * laughPulse,
-        1 + jawOpen * 15.78 - eyeSquint * 6.29,
+        1 + cheek * 3.43 * laughPulse,
+        1 + jawOpen * 17.04 - eyeSquint * 6.79,
         1,
       );
       this.face.position.set(
-        s * cheek * 0.343,
-        0.294 + brow * 1.27 * laughPulse - jawOpen * 0.755,
+        s * cheek * 0.370,
+        0.318 + brow * 1.37 * laughPulse - jawOpen * 0.815,
         -0.128,
       );
-      this.face.rotation.z = s2 * cheek * 1.668 + s * 0.435;
+      this.face.rotation.z = s2 * cheek * 1.801 + s * 0.470;
       this.lShoulder.rotation.set(-0.48 + s2 * amp * 0.8, 0.08, 0.62 + s * amp * 2.4);
       this.rShoulder.rotation.set(-0.42 - s2 * amp * 0.8, -0.08, -0.62 - s * amp * 2.4);
       this.lElbow.rotation.x = 0.72 + s * amp * 0.9;
