@@ -7,26 +7,26 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 43.9798,
-      "amp": 0.2597,
-      "lean": 0.2678,
-      "billShake": 0.2601,
-      "billRate": 63.1157,
+      "rate": 46.6186,
+      "amp": 0.2753,
+      "lean": 0.2839,
+      "billShake": 0.2757,
+      "billRate": 66.9026,
       "still": "stages/VeshMarlowe_s0.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 0.858,
+        "cheek": 0.909,
         "eye": 1.0,
-        "brow": 0.614
+        "brow": 0.651
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 63.9672,
-      "amp": 0.4329,
-      "lean": 0.47,
-      "billShake": 0.5198,
-      "billRate": 81.1448,
+      "rate": 67.8052,
+      "amp": 0.4589,
+      "lean": 0.4982,
+      "billShake": 0.551,
+      "billRate": 86.0135,
       "still": "stages/VeshMarlowe_s1.jpg",
       "blend": {
         "jaw": 1.0,
@@ -37,11 +37,11 @@
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 79.9583,
-      "amp": 0.5763,
-      "lean": 0.6708,
-      "billShake": 0.7433,
-      "billRate": 90.1781,
+      "rate": 84.7558,
+      "amp": 0.6109,
+      "lean": 0.711,
+      "billShake": 0.7879,
+      "billRate": 95.5888,
       "still": "stages/VeshMarlowe_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 91.9561,
-      "amp": 0.7206,
-      "lean": 0.8042,
-      "billShake": 0.9189,
-      "billRate": 108.2066,
+      "rate": 97.4735,
+      "amp": 0.7638,
+      "lean": 0.8525,
+      "billShake": 0.974,
+      "billRate": 114.699,
       "still": "stages/VeshMarlowe_s3.jpg",
       "blend": {
         "jaw": 1.0,
