@@ -2,7 +2,7 @@
 """Generate deepened four-frame run stills from metal-free A-poses (Amateur 12 + Elara).
 
 f0 = A-pose still; f1–f3 = deeper opposite-leg stride punch + oil-paint grade
-past #107. Full painterly production run art is still deferred.
+past #111. Full painterly production run art is still deferred.
 Requires: Pillow, numpy
 """
 from __future__ import annotations
@@ -112,40 +112,40 @@ def painterly(im: Image.Image, strength: float) -> Image.Image:
 
 
 def make_frames(src: Path) -> list[Image.Image]:
-    """v20 deepen past #107: punchier opposite-leg f1/f2 + peak f3 stride + oil grade."""
+    """v21 deepen past #111: punchier opposite-leg f1/f2 + peak f3 stride + oil grade."""
     base = Image.open(src).convert("RGB")
     f0 = ImageEnhance.Sharpness(base).enhance(1.22)
     f0 = ImageEnhance.Contrast(f0).enhance(1.14)
     f0 = cool_grade(f0, 0.64)
     f0 = painterly(f0, 0.4)
 
-    # f1 — plant / opposite sway (clearer opposite-leg punch past #107)
-    f1 = punch_stride(base, 5.08)
-    f1 = affine_frame(f1, 0.314, -0.101, 1.205, 0.748, -hshift(base, 0.13), -10.1)
-    f1 = ImageEnhance.Contrast(f1).enhance(1.37)
-    f1 = cool_grade(f1, 3.02)
-    f1 = painterly(f1, 1.52)
-    f1 = vignette(f1, 2.1)
+    # f1 — plant / opposite sway (clearer opposite-leg punch past #111)
+    f1 = punch_stride(base, 5.34)
+    f1 = affine_frame(f1, 0.326, -0.106, 1.218, 0.738, -hshift(base, 0.136), -10.8)
+    f1 = ImageEnhance.Contrast(f1).enhance(1.40)
+    f1 = cool_grade(f1, 3.22)
+    f1 = painterly(f1, 1.62)
+    f1 = vignette(f1, 2.22)
 
     # f2 — opposite plant / stronger extension
-    f2 = punch_stride(base, 6.4)
-    f2 = affine_frame(f2, -0.355, 0.126, 1.30, 0.646, -hshift(base, 0.188), 11.8)
+    f2 = punch_stride(base, 6.7)
+    f2 = affine_frame(f2, -0.368, 0.132, 1.318, 0.632, -hshift(base, 0.198), 12.5)
     f2 = ImageEnhance.Brightness(f2).enhance(1.1)
-    f2 = ImageEnhance.Contrast(f2).enhance(1.46)
-    f2 = cool_grade(f2, 3.78)
-    f2 = painterly(f2, 1.8)
-    f2 = f2.filter(ImageFilter.UnsharpMask(radius=2.2, percent=206, threshold=2))
-    f2 = vignette(f2, 2.66)
+    f2 = ImageEnhance.Contrast(f2).enhance(1.50)
+    f2 = cool_grade(f2, 4.02)
+    f2 = painterly(f2, 1.92)
+    f2 = f2.filter(ImageFilter.UnsharpMask(radius=2.2, percent=214, threshold=2))
+    f2 = vignette(f2, 2.82)
 
     # f3 — peak bob / squash / forward lean
-    f3 = punch_stride(base, 6.3)
-    f3 = affine_frame(f3, 0.25, -0.148, 1.345, 0.584, -hshift(base, 0.236), 6.8)
+    f3 = punch_stride(base, 6.6)
+    f3 = affine_frame(f3, 0.26, -0.154, 1.362, 0.57, -hshift(base, 0.248), 7.4)
     f3 = ImageEnhance.Sharpness(f3).enhance(1.68)
-    f3 = ImageEnhance.Contrast(f3).enhance(1.47)
-    f3 = cool_grade(f3, 4.68)
-    f3 = painterly(f3, 2.08)
-    f3 = f3.filter(ImageFilter.UnsharpMask(radius=2.45, percent=222, threshold=2))
-    f3 = vignette(f3, 2.96)
+    f3 = ImageEnhance.Contrast(f3).enhance(1.51)
+    f3 = cool_grade(f3, 4.96)
+    f3 = painterly(f3, 2.22)
+    f3 = f3.filter(ImageFilter.UnsharpMask(radius=2.45, percent=232, threshold=2))
+    f3 = vignette(f3, 3.14)
     return [f0, f1, f2, f3]
 
 
@@ -169,7 +169,7 @@ def main() -> None:
         "files": files,
         "note": (
             "f0 = metal-free A-pose still; f1–f3 = deeper opposite-leg stride punch "
-            "+ oil-paint grade past #107. Not full painterly. Elara jewelry exception only."
+            "+ oil-paint grade past #111. Not full painterly. Elara jewelry exception only."
         ),
     }
     (OUT / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n")

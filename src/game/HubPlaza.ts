@@ -12,7 +12,7 @@ type Box = { minx: number; maxx: number; minz: number; maxz: number };
 
 const CAPSULE_R = 0.42;
 /** Walk-up range to interact with a door. */
-export const PLAZA_DOOR_REACH = 5.35;
+export const PLAZA_DOOR_REACH = 5.45;
 
 /** City-hub backdrop (same mesh as the overlay rooms; not a second map). */
 export class HubPlaza {
@@ -182,8 +182,8 @@ export class HubPlaza {
   resolve(x: number, z: number, radius = CAPSULE_R): { x: number; z: number } {
     let px = x;
     let pz = z;
-    // Fifteen X/Z passes — AABB slide; clears Home/Shop/Arena jamb corners beyond #107.
-    for (let pass = 0; pass < 15; pass++) {
+    // Sixteen X/Z passes — AABB slide; clears Home/Shop/Arena jamb corners beyond #111.
+    for (let pass = 0; pass < 16; pass++) {
       for (const w of this.walls) {
         if (pz <= w.minz - radius || pz >= w.maxz + radius) continue;
         if (px > w.minx - radius && px < w.maxx + radius) {
@@ -220,27 +220,27 @@ export class HubPlaza {
     const halfD = 11;
     const doorW = 2.4;
     const half = doorW / 2;
-    const jamb = 1.48;
+    const jamb = 1.56;
     const open = half + jamb;
-    const tip = radius + 0.96;
+    const tip = radius + 1.04;
     const zFront = halfD - thick / 2;
     const xLeft = -(halfW - thick / 2);
     const xRight = halfW - thick / 2;
 
     // Arena (+z) wall ends
     if (Math.abs(pz - zFront) < tip + thick * 0.55) {
-      if (px > -open - tip && px < -open + tip * 0.999) px = -open + tip * 0.73;
-      else if (px < open + tip && px > open - tip * 0.999) px = open - tip * 0.73;
+      if (px > -open - tip && px < -open + tip * 0.999) px = -open + tip * 0.75;
+      else if (px < open + tip && px > open - tip * 0.999) px = open - tip * 0.75;
     }
     // Home (−x) wall ends
     if (Math.abs(px - xLeft) < tip + thick * 0.55) {
-      if (pz > -open - tip && pz < -open + tip * 0.999) pz = -open + tip * 0.73;
-      else if (pz < open + tip && pz > open - tip * 0.999) pz = open - tip * 0.73;
+      if (pz > -open - tip && pz < -open + tip * 0.999) pz = -open + tip * 0.75;
+      else if (pz < open + tip && pz > open - tip * 0.999) pz = open - tip * 0.75;
     }
     // Shop (+x) wall ends
     if (Math.abs(px - xRight) < tip + thick * 0.55) {
-      if (pz > -open - tip && pz < -open + tip * 0.999) pz = -open + tip * 0.73;
-      else if (pz < open + tip && pz > open - tip * 0.999) pz = open - tip * 0.73;
+      if (pz > -open - tip && pz < -open + tip * 0.999) pz = -open + tip * 0.75;
+      else if (pz < open + tip && pz > open - tip * 0.999) pz = open - tip * 0.75;
     }
     return { x: px, z: pz };
   }
@@ -263,7 +263,7 @@ export class HubPlaza {
     const frontLen = halfW - half;
     const sideLen = halfD - half;
 
-    const jamb = 1.48; // v20: deeper jamb lanes keep Leave/door approach from corner-catching
+    const jamb = 1.56; // v21: deeper jamb lanes keep Leave/door approach from corner-catching
     this.addWall(-halfW, halfW, zBack - thick / 2, zBack + thick / 2);
     this.addWall(-(half + frontLen), -half - jamb, zFront - thick / 2, zFront + thick / 2);
     this.addWall(half + jamb, half + frontLen, zFront - thick / 2, zFront + thick / 2);
@@ -492,30 +492,30 @@ export class HubPlaza {
     // Inner threshold sill (local +z toward plaza) — shared Home/Shop/Arena feel.
     const sillMat = glowMat(tint, room === "arena" ? 0.62 : 0.58);
     sillMat.userData.doorGlow = true;
-    const sill = new THREE.Mesh(new THREE.BoxGeometry(doorW + 0.68, 0.14, 1.74), sillMat);
-    sill.position.set(0, 0.07, 1.28);
+    const sill = new THREE.Mesh(new THREE.BoxGeometry(doorW + 0.76, 0.15, 1.82), sillMat);
+    sill.position.set(0, 0.075, 1.34);
     frame.add(sill);
     this.doorSillMats.set(room, sillMat);
 
-    // Outer lip further into plaza — threshold read stays clear beyond #107 inner strip.
-    const outerMat = glowMat(tint, room === "arena" ? 0.58 : 0.54);
+    // Outer lip further into plaza — threshold read stays clear beyond #111 inner strip.
+    const outerMat = glowMat(tint, room === "arena" ? 0.6 : 0.56);
     outerMat.userData.doorGlow = true;
-    const outer = new THREE.Mesh(new THREE.BoxGeometry(doorW + 1.68, 0.096, 1.52), outerMat);
-    outer.position.set(0, 0.048, 2.36);
+    const outer = new THREE.Mesh(new THREE.BoxGeometry(doorW + 1.84, 0.102, 1.6), outerMat);
+    outer.position.set(0, 0.051, 2.44);
     frame.add(outer);
     this.doorOuterSillMats.set(room, outerMat);
 
     // Narrow inner jamb fins — give each opening a readable threshold edge while
     // keeping the collision opening clear. They share the same pulse as the sill.
-    // v20: deepest glowing jamb fins keep the threshold readable while the opening stays clear.
+    // v21: deepest glowing jamb fins keep the threshold readable while the opening stays clear.
     const jambLMat = glowMat(tint, room === "arena" ? 0.54 : 0.5);
     jambLMat.userData.doorGlow = true;
-    const jambL = new THREE.Mesh(new THREE.BoxGeometry(0.12, doorH - 0.06, 0.15), jambLMat);
-    jambL.position.set(-doorW / 2 + 0.3, doorH / 2, 0.42);
+    const jambL = new THREE.Mesh(new THREE.BoxGeometry(0.126, doorH - 0.04, 0.16), jambLMat);
+    jambL.position.set(-doorW / 2 + 0.3, doorH / 2, 0.44);
     const jambRMat = jambLMat.clone();
     jambRMat.userData.doorGlow = true;
-    const jambR = new THREE.Mesh(new THREE.BoxGeometry(0.12, doorH - 0.06, 0.15), jambRMat);
-    jambR.position.set(doorW / 2 - 0.3, doorH / 2, 0.42);
+    const jambR = new THREE.Mesh(new THREE.BoxGeometry(0.126, doorH - 0.04, 0.16), jambRMat);
+    jambR.position.set(doorW / 2 - 0.3, doorH / 2, 0.44);
     frame.add(jambL, jambR);
 
     // Lintel underside accent — reads as door header glow with pulse.
@@ -543,19 +543,19 @@ export class HubPlaza {
     // Cross on the floor — dim cyan / amber, well under fighter-rim brightness.
     strip(18, 0.16, 0, 0, this.matCyan);
     strip(0.16, 14, 0, 0, this.matAmber);
-    // v20: wider near-door floor pads keep the threshold read continuous.
+    // v21: wider near-door floor pads keep the threshold read continuous.
     // Near-door floor pads share the door pulse (Home/Shop match Arena feel).
     const homePad = glowMat(CYAN, 0.4);
     homePad.userData.doorGlow = true;
-    strip(6.1, 0.54, this.doors.home.x + 2.0, 0, homePad);
+    strip(6.3, 0.56, this.doors.home.x + 2.1, 0, homePad);
     this.doorFloorMats.set("home", homePad);
     const shopPad = glowMat(AMBER, 0.4);
     shopPad.userData.doorGlow = true;
-    strip(6.1, 0.54, this.doors.shop.x - 2.0, 0, shopPad);
+    strip(6.3, 0.56, this.doors.shop.x - 2.1, 0, shopPad);
     this.doorFloorMats.set("shop", shopPad);
     const arenaPad = glowMat(AMBER, 0.48);
     arenaPad.userData.doorGlow = true;
-    strip(0.54, 6.1, 0, this.doors.arena.z - 2.28, arenaPad);
+    strip(0.56, 6.3, 0, this.doors.arena.z - 2.36, arenaPad);
     this.doorFloorMats.set("arena", arenaPad);
     strip(10, 0.1, 0, -9.4, this.matCyan);
     strip(10, 0.1, 0, 9.4, this.matAmber);

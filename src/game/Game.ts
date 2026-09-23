@@ -62,7 +62,7 @@ import {
 } from "./combatUtil";
 
 const SAVE_KEY = "tb-amateur-save";
-const HUB_CONFIRM_GRACE = 1.85;
+const HUB_CONFIRM_GRACE = 2.1;
 
 export class Game {
   renderer: THREE.WebGLRenderer;
