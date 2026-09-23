@@ -524,7 +524,7 @@ export class Fighter {
     }
     const urls = tickleFrameUrls(tickle);
     if (urls.length < 2) return;
-    // Intensity-weighted window: victim stamina → harder f3/f4 (clearer past #115).
+    // Intensity-weighted window: victim stamina → harder f3/f4 (clearer past #120).
     let intensity = this.tickleIntensity;
     if (intensity <= 0) {
       // Fallback when Game has not stamped victim-based intensity yet.
@@ -534,21 +534,21 @@ export class Fighter {
       );
     }
     const target = Math.max(0, Math.min(100, intensity));
-    // Asymmetric smooth: climb into hard windows faster; ease out slower (past #115).
+    // Asymmetric smooth: climb into hard windows faster; ease out slower (past #120).
     const climb = target > this.tickleIntensitySmooth;
-    const rate = climb ? 45.5 : 0.44;
+    const rate = climb ? 48.5 : 0.40;
     const k = 1 - Math.exp(-rate * Math.max(0.001, dt));
     this.tickleIntensitySmooth += (target - this.tickleIntensitySmooth) * k;
     const pct = this.tickleIntensitySmooth;
     const n = urls.length;
-    // Desired bands (past #115): soft f0–f1 holds longer → mid → hard/peak earlier.
+    // Desired bands (past #120): soft f0–f1 holds longer → mid → hard/peak earlier.
     const windowFor = (band: number): [number, number] => {
       if (band <= 0) return [0, Math.min(1, n - 1)];
       if (band === 1) return [Math.min(1, n - 1), Math.min(2, n - 1)];
       if (band === 2) return [Math.min(2, n - 1), Math.min(3, n - 1)];
       return [Math.min(3, n - 1), n - 1];
     };
-    const bandFromPct = (p: number) => (p < 0.18 ? 0 : p < 0.88 ? 1 : p < 3.1 ? 2 : 3);
+    const bandFromPct = (p: number) => (p < 0.15 ? 0 : p < 0.78 ? 1 : p < 2.75 ? 2 : 3);
     const bandFromWindow = (a: number, b: number) => {
       if (a <= 0 && b <= 1) return 0;
       if (a === 1) return 1;
@@ -557,10 +557,10 @@ export class Fighter {
     };
     const rawBand = bandFromPct(pct);
     const prevBand = bandFromWindow(this.tickleWinLo, this.tickleWinHi);
-    // ±21.5 deadband so edge flicker doesn't thrash lo/hi.
-    const dead = 21.5;
-    const upAt = [0.18 + dead, 0.88 + dead, 3.1 + dead];
-    const downAt = [0.18 - dead, 0.88 - dead, 3.1 - dead];
+    // ±22.8 deadband so edge flicker doesn't thrash lo/hi.
+    const dead = 22.8;
+    const upAt = [0.15 + dead, 0.78 + dead, 2.75 + dead];
+    const downAt = [0.15 - dead, 0.78 - dead, 2.75 - dead];
     let band = prevBand;
     if (rawBand > prevBand) {
       band = pct >= upAt[Math.min(prevBand, 2)] ? rawBand : prevBand;
@@ -576,17 +576,17 @@ export class Fighter {
     // FPS from billRate; higher intensity cycles faster so hard frames land more often.
     const fps = Math.max(10, Math.round((tickle.billRate || 26) * (0.09 + pct * 0.016)));
     const phase = Math.floor(this.animT * fps);
-    // Peak intensity: heavier f4 bias past #115 (ultra locks f4 hard).
+    // Peak intensity: heavier f4 bias past #120 (ultra locks f4 hard).
     let idx: number;
-    if (pct >= 6.8 && span >= 2) {
+    if (pct >= 6.0 && span >= 2) {
       const cycle =
-        pct >= 15
-          ? [hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, lo]
+        pct >= 13
+          ? [hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, lo]
           : [hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, lo];
       idx = cycle[phase % cycle.length];
-    } else if (pct >= 3.2 && span >= 2) {
-      // Soft peak lean: favor hi 23-of-24.
-      idx = phase % 24 === 12 ? lo : hi;
+    } else if (pct >= 2.85 && span >= 2) {
+      // Soft peak lean: favor hi 25-of-26.
+      idx = phase % 26 === 13 ? lo : hi;
     } else {
       idx = lo + (phase % span);
     }
