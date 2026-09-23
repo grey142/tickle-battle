@@ -50,7 +50,14 @@ export function normalizeSave(raw: Partial<SaveData> | null | undefined): SaveDa
     coins: Math.max(0, Number(raw.coins) || 0),
     level: clampInt(raw.level ?? 1, 1, 10),
     xp: Math.max(0, Number(raw.xp) || 0),
-    unspent: Math.max(0, Number(raw.unspent) || 0),
+    unspent: (() => {
+      const u = Math.max(0, Number(raw.unspent) || 0);
+      const st = clampInt(blocks.stamina ?? 0, 0, 10);
+      const sg = clampInt(blocks.struggle ?? 0, 0, 10);
+      const tk = clampInt(blocks.tickle ?? 0, 0, 10);
+      const room = 10 - st + (10 - sg) + (10 - tk);
+      return Math.min(u, Math.max(0, room));
+    })(),
     blocks: {
       stamina: clampInt(blocks.stamina ?? 0, 0, 10),
       struggle: clampInt(blocks.struggle ?? 0, 0, 10),
