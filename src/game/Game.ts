@@ -62,6 +62,7 @@ import {
 } from "./combatUtil";
 
 const SAVE_KEY = "tb-amateur-save";
+const HUB_CONFIRM_GRACE = 1.5;
 
 export class Game {
   renderer: THREE.WebGLRenderer;
@@ -108,6 +109,8 @@ export class Game {
   private hubPrompted: "home" | "shop" | "arena" | null = null;
   /** Ignore pad/click confirm briefly after Leave/Return so A does not re-queue Arena. */
   private hubConfirmGrace = 0;
+  /** Prevent a repeated results edge from banking the same existing payout twice. */
+  private matchRewardsCommitted = false;
   result = "";
   toastT = 0;
   toast = "";
@@ -334,6 +337,7 @@ export class Game {
     this.combatAnnounced = false;
     this.coinsEarned = 0;
     this.payouts = [];
+    this.matchRewardsCommitted = false;
     this.joinList.clear();
     this.firstTickler.clear();
     this.ffaScore.clear();
@@ -357,7 +361,7 @@ export class Game {
     document.exitPointerLock?.();
     // Consume back/confirm so pad B/A does not bounce into Arena or re-open rooms.
     this.input.endFrame();
-    this.hubConfirmGrace = 1.25;
+    this.hubConfirmGrace = HUB_CONFIRM_GRACE;
   }
 
   private beginMatch(fromPad: boolean) {
@@ -556,6 +560,7 @@ export class Game {
     this.tapScore = [0, 0];
     this.coinsEarned = 0;
     this.payouts = [];
+    this.matchRewardsCommitted = false;
     this.joinList.clear();
     this.firstTickler.clear();
     this.ffaScore.clear();
@@ -1692,6 +1697,8 @@ export class Game {
   }
 
   private commitMatchRewards(): boolean {
+    if (this.matchRewardsCommitted) return false;
+    this.matchRewardsCommitted = true;
     this.save.coins += this.coinsEarned;
     // Amateur XP curve: need 100 + 20*(level-1) to advance; flat after 10.
     const xpGain = Math.max(15, this.coinsEarned * 8 + (this.result === "Victory" ? 40 : 10));

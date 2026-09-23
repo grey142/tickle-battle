@@ -5,7 +5,7 @@ Per-look locomotion binds for **Elara Case** (player kit) and the **Amateur 12**
 ## Files
 
 - `assets/binds/run/{Slug}.run.json`
-- `assets/binds/run/frames/{Slug}_f0.jpg` … `_f3.jpg` — four-frame run cycle (f0 = A-pose still; f1–f3 = deeper opposite-leg stride punch + oil-paint grade past #100)
+- `assets/binds/run/frames/{Slug}_f0.jpg` … `_f3.jpg` — four-frame run cycle (f0 = A-pose still; f1–f3 = deeper opposite-leg stride punch + oil-paint grade past #104)
 - `assets/binds/run/frames/MANIFEST.json`
 - Loader: `src/game/runBind.ts` (`runFrameUrls(bind)`)
 
