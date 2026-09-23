@@ -7,26 +7,26 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 64.6883,
-      "amp": 0.4183,
-      "lean": 0.4027,
-      "billShake": 0.3313,
-      "billRate": 100.2177,
+      "rate": 68.5696,
+      "amp": 0.4434,
+      "lean": 0.4269,
+      "billShake": 0.3512,
+      "billRate": 106.2308,
       "still": "stages/KoraVale_s0.jpg",
       "blend": {
         "jaw": 1.0,
         "cheek": 1.0,
         "eye": 1.0,
-        "brow": 0.8937
+        "brow": 0.9473
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 94.0927,
-      "amp": 0.6853,
-      "lean": 0.7067,
-      "billShake": 0.6613,
-      "billRate": 128.8036,
+      "rate": 99.7383,
+      "amp": 0.7264,
+      "lean": 0.7491,
+      "billShake": 0.701,
+      "billRate": 136.5318,
       "still": "stages/KoraVale_s1.jpg",
       "blend": {
         "jaw": 1.0,
@@ -37,11 +37,11 @@
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 117.6165,
-      "amp": 0.9272,
-      "lean": 1.0086,
-      "billShake": 0.9477,
-      "billRate": 143.1306,
+      "rate": 124.6735,
+      "amp": 0.9828,
+      "lean": 1.0691,
+      "billShake": 1.0046,
+      "billRate": 151.7184,
       "still": "stages/KoraVale_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 135.2611,
-      "amp": 1.1593,
-      "lean": 1.2094,
-      "billShake": 1.2774,
-      "billRate": 171.7828,
+      "rate": 143.3768,
+      "amp": 1.2289,
+      "lean": 1.282,
+      "billShake": 1.354,
+      "billRate": 182.0898,
       "still": "stages/KoraVale_s3.jpg",
       "blend": {
         "jaw": 1.0,
