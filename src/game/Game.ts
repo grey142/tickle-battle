@@ -62,7 +62,7 @@ import {
 } from "./combatUtil";
 
 const SAVE_KEY = "tb-amateur-save";
-const HUB_CONFIRM_GRACE = 2.1;
+const HUB_CONFIRM_GRACE = 2.35;
 
 export class Game {
   renderer: THREE.WebGLRenderer;
@@ -271,6 +271,8 @@ export class Game {
     this.renderer.domElement.style.cursor = "";
     document.body.style.cursor = "";
     if (hit === "arena") {
+      // Leave/Return owns the first short input window; never queue a fresh match from a stale click.
+      if (this.hubConfirmGrace > 0) return true;
       this.arenaMode = "team-quick";
       this.beginMatch(this.input.padActive);
       return true;
@@ -363,6 +365,8 @@ export class Game {
     // Keep the existing saved coins/XP untouched; only the transient match edge is gated.
     this.input.endFrame();
     this.hubConfirmGrace = HUB_CONFIRM_GRACE;
+    // Keep the return edge reward-safe: only commitMatchRewards may bank existing match coins/XP.
+    this.matchRewardsCommitted = false;
   }
 
   private beginMatch(fromPad: boolean) {
