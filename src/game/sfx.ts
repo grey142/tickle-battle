@@ -1,4 +1,4 @@
-/** Amateur Team Quick SFX — procedural sample pack + oscillator fallbacks (vanish-v25). */
+/** Amateur Team Quick SFX — procedural sample pack + oscillator fallbacks (vanish-v26). */
 
 type CueId =
   | "tickle-lock"
@@ -197,7 +197,7 @@ export function stingStart() {
 
 /** Nearby reappear tell — bright rising ping (`public/sfx/reappear`). */
 export function stingReappear() {
-  playCue("reappear", 2.44, () => {
+  playCue("reappear", 2.58, () => {
     sting(1560, 0.058, "sine", 0.068, 0, 3800);
     sting(2700, 0.052, "sine", 0.116, 0.003);
     sting(4050, 0.066, "triangle", 0.096, 0.01);
@@ -230,7 +230,7 @@ export function stingEscape() {
 
 /** Falling whoosh-out — vanish (`public/sfx/vanish`). */
 export function stingVanish() {
-  playCue("vanish", 2.60, () => {
+  playCue("vanish", 2.74, () => {
     sting(10, 0.4, "sine", 0.14);
     sting(1240, 0.92, "sine", 0.132, 0.004, 7.5);
     sting(860, 0.78, "triangle", 0.1, 0.018, 6.5);
@@ -257,13 +257,13 @@ export function stingVanish() {
  * @param soft vanish-clock mode: slightly lower pitch so it stays a tell vs spawn alarm
  */
 export function stingCountdownTick(gain = 0.48, step = 2, soft = false) {
-  // Wider rate ladder than #130 so 3→2→1 is unmistakable.
-  let rate = step <= 1 ? 5.35 : step === 2 ? 0.60 : 0.025;
-  let freq = step <= 1 ? 3600 : step === 2 ? 440 : 42;
+  // Wider rate ladder than #137 so 3→2→1 is unmistakable.
+  let rate = step <= 1 ? 5.65 : step === 2 ? 0.54 : 0.022;
+  let freq = step <= 1 ? 3800 : step === 2 ? 400 : 36;
   if (soft) {
     // Stronger soft-mode detune so vanish clock stays a tell vs spawn alarm.
-    rate *= 0.13;
-    freq *= 0.095;
+    rate *= 0.115;
+    freq *= 0.082;
   }
   playCue(
     "countdown-tick",
