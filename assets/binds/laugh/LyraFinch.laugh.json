@@ -7,11 +7,11 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 102.9737,
-      "amp": 0.6006,
-      "lean": 0.6413,
-      "billShake": 0.5385,
-      "billRate": 151.05,
+      "rate": 109.1521,
+      "amp": 0.6366,
+      "lean": 0.6798,
+      "billShake": 0.5708,
+      "billRate": 160.113,
       "still": "stages/LyraFinch_s0.jpg",
       "blend": {
         "jaw": 1.0,
@@ -22,11 +22,11 @@
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 149.7822,
-      "amp": 1.002,
-      "lean": 1.1239,
-      "billShake": 1.0778,
-      "billRate": 194.2931,
+      "rate": 158.7691,
+      "amp": 1.0621,
+      "lean": 1.1913,
+      "billShake": 1.1425,
+      "billRate": 205.9507,
       "still": "stages/LyraFinch_s1.jpg",
       "blend": {
         "jaw": 1.0,
@@ -37,11 +37,11 @@
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 187.2289,
-      "amp": 1.3356,
-      "lean": 1.6049,
-      "billShake": 1.5369,
-      "billRate": 215.8457,
+      "rate": 198.4626,
+      "amp": 1.4157,
+      "lean": 1.7012,
+      "billShake": 1.6291,
+      "billRate": 228.7964,
       "still": "stages/LyraFinch_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 215.3095,
-      "amp": 1.6688,
-      "lean": 1.9261,
-      "billShake": 2.0774,
-      "billRate": 258.9718,
+      "rate": 228.2281,
+      "amp": 1.7689,
+      "lean": 2.0417,
+      "billShake": 2.202,
+      "billRate": 274.5101,
       "still": "stages/LyraFinch_s3.jpg",
       "blend": {
         "jaw": 1.0,
