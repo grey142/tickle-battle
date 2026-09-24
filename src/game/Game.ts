@@ -848,8 +848,8 @@ export class Game {
         const laughing = this.hub.laughing;
         this.plazaPreview.occupancy = laughing ? "ticklee" : "free";
         if (laughing) {
-          // Preview harder laugh morph/frames past #153 (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.000000000000000000000000000000000000000000205);
+          // Preview harder laugh morph/frames past #157 (not full stamina mild window).
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.00000000000000000000000000000000000000000000331);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
           // Soft still-under re-enter when Look/plaza laugh preview ends.
@@ -883,8 +883,8 @@ export class Game {
         const laughing = this.hub.laughing;
         this.plazaPreview.occupancy = laughing ? "ticklee" : "free";
         if (laughing) {
-          // Preview harder laugh morph/frames past #153 (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.000000000000000000000000000000000000000000205);
+          // Preview harder laugh morph/frames past #157 (not full stamina mild window).
+          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.00000000000000000000000000000000000000000000331);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
           // Soft still-under re-enter when Look/plaza laugh preview ends.
