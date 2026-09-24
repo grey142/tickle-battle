@@ -12,11 +12,11 @@
     "billRate": 21.294
   },
   "run": {
-    "rate": 37.706,
-    "amp": 2.522,
-    "lean": 0.623,
-    "billBob": 0.326,
-    "billRate": 45.613
+    "rate": 38.498,
+    "amp": 2.575,
+    "lean": 0.636,
+    "billBob": 0.333,
+    "billRate": 46.571
   },
   "runSpeed": 4.4,
   "walkSpeed": 0.4,
