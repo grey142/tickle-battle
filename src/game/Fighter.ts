@@ -196,8 +196,8 @@ export class Fighter {
     this.idleFrameAcc = 0;
     // Keep idlePhase so Look swaps don't restart the breathe clock cold.
     this.idleSheetEnter = 0;
-    // Past #162: softer Look-edge ramp on fresh look load (laugh soft-reenter stays via softenIdleSheetEnter).
-    this.idleEnterRate = 0.372;
+    // Past #166: softer Look-edge ramp on fresh look load (laugh soft-reenter stays via softenIdleSheetEnter).
+    this.idleEnterRate = 0.335;
     if (this.idleFadeSprite) {
       this.idleFadeSprite.visible = false;
     }
@@ -226,7 +226,7 @@ export class Fighter {
         map: tex,
         transparent: true,
         depthTest: true,
-        alphaTest: 0.413,
+        alphaTest: 0.421,
       });
       const bill = new THREE.Sprite(mat);
       bill.scale.set(BILL_W, BILL_H, 1);
@@ -265,7 +265,7 @@ export class Fighter {
       this.idleFrameAcc = 0;
       this.idleSheetEnter = 0;
       // Past #150: softer Look-edge ramp on fresh look sheet load.
-      this.idleEnterRate = 0.372;
+      this.idleEnterRate = 0.335;
       // Fresh fade tex for the new Look sheet.
       this.idleFadeTex = undefined;
       if (this.idleFadeSprite) {
@@ -276,10 +276,10 @@ export class Fighter {
   }
 
   /** Soft re-enter sheet after laugh/Look so still-under path can run again. */
-  softenIdleSheetEnter(cap = 0.00085) {
+  softenIdleSheetEnter(cap = 0.00072) {
     this.idleSheetEnter = Math.min(this.idleSheetEnter, cap);
     // Past #150: softer still-under ramp after laugh so the sheet eases back in.
-    this.idleEnterRate = 0.065;
+    this.idleEnterRate = 0.059;
   }
 
   private applyIdleSheetFrame(dt: number, playing: boolean) {
@@ -304,9 +304,9 @@ export class Fighter {
     const f0 = Math.floor(frameF) % frames;
     const f1 = (f0 + 1) % frames;
     const u = frameF - Math.floor(frameF);
-    // Past #162: smootherstep then higher-power plateau — longer mid-frame hold / sheet clarity.
+    // Past #166: smootherstep then higher-power plateau — longer mid-frame hold / sheet clarity.
     const s = u * u * u * (u * (u * 6 - 15) + 10);
-    const blend = Math.pow(s, 100);
+    const blend = Math.pow(s, 104);
     this.idleFrame = f0;
     this.idleFrameAcc = u;
 
@@ -340,7 +340,7 @@ export class Fighter {
         transparent: true,
         depthTest: true,
         depthWrite: false,
-        alphaTest: 0.413,
+        alphaTest: 0.421,
         opacity: 0,
       });
       fade = new THREE.Sprite(fadeMat);
@@ -767,8 +767,8 @@ export class Fighter {
       this.applyIdleSheetFrame(dt, true);
       const idle = idleBindForSlug(this.slug);
       const rate = idle.breatheRate;
-      const b = Math.sin(t * rate) * idle.breatheAmp * 6.58;
-      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 4.19;
+      const b = Math.sin(t * rate) * idle.breatheAmp * 6.91;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 4.4;
       const shift = idle.weightShift ?? idle.sway;
       const s =
         Math.sin(t * rate * 0.62) * idle.sway * 5.29 +
