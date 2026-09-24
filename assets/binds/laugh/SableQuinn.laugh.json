@@ -7,11 +7,11 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 96.2327,
-      "amp": 0.4907,
-      "lean": 0.7145,
-      "billShake": 0.4792,
-      "billRate": 126.0665,
+      "rate": 102.0067,
+      "amp": 0.5201,
+      "lean": 0.7574,
+      "billShake": 0.508,
+      "billRate": 133.6305,
       "still": "stages/SableQuinn_s0.jpg",
       "blend": {
         "jaw": 1.0,
@@ -22,11 +22,11 @@
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 139.9694,
-      "amp": 0.8182,
-      "lean": 1.2506,
-      "billShake": 0.9592,
-      "billRate": 162.0853,
+      "rate": 148.3676,
+      "amp": 0.8673,
+      "lean": 1.3256,
+      "billShake": 1.0168,
+      "billRate": 171.8104,
       "still": "stages/SableQuinn_s1.jpg",
       "blend": {
         "jaw": 1.0,
@@ -37,11 +37,11 @@
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 174.963,
-      "amp": 1.0916,
-      "lean": 1.7849,
-      "billShake": 1.3678,
-      "billRate": 180.0989,
+      "rate": 185.461,
+      "amp": 1.1571,
+      "lean": 1.892,
+      "billShake": 1.4499,
+      "billRate": 190.9048,
       "still": "stages/SableQuinn_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 201.2027,
-      "amp": 1.3636,
-      "lean": 2.1439,
-      "billShake": 1.8489,
-      "billRate": 216.117,
+      "rate": 213.2749,
+      "amp": 1.4454,
+      "lean": 2.2725,
+      "billShake": 1.9598,
+      "billRate": 229.084,
       "still": "stages/SableQuinn_s3.jpg",
       "blend": {
         "jaw": 1.0,

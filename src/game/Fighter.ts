@@ -423,22 +423,22 @@ export class Fighter {
     }
     const urls = laughFrameUrls(bind);
     if (urls.length < 2) return false;
-    // Tighter stamina→frame past #153: high soft-locks f0–f1 earlier; mid f1–f2;
+    // Tighter stamina→frame past #157: high soft-locks f0–f1 earlier; mid f1–f2;
     // low opens f2–f3; peak biases f3–f4 / f4 soft-lock. FPS climbs harder with drain.
     const pct = Math.max(0, Math.min(100, staminaPct ?? 100));
     const n = urls.length;
     let lo = 0;
     let hi = n - 1;
-    if (pct >= 0.000000000000000000000000000000000000000155) {
+    if (pct >= 0.00000000000000000000000000000000000000000250) {
       lo = 0;
       hi = Math.min(1, n - 1);
-    } else if (pct >= 0.0000000000000000000000000000000000000000240) {
+    } else if (pct >= 0.000000000000000000000000000000000000000000387) {
       lo = Math.min(1, n - 1);
       hi = Math.min(2, n - 1);
-    } else if (pct >= 0.00000000000000000000000000000000000000000335) {
+    } else if (pct >= 0.0000000000000000000000000000000000000000000540) {
       lo = Math.min(2, n - 1);
       hi = Math.min(3, n - 1);
-    } else if (pct >= 0.000000000000000000000000000000000000000000306) {
+    } else if (pct >= 0.00000000000000000000000000000000000000000000494) {
       lo = Math.min(3, n - 1);
       hi = n - 1;
     } else {
@@ -446,7 +446,7 @@ export class Fighter {
       hi = n - 1;
     }
     const span = Math.max(1, hi - lo + 1);
-    const fps = Math.max(103419, Math.round((stageParams?.billRate || 14) * (97.86 + (100 - pct) * 61.16)));
+    const fps = Math.max(144787, Math.round((stageParams?.billRate || 14) * (116.07 + (100 - pct) * 82.87)));
     const idx = lo + (Math.floor(this.animT * fps) % span);
     if (idx === this.laughFrameApplied && this.laughFramePortrait) return true;
     const want = idx;
@@ -738,14 +738,14 @@ export class Fighter {
       const s2 = Math.sin(t * rate * 0.7);
       const s3 = Math.sin(t * rate * 1.35);
       const pulse = 0.55 + 0.45 * Math.abs(s3);
-      // Billboard morph-feel past #153: cheek widens, jaw opens (taller), eye squint shortens.
-      const morphW = 1 + cheek * 1222.89 * pulse + s * shake * 6460.99;
-      const morphH = 1 + jaw * 1401.70 * pulse - eye * 931.68 * pulse - s * shake * 3408.54;
+      // Billboard morph-feel past #157: cheek widens, jaw opens (taller), eye squint shortens.
+      const morphW = 1 + cheek * 1736.50 * pulse + s * shake * 9174.61;
+      const morphH = 1 + jaw * 1990.41 * pulse - eye * 1322.99 * pulse - s * shake * 4840.13;
       w = BILL_W * morphW;
       h = BILL_H * morphH;
-      x = s * shake * 8805.62 + s2 * cheek * 508.91;
-      y = BILL_Y + Math.abs(s2) * shake * 4224.80 + jaw * 508.91 * pulse;
-      rot = s2 * shake * 8267.54 + s * cheek * 535.61;
+      x = s * shake * 12503.98 + s2 * cheek * 722.65;
+      y = BILL_Y + Math.abs(s2) * shake * 5999.22 + jaw * 722.65 * pulse;
+      rot = s2 * shake * 11739.91 + s * cheek * 760.57;
     } else if (this.occupancy === "tapped") {
       h = BILL_H * 0.72;
       y = BILL_Y * 0.55;

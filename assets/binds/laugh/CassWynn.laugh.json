@@ -7,11 +7,11 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 98.5394,
-      "amp": 0.5915,
-      "lean": 0.7145,
-      "billShake": 0.3639,
-      "billRate": 142.904,
+      "rate": 104.4518,
+      "amp": 0.627,
+      "lean": 0.7574,
+      "billShake": 0.3857,
+      "billRate": 151.478,
       "still": "stages/CassWynn_s0.jpg",
       "blend": {
         "jaw": 1.0,
@@ -22,11 +22,11 @@
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 143.3031,
-      "amp": 0.963,
-      "lean": 1.2506,
-      "billShake": 0.7741,
-      "billRate": 183.7445,
+      "rate": 151.9013,
+      "amp": 1.021,
+      "lean": 1.3256,
+      "billShake": 0.8205,
+      "billRate": 194.7692,
       "still": "stages/CassWynn_s1.jpg",
       "blend": {
         "jaw": 1.0,
@@ -37,11 +37,11 @@
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 179.1352,
-      "amp": 1.2842,
-      "lean": 1.7849,
-      "billShake": 1.0949,
-      "billRate": 204.1164,
+      "rate": 189.8833,
+      "amp": 1.3613,
+      "lean": 1.892,
+      "billShake": 1.1606,
+      "billRate": 216.3634,
       "still": "stages/CassWynn_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 206.002,
-      "amp": 1.6066,
-      "lean": 2.1439,
-      "billShake": 1.4781,
-      "billRate": 244.9567,
+      "rate": 218.362,
+      "amp": 1.703,
+      "lean": 2.2725,
+      "billShake": 1.5668,
+      "billRate": 259.6541,
       "still": "stages/CassWynn_s3.jpg",
       "blend": {
         "jaw": 1.0,

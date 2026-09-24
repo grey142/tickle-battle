@@ -7,11 +7,11 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 103.1034,
-      "amp": 0.6667,
-      "lean": 0.7855,
-      "billShake": 0.5281,
-      "billRate": 159.7318,
+      "rate": 109.2896,
+      "amp": 0.7067,
+      "lean": 0.8326,
+      "billShake": 0.5598,
+      "billRate": 169.3157,
       "still": "stages/TorenBlake_s0.jpg",
       "blend": {
         "jaw": 1.0,
@@ -22,11 +22,11 @@
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 149.9727,
-      "amp": 1.0922,
-      "lean": 1.3742,
-      "billShake": 1.0541,
-      "billRate": 205.2933,
+      "rate": 158.9711,
+      "amp": 1.1577,
+      "lean": 1.4567,
+      "billShake": 1.1173,
+      "billRate": 217.6109,
       "still": "stages/TorenBlake_s1.jpg",
       "blend": {
         "jaw": 1.0,
@@ -37,11 +37,11 @@
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 187.4628,
-      "amp": 1.4777,
-      "lean": 1.9652,
-      "billShake": 1.5106,
-      "billRate": 228.1284,
+      "rate": 198.7106,
+      "amp": 1.5664,
+      "lean": 2.0831,
+      "billShake": 1.6012,
+      "billRate": 241.8161,
       "still": "stages/TorenBlake_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 215.5857,
-      "amp": 1.8478,
-      "lean": 2.3568,
-      "billShake": 2.0359,
-      "billRate": 273.7958,
+      "rate": 228.5208,
+      "amp": 1.9587,
+      "lean": 2.4982,
+      "billShake": 2.1581,
+      "billRate": 290.2235,
       "still": "stages/TorenBlake_s3.jpg",
       "blend": {
         "jaw": 1.0,

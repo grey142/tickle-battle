@@ -7,11 +7,11 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 105.4001,
-      "amp": 0.623,
-      "lean": 0.7855,
-      "billShake": 0.6233,
-      "billRate": 151.2604,
+      "rate": 111.7241,
+      "amp": 0.66,
+      "lean": 0.8326,
+      "billShake": 0.6607,
+      "billRate": 160.336,
       "still": "stages/NimCortez_s0.jpg",
       "blend": {
         "jaw": 1.0,
@@ -22,11 +22,11 @@
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 153.301,
-      "amp": 1.0375,
-      "lean": 1.3742,
-      "billShake": 1.2455,
-      "billRate": 194.4683,
+      "rate": 162.499,
+      "amp": 1.0998,
+      "lean": 1.4567,
+      "billShake": 1.3202,
+      "billRate": 206.1364,
       "still": "stages/NimCortez_s1.jpg",
       "blend": {
         "jaw": 1.0,
@@ -37,11 +37,11 @@
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 191.6247,
-      "amp": 1.3815,
-      "lean": 1.9652,
-      "billShake": 1.7816,
-      "billRate": 216.117,
+      "rate": 203.1222,
+      "amp": 1.4644,
+      "lean": 2.0831,
+      "billShake": 1.8885,
+      "billRate": 229.084,
       "still": "stages/NimCortez_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 220.3785,
-      "amp": 1.7268,
-      "lean": 2.3568,
-      "billShake": 2.202,
-      "billRate": 259.3235,
+      "rate": 233.6012,
+      "amp": 1.8304,
+      "lean": 2.4982,
+      "billShake": 2.334,
+      "billRate": 274.8829,
       "still": "stages/NimCortez_s3.jpg",
       "blend": {
         "jaw": 1.0,
