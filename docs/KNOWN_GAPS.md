@@ -46,7 +46,7 @@ Playable Team Quick in `npm run dev`. Not a vertical slice of the full bible.
 ## Stub / missing
 
 - Walkable plaza ships with over-shoulder third-person mannequin on multi-frame idle sheets plus Home/Shop/Arena near-door soft glow/pulse + inner/outer sills + penta-biased-smoothstep approach + stronger frame lift + wider six-pass jamb-tip unjam wall-slide + hardened Leave/Return (ephemeral wipe + ~0.95s confirm grace); remaining hub polish still TBD
-- Painterly four-clip production anims and blendshapes still missing (tickle five-frame deepened A-pose cycle + intensity pick past #96, run four-frame oil-grade adaptations past #53, laugh five-frame stamina-weighted cycle + blend deepen past #151 ship; full painterly anims TBD).
+- Painterly four-clip production anims and blendshapes still missing (tickle five-frame deepened A-pose cycle + intensity pick past #96, run four-frame oil-grade adaptations past #144, laugh five-frame stamina-weighted cycle + blend deepen past #151 ship; full painterly anims TBD).
 - Navmesh AI mid-lane waypoints + wall-slide shipped; pile join cooldown is exact (`PILE_CD` 2.75s / sticky 1.35s, armed on join + drop)
 - Full licensed SFX library still TBD (and out of scope — procedural/CC0 only); Team Quick UI/combat stingers use deepened layered samples + oscillator fallbacks (countdown last-3s widest rate ladder + stronger vanish soft-mode, deepest vanish whoosh vs brightest reappear ping past #99, soft unlock chirp)
 - No jump (bible); ramp height is a groundY sample
