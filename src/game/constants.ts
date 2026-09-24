@@ -35,10 +35,10 @@ export const REGEN_DELAY = 3;
 export const REGEN_PS = 6;
 export const CONTACT_GRACE = 0.25;
 /** Both-ways after vanish; does not stack with vanish remaining. Then leftover overlap still needs a fresh rear/pack edge. */
-export const REAPPEAR_IGNORE = 2.02;
+export const REAPPEAR_IGNORE = 2.12;
 /** Nearby band for reappear sound + white rim flash (not rose). */
-export const REAPPEAR_TELL = 35;
-export const REAPPEAR_FLASH = 1.88;
+export const REAPPEAR_TELL = 37;
+export const REAPPEAR_FLASH = 1.98;
 
 export const BASE = { stamina: 3, struggle: 3, tickle: 3 };
 export const K_STAMINA = 28;
