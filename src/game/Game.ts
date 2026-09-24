@@ -853,7 +853,7 @@ export class Game {
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
           // Soft still-under re-enter when Look/plaza laugh preview ends.
-          if (this.hubLaughWas) this.plazaPreview.softenIdleSheetEnter(0.0037);
+          if (this.hubLaughWas) this.plazaPreview.softenIdleSheetEnter(0.0031);
         }
         this.hubLaughWas = laughing;
         this.plazaPreview.tickAnim(Math.min(0.05, wallDt));
@@ -888,7 +888,7 @@ export class Game {
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
           // Soft still-under re-enter when Look/plaza laugh preview ends.
-          if (this.hubLaughWas) this.plazaPreview.softenIdleSheetEnter(0.0037);
+          if (this.hubLaughWas) this.plazaPreview.softenIdleSheetEnter(0.0031);
         }
         this.hubLaughWas = laughing;
         this.plazaPreview.tickAnim(Math.min(0.05, wallDt));
