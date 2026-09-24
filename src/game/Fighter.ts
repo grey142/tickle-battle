@@ -196,8 +196,8 @@ export class Fighter {
     this.idleFrameAcc = 0;
     // Keep idlePhase so Look swaps don't restart the breathe clock cold.
     this.idleSheetEnter = 0;
-    // Past #143: softer Look-edge ramp on fresh look load (laugh soft-reenter stays via softenIdleSheetEnter).
-    this.idleEnterRate = 0.78;
+    // Past #146: softer Look-edge ramp on fresh look load (laugh soft-reenter stays via softenIdleSheetEnter).
+    this.idleEnterRate = 0.70;
     if (this.idleFadeSprite) {
       this.idleFadeSprite.visible = false;
     }
@@ -226,7 +226,7 @@ export class Fighter {
         map: tex,
         transparent: true,
         depthTest: true,
-        alphaTest: 0.338,
+        alphaTest: 0.355,
       });
       const bill = new THREE.Sprite(mat);
       bill.scale.set(BILL_W, BILL_H, 1);
@@ -264,8 +264,8 @@ export class Fighter {
       this.idleFrame = 0;
       this.idleFrameAcc = 0;
       this.idleSheetEnter = 0;
-      // Past #143: softer Look-edge ramp on fresh look sheet load.
-      this.idleEnterRate = 0.78;
+      // Past #146: softer Look-edge ramp on fresh look sheet load.
+      this.idleEnterRate = 0.70;
       // Fresh fade tex for the new Look sheet.
       this.idleFadeTex = undefined;
       if (this.idleFadeSprite) {
@@ -276,10 +276,10 @@ export class Fighter {
   }
 
   /** Soft re-enter sheet after laugh/Look so still-under path can run again. */
-  softenIdleSheetEnter(cap = 0.0026) {
+  softenIdleSheetEnter(cap = 0.0022) {
     this.idleSheetEnter = Math.min(this.idleSheetEnter, cap);
-    // Past #143: softer still-under ramp after laugh so the sheet eases back in.
-    this.idleEnterRate = 0.14;
+    // Past #146: softer still-under ramp after laugh so the sheet eases back in.
+    this.idleEnterRate = 0.12;
   }
 
   private applyIdleSheetFrame(dt: number, playing: boolean) {
@@ -304,9 +304,9 @@ export class Fighter {
     const f0 = Math.floor(frameF) % frames;
     const f1 = (f0 + 1) % frames;
     const u = frameF - Math.floor(frameF);
-    // Past #143: smootherstep then higher-power plateau — longer mid-frame hold / sheet clarity.
+    // Past #146: smootherstep then higher-power plateau — longer mid-frame hold / sheet clarity.
     const s = u * u * u * (u * (u * 6 - 15) + 10);
-    const blend = Math.pow(s, 72);
+    const blend = Math.pow(s, 76);
     this.idleFrame = f0;
     this.idleFrameAcc = u;
 
@@ -340,7 +340,7 @@ export class Fighter {
         transparent: true,
         depthTest: true,
         depthWrite: false,
-        alphaTest: 0.338,
+        alphaTest: 0.355,
         opacity: 0,
       });
       fade = new THREE.Sprite(fadeMat);
@@ -763,22 +763,22 @@ export class Fighter {
       y = BILL_Y + Math.abs(s) * bob * 2.8;
       rot = s * bob * 1.58;
     } else {
-      // Past #143: idle/skills/persist lane — crossfade / re-enter / sheet clarity. Persist profile-safe (no schema invent). Idle-scoped only.
+      // Past #146: idle/skills/persist lane — crossfade / re-enter / sheet clarity. Persist profile-safe (no schema invent). Idle-scoped only.
       this.applyIdleSheetFrame(dt, true);
       const idle = idleBindForSlug(this.slug);
       const rate = idle.breatheRate;
-      const b = Math.sin(t * rate) * idle.breatheAmp * 4.68;
-      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 2.98;
+      const b = Math.sin(t * rate) * idle.breatheAmp * 4.91;
+      const b2 = Math.sin(t * rate * 0.53 + 0.7) * idle.breatheAmp * 3.13;
       const shift = idle.weightShift ?? idle.sway;
       const s =
-        Math.sin(t * rate * 0.62) * idle.sway * 4.80 +
-        Math.sin(t * rate * 0.31 + 0.4) * shift * 3.90 +
-        Math.sin(t * rate * 0.17) * shift * 2.08;
-      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 4.40 + Math.sin(t * rate * 1.7) * idle.scalePulse * 2.58);
-      h = BILL_H * (1 + (b + b2) * 3.38);
+        Math.sin(t * rate * 0.62) * idle.sway * 5.04 +
+        Math.sin(t * rate * 0.31 + 0.4) * shift * 4.10 +
+        Math.sin(t * rate * 0.17) * shift * 2.18;
+      w = BILL_W * (1 + Math.sin(t * rate) * idle.scalePulse * 4.62 + Math.sin(t * rate * 1.7) * idle.scalePulse * 2.71);
+      h = BILL_H * (1 + (b + b2) * 3.55);
       x = s;
-      y = BILL_Y + b + b2 * 2.58;
-      rot = s * 2.58;
+      y = BILL_Y + b + b2 * 2.71;
+      rot = s * 2.71;
       bill.scale.set(w, h, 1);
       bill.position.set(x, y, 0);
       mat.rotation = rot;
