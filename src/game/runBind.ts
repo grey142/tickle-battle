@@ -40,7 +40,7 @@ const FALLBACK: RunBind = {
   slug: "default",
   display: "Default",
   walk: { rate: 17.031, amp: 1.146, lean: 0.148, billBob: 0.083, billRate: 20.55 },
-  run: { rate: 34.361, amp: 2.277, lean: 0.563, billBob: 0.248, billRate: 41.413 },
+  run: { rate: 35.083, amp: 2.325, lean: 0.575, billBob: 0.253, billRate: 42.283 },
   runSpeed: 4.4,
   walkSpeed: 0.4,
 };
