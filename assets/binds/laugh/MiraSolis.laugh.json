@@ -7,11 +7,11 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 109.2896,
-      "amp": 0.5201,
-      "lean": 0.8326,
-      "billShake": 0.5598,
-      "billRate": 133.6305,
+      "rate": 115.847,
+      "amp": 0.5513,
+      "lean": 0.8826,
+      "billShake": 0.5934,
+      "billRate": 141.6483,
       "still": "stages/MiraSolis_s0.jpg",
       "blend": {
         "jaw": 1.0,
@@ -22,11 +22,11 @@
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 158.9711,
-      "amp": 0.8673,
-      "lean": 1.4567,
-      "billShake": 1.1173,
-      "billRate": 171.8104,
+      "rate": 168.5094,
+      "amp": 0.9193,
+      "lean": 1.5441,
+      "billShake": 1.1843,
+      "billRate": 182.119,
       "still": "stages/MiraSolis_s1.jpg",
       "blend": {
         "jaw": 1.0,
@@ -37,11 +37,11 @@
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 198.7106,
-      "amp": 1.1571,
-      "lean": 2.0831,
-      "billShake": 1.6012,
-      "billRate": 190.9048,
+      "rate": 210.6332,
+      "amp": 1.2265,
+      "lean": 2.2081,
+      "billShake": 1.6973,
+      "billRate": 202.3591,
       "still": "stages/MiraSolis_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 228.5208,
-      "amp": 1.4454,
-      "lean": 2.4982,
-      "billShake": 2.1581,
-      "billRate": 229.084,
+      "rate": 242.232,
+      "amp": 1.5321,
+      "lean": 2.6481,
+      "billShake": 2.2876,
+      "billRate": 242.829,
       "still": "stages/MiraSolis_s3.jpg",
       "blend": {
         "jaw": 1.0,
