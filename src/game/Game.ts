@@ -975,10 +975,10 @@ export class Game {
         if (v && v.maxStamina > 0) {
           const raw = Math.max(0, Math.min(100, 100 - (100 * v.stamina) / v.maxStamina)) / 100;
           const contrasted =
-            raw < 0.5 ? 0.5 * Math.pow(raw * 2, 6.75) : 1 - 0.5 * Math.pow((1 - raw) * 2, 6.75);
-          // Clearer pack-size boost past #164 so 1→5 ticklers climb the five-frame ladder with drain.
+            raw < 0.5 ? 0.5 * Math.pow(raw * 2, 6.95) : 1 - 0.5 * Math.pow((1 - raw) * 2, 6.95);
+          // Clearer pack-size boost past #169 so 1→5 ticklers climb the five-frame ladder with drain.
           const packN = (this.joinList.get(v.id) ?? []).length;
-          const packBoost = Math.min(1.0, Math.max(0, packN - 1) * 0.27);
+          const packBoost = Math.min(1.0, Math.max(0, packN - 1) * 0.28);
           f.tickleIntensity = Math.min(100, (contrasted + packBoost) * 100);
         } else {
           f.tickleIntensity = 0;
@@ -1750,7 +1750,7 @@ export class Game {
       if (f.reappearFlash > 0) {
         f.reappearFlash = Math.max(0, f.reappearFlash - dt);
         f.rim.color.set(0xffffff);
-        f.rim.intensity = 29.6;
+        f.rim.intensity = 30.8;
       }
       if (f.occupancy === "vanished") {
         f.vanishLeft = Math.max(0, f.vanishLeft - dt);
