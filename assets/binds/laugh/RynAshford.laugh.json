@@ -7,11 +7,11 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 80.7989,
-      "amp": 0.5598,
-      "lean": 0.4792,
-      "billShake": 0.482,
-      "billRate": 134.114,
+      "rate": 85.6468,
+      "amp": 0.5934,
+      "lean": 0.508,
+      "billShake": 0.5109,
+      "billRate": 142.1608,
       "still": "stages/RynAshford_s0.jpg",
       "blend": {
         "jaw": 1.0,
@@ -22,11 +22,11 @@
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 117.521,
-      "amp": 0.9171,
-      "lean": 0.8399,
-      "billShake": 0.9664,
-      "billRate": 172.3682,
+      "rate": 124.5723,
+      "amp": 0.9721,
+      "lean": 0.8903,
+      "billShake": 1.0244,
+      "billRate": 182.7103,
       "still": "stages/RynAshford_s1.jpg",
       "blend": {
         "jaw": 1.0,
@@ -37,11 +37,11 @@
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 146.9023,
-      "amp": 1.2408,
-      "lean": 1.1992,
-      "billShake": 1.3788,
-      "billRate": 191.541,
+      "rate": 155.7164,
+      "amp": 1.3152,
+      "lean": 1.2712,
+      "billShake": 1.4615,
+      "billRate": 203.0335,
       "still": "stages/RynAshford_s2.jpg",
       "blend": {
         "jaw": 1.0,
@@ -52,11 +52,11 @@
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 168.9337,
-      "amp": 1.5514,
-      "lean": 1.4393,
-      "billShake": 1.8489,
-      "billRate": 229.8842,
+      "rate": 179.0697,
+      "amp": 1.6445,
+      "lean": 1.5257,
+      "billShake": 1.9598,
+      "billRate": 243.6773,
       "still": "stages/RynAshford_s3.jpg",
       "blend": {
         "jaw": 1.0,
