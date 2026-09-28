@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
-"""Generate deepened four-frame run stills from metal-free A-poses (Amateur 12 + Elara).
+"""Generate four-frame run stills from metal-free A-poses (Amateur 12 + Elara).
 
-f0 = A-pose still; f1–f3 = deeper opposite-leg stride punch + oil-paint grade
-past #172. Full painterly production run art is still deferred.
+Run recal: f0–f3 form ONE stride cycle played at bind billRate FPS
+(billRate / 4 = strides per second, ~2.5 for sprint). Every frame shares the
+same colour grade so only the pose changes between frames (no colour/zoom
+flicker); geometry offsets are small (≤2° sway, ≤1.2% bob) plus an
+alternating one-leg knee lift on f1/f3 so the legs visibly cycle.
+Full painterly production run art is still deferred.
 Requires: Pillow, numpy
 """
 from __future__ import annotations
@@ -38,7 +42,14 @@ def hshift(im: Image.Image, frac: float) -> float:
 
 
 def affine_frame(
-    im: Image.Image, shear_x: float, shear_y: float, scale_x: float, scale_y: float, dy: float, rot: float
+    im: Image.Image,
+    shear_x: float,
+    shear_y: float,
+    scale_x: float,
+    scale_y: float,
+    dy: float,
+    rot: float,
+    fill: tuple[int, int, int] = (248, 244, 238),
 ) -> Image.Image:
     w, h = im.size
     cx, cy = w / 2, h * 0.62  # pivot near hips for stride
@@ -57,39 +68,17 @@ def affine_frame(
         Image.AFFINE,
         (a, b, c, d, e, f),
         resample=Image.BICUBIC,
-        fillcolor=(248, 244, 238),
+        fillcolor=fill,
     )
-
-
-def punch_stride(im: Image.Image, amount: float) -> Image.Image:
-    """Vertical crop push — reads as stride squash / extension."""
-    w, h = im.size
-    inset_x = int(w * 0.032 * amount)
-    inset_top = int(h * 0.03 * amount)
-    inset_bot = int(h * 0.11 * amount)
-    box = (inset_x, inset_top, w - inset_x, h - inset_bot)
-    return im.crop(box).resize((w, h), Image.BICUBIC)
 
 
 def cool_grade(im: Image.Image, amount: float) -> Image.Image:
     """Cool energy push so run frames read faster than idle."""
     arr = np.asarray(im).astype(np.float32)
-    arr[..., 0] = np.clip(arr[..., 0] * (1.0 - 0.052 * amount), 0, 255)
-    arr[..., 1] = np.clip(arr[..., 1] * (1.0 + 0.046 * amount), 0, 255)
-    arr[..., 2] = np.clip(arr[..., 2] * (1.0 + 0.11 * amount), 0, 255)
+    arr[..., 0] = np.clip(arr[..., 0] * (1.0 - 0.015 * amount), 0, 255)
+    arr[..., 1] = np.clip(arr[..., 1] * (1.0 + 0.01 * amount), 0, 255)
+    arr[..., 2] = np.clip(arr[..., 2] * (1.0 + 0.035 * amount), 0, 255)
     return Image.fromarray(arr.astype(np.uint8))
-
-
-def vignette(im: Image.Image, amount: float) -> Image.Image:
-    """Soft edge darken so stride frames read more kinetic."""
-    w, h = im.size
-    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
-    cx, cy = w / 2.0, h * 0.55
-    r = np.sqrt(((xx - cx) / (w * 0.46)) ** 2 + ((yy - cy) / (h * 0.56)) ** 2)
-    factor = np.clip(1.0 - np.clip(r - 0.36, 0, 1) * 0.58 * amount, 0.42, 1.0)
-    arr = np.asarray(im).astype(np.float32)
-    arr *= factor[..., None]
-    return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
 
 
 def painterly(im: Image.Image, strength: float) -> Image.Image:
@@ -111,42 +100,73 @@ def painterly(im: Image.Image, strength: float) -> Image.Image:
     return out
 
 
+# Stride pose table:
+#   (shear_x, shear_y, scale_x, scale_y, bob_frac, rot_deg, lift_side, lift)
+# bob_frac < 0 lifts the figure (flight), > 0 drops it (contact / squash).
+# lift_side: -1 = image-left leg, +1 = image-right leg; lift = fraction of leg
+# length the swing foot is drawn up (knee lift), so the legs visibly alternate.
+STRIDE_POSES = [
+    (0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0, 0.0),  # f0 — passing / neutral
+    (0.02, -0.006, 1.01, 0.985, 0.005, -1.8, -1, 0.10),  # f1 — left knee up, sway left
+    (0.0, 0.0, 0.996, 1.008, -0.012, 0.0, 0, 0.0),  # f2 — flight / peak lift
+    (-0.02, 0.006, 1.01, 0.985, 0.005, 1.8, 1, 0.10),  # f3 — right knee up, sway right
+]
+HIP_Y = 0.54  # fraction of image height where legs start (below shorts line)
+
+
+def bg_color(im: Image.Image) -> tuple[int, int, int]:
+    """Median of the top corners — the still's backdrop colour."""
+    arr = np.asarray(im)
+    h, w = arr.shape[:2]
+    patch = np.concatenate([arr[: h // 40, : w // 20].reshape(-1, 3), arr[: h // 40, -w // 20 :].reshape(-1, 3)])
+    return tuple(int(v) for v in np.median(patch, axis=0))
+
+
+def lift_leg(im: Image.Image, side: int, lift: float) -> Image.Image:
+    """Draw one leg up toward the hip (foreshortened knee lift), other leg planted."""
+    if side == 0 or lift <= 0:
+        return im
+    arr = np.asarray(im).astype(np.float32)
+    h, w = arr.shape[:2]
+    y0 = h * HIP_Y
+    xs = np.arange(w, dtype=np.float32)
+    # Soft mask across the centre gap between the legs to avoid a seam.
+    t = np.clip((xs - w * 0.47) / (w * 0.06), 0.0, 1.0)
+    t = t * t * (3 - 2 * t)
+    wx = (1.0 - t) if side < 0 else t
+    ys = np.arange(h, dtype=np.float32)[:, None]
+    k = 1.0 / (1.0 - lift)
+    src = ys + wx[None, :] * np.clip(ys - y0, 0, None) * (k - 1.0)
+    y_lo = np.floor(src).astype(np.int64)
+    frac = (src - y_lo)[..., None]
+    valid = (y_lo + 1) < h
+    y_lo_c = np.clip(y_lo, 0, h - 1)
+    y_hi_c = np.clip(y_lo + 1, 0, h - 1)
+    cols = np.broadcast_to(np.arange(w), (h, w))
+    out = arr[y_lo_c, cols] * (1 - frac) + arr[y_hi_c, cols] * frac
+    out[~valid] = np.array(bg_color(im), dtype=np.float32)
+    return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
+
+
+def grade(im: Image.Image) -> Image.Image:
+    """Shared, mild run grade applied identically to every frame."""
+    im = ImageEnhance.Sharpness(im).enhance(1.05)
+    im = ImageEnhance.Contrast(im).enhance(1.04)
+    im = cool_grade(im, 0.4)
+    return painterly(im, 0.25)
+
+
 def make_frames(src: Path) -> list[Image.Image]:
-    """v29 deepen past #172: punchier opposite-leg f1/f2 + peak f3 stride + oil grade."""
-    base = Image.open(src).convert("RGB")
-    f0 = ImageEnhance.Sharpness(base).enhance(1.22)
-    f0 = ImageEnhance.Contrast(f0).enhance(1.14)
-    f0 = cool_grade(f0, 0.64)
-    f0 = painterly(f0, 0.4)
-
-    # f1 — plant / opposite sway (clearer opposite-leg punch past #172)
-    f1 = punch_stride(base, 7.14)
-    f1 = affine_frame(f1, 0.420, -0.138, 1.310, 0.66, -hshift(base, 0.198), -15.4)
-    f1 = ImageEnhance.Contrast(f1).enhance(1.54)
-    f1 = cool_grade(f1, 4.34)
-    f1 = painterly(f1, 2.18)
-    f1 = vignette(f1, 3.11)
-
-    # f2 — opposite plant / stronger extension
-    f2 = punch_stride(base, 7.14)
-    f2 = affine_frame(f2, -0.492, 0.187, 1.435, 0.526, -hshift(base, 0.282), 17.1)
-    f2 = ImageEnhance.Brightness(f2).enhance(1.1)
-    f2 = ImageEnhance.Contrast(f2).enhance(1.78)
-    f2 = cool_grade(f2, 5.31)
-    f2 = painterly(f2, 2.50)
-    f2 = f2.filter(ImageFilter.UnsharpMask(radius=2.2, percent=256, threshold=2))
-    f2 = vignette(f2, 3.75)
-
-    # f3 — peak bob / squash / forward lean
-    f3 = punch_stride(base, 7.14)
-    f3 = affine_frame(f3, 0.342, -0.209, 1.480, 0.49, -hshift(base, 0.328), 10.6)
-    f3 = ImageEnhance.Sharpness(f3).enhance(2.17)
-    f3 = ImageEnhance.Contrast(f3).enhance(1.79)
-    f3 = cool_grade(f3, 6.11)
-    f3 = painterly(f3, 2.82)
-    f3 = f3.filter(ImageFilter.UnsharpMask(radius=2.45, percent=288, threshold=2))
-    f3 = vignette(f3, 3.99)
-    return [f0, f1, f2, f3]
+    """Run recal: one natural stride cycle (f0 passing, f1/f3 alternating knee lift, f2 flight)."""
+    base = grade(Image.open(src).convert("RGB"))
+    fill = bg_color(base)
+    frames: list[Image.Image] = []
+    for shx, shy, sx, sy, bob, rot, side, lift in STRIDE_POSES:
+        fr = lift_leg(base, side, lift)
+        if (shx, shy, sx, sy, bob, rot) != (0.0, 0.0, 1.0, 1.0, 0.0, 0.0):
+            fr = affine_frame(fr, shx, shy, sx, sy, hshift(base, bob), rot, fill)
+        frames.append(fr)
+    return frames
 
 
 def main() -> None:
@@ -168,8 +188,10 @@ def main() -> None:
         "characters": [c[0] for c in CHARS],
         "files": files,
         "note": (
-            "f0 = metal-free A-pose still; f1–f3 = deeper opposite-leg stride punch "
-            "+ oil-paint grade past #172. Not full painterly. Elara jewelry exception only."
+            "Run recal: f0–f3 = one natural stride cycle from the metal-free A-pose "
+            "(f0 passing, f1 left knee lift, f2 flight, f3 right knee lift), shared mild grade, played at "
+            "bind billRate FPS (billRate/4 strides/s). Not full painterly. "
+            "Elara jewelry exception only."
         ),
     }
     (OUT / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n")
