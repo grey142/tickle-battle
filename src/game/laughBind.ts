@@ -51,18 +51,81 @@ for (const [path, bind] of Object.entries(mods)) {
   if (bind.slug) bySlug[bind.slug] = bind;
 }
 
-const FALLBACK: LaughBind = {
+/**
+ * Sane absolute laugh ranges (recalibrated from compounded ×1.06 drift past #176).
+ * Rates are rad/s for the squirm sine (Humanoid) and frames/s for the billboard cycle.
+ */
+export const LAUGH_FPS_MIN = 8;
+export const LAUGH_FPS_MAX = 24;
+export const LAUGH_RATE_MIN = 8;
+export const LAUGH_RATE_MAX = 24;
+/** Joint squirm amplitude (radians-ish multiplier input). */
+export const LAUGH_AMP_MAX = 0.2;
+/** Lean in radians (~6.9°) — a few degrees at most. */
+export const LAUGH_LEAN_MAX = 0.12;
+/** Billboard shake as fraction of billboard size. */
+export const LAUGH_SHAKE_MAX = 0.2;
+
+const clamp = (v: number, lo: number, hi: number) =>
+  Number.isFinite(v) ? Math.max(lo, Math.min(hi, v)) : lo;
+
+/**
+ * Runtime guard: clamp a stage into sane ranges so future drift cannot silently
+ * break the laugh cycle again. Warns once per bind in dev when anything was clamped.
+ */
+export function sanitizeLaughStage(p: LaughStageParams, who = "?"): LaughStageParams {
+  const out: LaughStageParams = {
+    ...p,
+    staminaMin: clamp(p.staminaMin, 0, 100),
+    rate: clamp(p.rate, LAUGH_RATE_MIN, LAUGH_RATE_MAX),
+    amp: clamp(p.amp, 0, LAUGH_AMP_MAX),
+    lean: clamp(p.lean, 0, LAUGH_LEAN_MAX),
+    billShake: clamp(p.billShake, 0, LAUGH_SHAKE_MAX),
+    billRate: clamp(p.billRate, LAUGH_FPS_MIN, LAUGH_FPS_MAX),
+    blend: p.blend
+      ? {
+          jaw: clamp(p.blend.jaw, 0, 1),
+          cheek: clamp(p.blend.cheek, 0, 1),
+          eye: clamp(p.blend.eye, 0, 1),
+          brow: clamp(p.blend.brow, 0, 1),
+        }
+      : undefined,
+  };
+  if (import.meta.env?.DEV) {
+    const drift =
+      out.rate !== p.rate ||
+      out.amp !== p.amp ||
+      out.lean !== p.lean ||
+      out.billShake !== p.billShake ||
+      out.billRate !== p.billRate ||
+      (p.blend && out.blend && JSON.stringify(out.blend) !== JSON.stringify(p.blend));
+    if (drift) console.warn(`[laughBind] ${who}: stage values out of sane range — clamped`, p, out);
+  }
+  return out;
+}
+
+function sanitizeLaughBind(bind: LaughBind): LaughBind {
+  const stages = {} as Record<LaughStageId, LaughStageParams>;
+  for (const id of ["s0", "s1", "s2", "s3"] as LaughStageId[]) {
+    stages[id] = sanitizeLaughStage(bind.stages[id], `${bind.slug}.${id}`);
+  }
+  return { ...bind, stages };
+}
+
+for (const key of Object.keys(bySlug)) bySlug[key] = sanitizeLaughBind(bySlug[key]);
+
+const FALLBACK: LaughBind = sanitizeLaughBind({
   clip: "laugh_squirm",
   slug: "default",
   display: "Default",
   stages: {
-    s0: { staminaMin: 70, rate: 125.62, amp: 0.6482, lean: 0.7984, billShake: 0.4947, billRate: 158.67, blend: { jaw: 1.0, cheek: 1.0, eye: 1.0, brow: 1.0 } },
-    s1: { staminaMin: 40, rate: 174.11, amp: 1.1449, lean: 1.4454, billShake: 0.9950, billRate: 207.19, blend: { jaw: 1.0, cheek: 1.0, eye: 1.0, brow: 1.0 } },
-    s2: { staminaMin: 15, rate: 220.53, amp: 1.6378, lean: 1.9294, billShake: 1.4987, billRate: 253.69, blend: { jaw: 1.0, cheek: 1.0, eye: 1.0, brow: 1.0 } },
-    s3: { staminaMin: 0, rate: 253.34, amp: 2.1137, lean: 2.4049, billShake: 1.9757, billRate: 303.20, blend: { jaw: 1.0, cheek: 1.0, eye: 1.0, brow: 1.0 } },
+    s0: { staminaMin: 70, rate: 8, amp: 0.04, lean: 0.03, billShake: 0.03, billRate: 10, blend: { jaw: 0.26, cheek: 0.14, eye: 0.21, brow: 0.09 } },
+    s1: { staminaMin: 40, rate: 11, amp: 0.07, lean: 0.05, billShake: 0.06, billRate: 13, blend: { jaw: 0.51, cheek: 0.34, eye: 0.46, brow: 0.2 } },
+    s2: { staminaMin: 15, rate: 14, amp: 0.1, lean: 0.07, billShake: 0.09, billRate: 16, blend: { jaw: 0.85, cheek: 0.6, eye: 0.78, brow: 0.35 } },
+    s3: { staminaMin: 0, rate: 16, amp: 0.13, lean: 0.09, billShake: 0.12, billRate: 19, blend: { jaw: 1.0, cheek: 0.92, eye: 1.0, brow: 0.54 } },
   },
   hubPreviewMs: 2000,
-};
+});
 
 export function laughBindForSlug(slug?: string): LaughBind {
   if (!slug) return FALLBACK;
@@ -135,6 +198,29 @@ export function laughStageForStamina(bind: LaughBind, staminaPct: number): Laugh
 
 export function laughParams(bind: LaughBind, staminaPct: number): LaughStageParams {
   return bind.stages[laughStageForStamina(bind, staminaPct)];
+}
+
+/**
+ * Real stamina→frame ramp over normalized stamina 0–1 (1 = fresh, 0 = drained).
+ * Evenly spaced across the cycle with a mild ease so frames climb f0 → f(n-1):
+ * returns the [lo, hi] window to alternate between (hi = lo + 1, last frame locks).
+ */
+export function laughFrameWindow(frameCount: number, stamina01: number): [number, number] {
+  const n = Math.max(1, Math.floor(frameCount));
+  if (n === 1) return [0, 0];
+  const s = clamp(stamina01, 0, 1);
+  // Mild ease-in on drain so the high-stamina window holds a touch longer.
+  const drain = Math.pow(1 - s, 1.15);
+  const lo = Math.min(n - 1, Math.floor(drain * n));
+  const hi = Math.min(n - 1, lo + 1);
+  return [lo, hi];
+}
+
+/** Billboard frame-cycle rate: stage billRate, climbing with drain, clamped 8–24 fps. */
+export function laughFrameFps(billRate: number | undefined, stamina01: number): number {
+  const s = clamp(stamina01, 0, 1);
+  const base = clamp(billRate ?? 14, LAUGH_FPS_MIN, LAUGH_FPS_MAX);
+  return clamp(base * (0.85 + 0.3 * (1 - s)), LAUGH_FPS_MIN, LAUGH_FPS_MAX);
 }
 
 export function listedLaughSlugs(): string[] {

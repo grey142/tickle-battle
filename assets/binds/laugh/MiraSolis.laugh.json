@@ -7,62 +7,62 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 137.9756,
-      "amp": 0.6567,
-      "lean": 1.0512,
-      "billShake": 0.7067,
-      "billRate": 168.705,
+      "rate": 8.66,
+      "amp": 0.0405,
+      "lean": 0.0363,
+      "billShake": 0.0385,
+      "billRate": 10.5,
       "still": "stages/MiraSolis_s0.jpg",
       "blend": {
-        "jaw": 1.0,
-        "cheek": 1.0,
-        "eye": 1.0,
-        "brow": 1.0
+        "jaw": 0.267,
+        "cheek": 0.145,
+        "eye": 0.218,
+        "brow": 0.097
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 200.6974,
-      "amp": 1.095,
-      "lean": 1.839,
-      "billShake": 1.4105,
-      "billRate": 216.9066,
+      "rate": 12.6,
+      "amp": 0.0675,
+      "lean": 0.0635,
+      "billShake": 0.077,
+      "billRate": 13.5,
       "still": "stages/MiraSolis_s1.jpg",
       "blend": {
-        "jaw": 1.0,
-        "cheek": 1.0,
-        "eye": 1.0,
-        "brow": 1.0
+        "jaw": 0.483,
+        "cheek": 0.322,
+        "eye": 0.438,
+        "brow": 0.184
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 250.8676,
-      "amp": 1.4608,
-      "lean": 2.63,
-      "billShake": 2.021,
-      "billRate": 241.0128,
+      "rate": 15.75,
+      "amp": 0.09,
+      "lean": 0.0907,
+      "billShake": 0.11,
+      "billRate": 15,
       "still": "stages/MiraSolis_s2.jpg",
       "blend": {
-        "jaw": 1.0,
-        "cheek": 1.0,
-        "eye": 1.0,
-        "brow": 1.0
+        "jaw": 0.807,
+        "cheek": 0.57,
+        "eye": 0.736,
+        "brow": 0.333
       }
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 288.5022,
-      "amp": 1.8247,
-      "lean": 3.1539,
-      "billShake": 2.7246,
-      "billRate": 289.2132,
+      "rate": 18.11,
+      "amp": 0.1125,
+      "lean": 0.1089,
+      "billShake": 0.1485,
+      "billRate": 18.0,
       "still": "stages/MiraSolis_s3.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 1.0,
+        "cheek": 0.852,
         "eye": 1.0,
-        "brow": 1.0
+        "brow": 0.497
       }
     }
   },

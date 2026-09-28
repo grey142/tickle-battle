@@ -7,62 +7,62 @@
   "stages": {
     "s0": {
       "staminaMin": 70,
-      "rate": 134.91,
-      "amp": 0.6567,
-      "lean": 0.859,
-      "billShake": 0.5791,
-      "billRate": 168.705,
+      "rate": 8.47,
+      "amp": 0.0405,
+      "lean": 0.0297,
+      "billShake": 0.0315,
+      "billRate": 10.5,
       "still": "stages/ElaraCase_s0.jpg",
       "blend": {
-        "jaw": 1.0,
-        "cheek": 1.0,
-        "eye": 1.0,
-        "brow": 1.0
+        "jaw": 0.264,
+        "cheek": 0.144,
+        "eye": 0.216,
+        "brow": 0.097
       }
     },
     "s1": {
       "staminaMin": 40,
-      "rate": 196.23,
-      "amp": 1.095,
-      "lean": 1.507,
-      "billShake": 1.1571,
-      "billRate": 216.9066,
+      "rate": 12.32,
+      "amp": 0.0675,
+      "lean": 0.052,
+      "billShake": 0.063,
+      "billRate": 13.5,
       "still": "stages/ElaraCase_s1.jpg",
       "blend": {
-        "jaw": 1.0,
-        "cheek": 1.0,
-        "eye": 1.0,
-        "brow": 1.0
+        "jaw": 0.478,
+        "cheek": 0.318,
+        "eye": 0.432,
+        "brow": 0.182
       }
     },
     "s2": {
       "staminaMin": 15,
-      "rate": 245.296,
-      "amp": 1.4608,
-      "lean": 2.1513,
-      "billShake": 1.6513,
-      "billRate": 241.0128,
+      "rate": 15.4,
+      "amp": 0.09,
+      "lean": 0.0743,
+      "billShake": 0.09,
+      "billRate": 15,
       "still": "stages/ElaraCase_s2.jpg",
       "blend": {
-        "jaw": 1.0,
-        "cheek": 1.0,
-        "eye": 1.0,
-        "brow": 1.0
+        "jaw": 0.795,
+        "cheek": 0.561,
+        "eye": 0.725,
+        "brow": 0.328
       }
     },
     "s3": {
       "staminaMin": 0,
-      "rate": 282.0907,
-      "amp": 1.8247,
-      "lean": 2.5794,
-      "billShake": 2.2285,
-      "billRate": 289.2132,
+      "rate": 17.71,
+      "amp": 0.1125,
+      "lean": 0.0891,
+      "billShake": 0.1215,
+      "billRate": 18.0,
       "still": "stages/ElaraCase_s3.jpg",
       "blend": {
         "jaw": 1.0,
-        "cheek": 1.0,
+        "cheek": 0.947,
         "eye": 1.0,
-        "brow": 1.0
+        "brow": 0.553
       }
     }
   },
