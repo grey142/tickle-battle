@@ -1,4 +1,6 @@
-/** Amateur Team Quick SFX — procedural sample pack + oscillator fallbacks (vanish-v33). */
+/** Amateur Team Quick SFX — procedural sample pack + oscillator fallbacks (vanish-recal). */
+
+import { SFX_REAPPEAR_GAIN, SFX_VANISH_GAIN, TICK_FREQ, TICK_RATE } from "./constants";
 
 type CueId =
   | "tickle-lock"
@@ -92,7 +94,8 @@ function playBuffer(id: CueId, gain = 0.7, rate = 1): boolean {
     src.playbackRate.setValueAtTime(Math.max(0.5, Math.min(2, rate)), t0);
     // Soft attack envelope so sample stingers don't click on start.
     g.gain.setValueAtTime(0.0001, t0);
-    g.gain.exponentialRampToValueAtTime(Math.max(0.0001, gain), t0 + 0.006);
+    // Runtime guard: sample gains never exceed unity (no WebAudio clipping).
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0001, Math.min(1, gain)), t0 + 0.006);
     src.connect(g);
     g.connect(a.destination);
     src.start(t0);
@@ -197,21 +200,11 @@ export function stingStart() {
 
 /** Nearby reappear tell — bright rising ping (`public/sfx/reappear`). */
 export function stingReappear() {
-  playCue("reappear", 3.50, () => {
-    sting(1560, 0.058, "sine", 0.068, 0, 3800);
-    sting(2700, 0.052, "sine", 0.116, 0.003);
-    sting(4050, 0.066, "triangle", 0.096, 0.01);
-    sting(5400, 0.048, "sine", 0.072, 0.022);
-    sting(6750, 0.04, "sine", 0.06, 0.034);
-    sting(8100, 0.03, "sine", 0.046, 0.048);
-    sting(9450, 0.024, "sine", 0.03, 0.062);
-    sting(10800, 0.02, "sine", 0.024, 0.078);
-    sting(12150, 0.016, "sine", 0.018, 0.092);
-    sting(13500, 0.012, "sine", 0.014, 0.106);
-    sting(14850, 0.008, "sine", 0.01, 0.118);
-    sting(16200, 0.006, "sine", 0.006, 0.128);
-    sting(17550, 0.004, "sine", 0.0035, 0.138);
-    sting(18900, 0.003, "sine", 0.0025, 0.148);
+  playCue("reappear", SFX_REAPPEAR_GAIN, () => {
+    sting(640, 0.09, "sine", 0.038, 0, 1420);
+    sting(1120, 0.08, "sine", 0.052, 0.018);
+    sting(1680, 0.1, "triangle", 0.034, 0.04);
+    sting(2240, 0.08, "sine", 0.02, 0.07);
   });
 }
 
@@ -230,73 +223,34 @@ export function stingEscape() {
 
 /** Falling whoosh-out — vanish (`public/sfx/vanish`). */
 export function stingVanish() {
-  playCue("vanish", 3.60, () => {
-    sting(10, 0.4, "sine", 0.14);
-    sting(1240, 0.92, "sine", 0.132, 0.004, 7.5);
-    sting(860, 0.78, "triangle", 0.1, 0.018, 6.5);
-    sting(510, 0.72, "sawtooth", 0.068, 0.038, 5.5);
-    sting(340, 0.66, "sine", 0.056, 0.07, 4.0);
-    sting(210, 0.6, "sine", 0.05, 0.105, 3.0);
-    sting(150, 0.54, "sine", 0.044, 0.145, 2.5);
-    sting(110, 0.5, "sine", 0.038, 0.19, 2.0);
-    sting(76, 0.46, "sine", 0.032, 0.24, 1.4);
-    sting(56, 0.42, "sine", 0.02, 0.29, 1.0);
-    sting(44, 0.36, "sine", 0.016, 0.34, 0.74);
-    sting(36, 0.3, "sine", 0.012, 0.4, 0.58);
-    sting(28, 0.24, "sine", 0.008, 0.46, 0.44);
-    sting(22, 0.16, "sine", 0.005, 0.52, 0.32);
-    sting(18, 0.12, "sine", 0.0035, 0.58, 0.24);
-    sting(14, 0.08, "sine", 0.0025, 0.64, 0.18);
+  playCue("vanish", SFX_VANISH_GAIN, () => {
+    sting(78, 0.12, "sine", 0.045);
+    sting(680, 0.4, "sine", 0.058, 0.02, 46);
+    sting(440, 0.3, "triangle", 0.038, 0.05, 34);
+    sting(300, 0.24, "sawtooth", 0.022, 0.09, 28);
+    sting(190, 0.2, "sine", 0.016, 0.14, 24);
   });
 }
 
 /**
  * Soft countdown beat — last ~3s spawn / leave / vanish clock (`public/sfx/countdown-tick`).
- * @param gain linear peak
- * @param step HUD ceil 3/2/1 (pitches up toward 1); omit/other = neutral
- * @param soft vanish-clock mode: slightly lower pitch so it stays a tell vs spawn alarm
+ * Called once per HUD second, so ticks land ~1 s apart.
+ * @param gain linear peak (clamped to <= 1)
+ * @param step HUD ceil 3/2/1 (pitches up gently toward 1); other = neutral (2)
+ * @param soft vanish-clock mode: a little lower so it reads as a tell, not the spawn alarm
  */
 export function stingCountdownTick(gain = 0.48, step = 2, soft = false) {
-  // Wider rate ladder than #173 so 3→2→1 is unmistakable.
-  let rate = step <= 1 ? 7.15 : step === 2 ? 0.36 : 0.007;
-  let freq = step <= 1 ? 4000 : step === 2 ? 360 : 32;
-  if (soft) {
-    // Stronger soft-mode detune so vanish clock stays a tell vs spawn alarm.
-    rate *= 0.10;
-    freq *= 0.07;
-  }
+  const i = step <= 1 ? 2 : step === 2 ? 1 : 0;
+  const g = Math.max(0, Math.min(1, gain));
+  const rate = TICK_RATE[i] * (soft ? 0.9 : 1);
+  const freq = TICK_FREQ[i] * (soft ? 0.85 : 1);
   playCue(
     "countdown-tick",
-    gain,
+    g,
     () => {
-      sting(freq, 0.038, "sine", Math.min(0.08, gain * 0.15));
-      sting(freq * 1.5, 0.018, "triangle", Math.min(0.046, gain * 0.08), 0.006);
-      if (step <= 1) {
-        sting(freq * 2, 0.014, "sine", soft ? 0.004 : 0.044, 0.016);
-        sting(freq * 2.5, 0.011, "triangle", soft ? 0.002 : 0.032, 0.028);
-        if (!soft) {
-          sting(freq * 3, 0.01, "sine", 0.022, 0.04);
-          sting(freq * 3.5, 0.008, "triangle", 0.018, 0.05);
-          sting(freq * 4, 0.007, "sine", 0.014, 0.06);
-          sting(freq * 4.5, 0.006, "sine", 0.01, 0.072);
-          sting(freq * 5, 0.005, "triangle", 0.007, 0.084);
-          sting(freq * 5.5, 0.004, "sine", 0.005, 0.094);
-          sting(freq * 6, 0.003, "triangle", 0.003, 0.104);
-        }
-      } else if (step === 2) {
-        sting(freq * 2, 0.011, "sine", soft ? 0.002 : 0.026, 0.018);
-        if (!soft) {
-          sting(freq * 2.5, 0.01, "triangle", 0.02, 0.032);
-          sting(freq * 3, 0.008, "sine", 0.015, 0.044);
-          sting(freq * 3.5, 0.006, "triangle", 0.011, 0.056);
-          sting(freq * 4, 0.005, "sine", 0.007, 0.068);
-          sting(freq * 4.5, 0.004, "triangle", 0.005, 0.08);
-          sting(freq * 5, 0.003, "sine", 0.003, 0.09);
-        }
-      } else if (!soft) {
-        // Step 3: soft wood body only — no upper sparkle.
-        sting(freq * 0.5, 0.052, "triangle", Math.min(0.032, gain * 0.056), 0.003);
-      }
+      sting(freq, 0.055, "sine", Math.min(0.058, g * 0.11));
+      sting(freq * 1.5, 0.032, "triangle", Math.min(0.032, g * 0.06), 0.016);
+      if (step <= 1 && !soft) sting(freq * 2, 0.028, "sine", 0.022, 0.03);
     },
     rate,
   );

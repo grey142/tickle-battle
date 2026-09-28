@@ -34,11 +34,61 @@ export const FLASH_T = 1;
 export const REGEN_DELAY = 3;
 export const REGEN_PS = 6;
 export const CONTACT_GRACE = 0.25;
-/** Both-ways after vanish; does not stack with vanish remaining. Then leftover overlap still needs a fresh rear/pack edge. */
-export const REAPPEAR_IGNORE = 2.62;
-/** Nearby band for reappear sound + white rim flash (not rose). */
-export const REAPPEAR_TELL = 47;
-export const REAPPEAR_FLASH = 2.48;
+/**
+ * Load-time range guard for tuning constants (vanish-recal). Out-of-range values are
+ * clamped and warned once, so compounded nudges can't silently drift into broken ranges.
+ */
+export function tuned(name: string, v: number, lo: number, hi: number): number {
+  if (!Number.isFinite(v)) {
+    console.warn(`[tuning] ${name}=${v} not finite; using ${lo}`);
+    return lo;
+  }
+  if (v < lo || v > hi) {
+    const c = Math.min(hi, Math.max(lo, v));
+    console.warn(`[tuning] ${name}=${v} outside [${lo}, ${hi}]; clamped to ${c}`);
+    return c;
+  }
+  return v;
+}
+
+/** Seconds of both-ways ignore after vanish; does not stack with vanish remaining. Then leftover overlap still needs a fresh rear/pack edge. */
+export const REAPPEAR_IGNORE = tuned("REAPPEAR_IGNORE", 0.85, 0.3, 2);
+/** Distance (m) from the player within which a reappear plays the sound + toast. */
+export const REAPPEAR_TELL = tuned("REAPPEAR_TELL", 12, 4, 20);
+/** Seconds the white reappear rim stays lit. */
+export const REAPPEAR_FLASH = tuned("REAPPEAR_FLASH", 0.5, 0.2, 1.2);
+/** PointLight intensity of the white reappear rim (normal team rim is 2.2). */
+export const REAPPEAR_RIM = tuned("REAPPEAR_RIM", 6.8, 3, 10);
+
+/*
+ * Five-frame tickle intensity (Support 4, vanish-recal). Intensity is 0..1:
+ * f0–f1 below 0.2, f1–f2 to 0.4, f2–f3 to 0.6, f3–f4 to 0.8, f3/f4 peak lean above 0.8.
+ */
+export const TICKLE_BANDS: readonly number[] = [0.2, 0.4, 0.6, 0.8].map((b, i) =>
+  tuned(`TICKLE_BANDS[${i}]`, b, 0.05 + i * 0.2, 0.35 + i * 0.2),
+);
+/** Hysteresis around each band edge (0..1 units) so edges don't thrash frames. */
+export const TICKLE_HYST = tuned("TICKLE_HYST", 0.035, 0, 0.08);
+/** Smoothing rates (1/s): climb into harder windows a bit faster than easing out. */
+export const TICKLE_CLIMB = tuned("TICKLE_CLIMB", 8.2, 1, 20);
+export const TICKLE_EASE = tuned("TICKLE_EASE", 5.4, 1, 20);
+/** Symmetric S-curve exponent on victim drain (1 = linear). */
+export const TICKLE_CONTRAST_POW = tuned("TICKLE_CONTRAST_POW", 1.28, 1, 2);
+/** Additive intensity per extra tickler in the pack, and its cap. */
+export const TICKLE_PACK_BOOST = tuned("TICKLE_PACK_BOOST", 0.04, 0, 0.08);
+export const TICKLE_PACK_BOOST_CAP = tuned("TICKLE_PACK_BOOST_CAP", 0.16, 0, 0.25);
+
+/** Vanish / reappear sample gains (linear, <= 1 so WebAudio never clips). */
+export const SFX_VANISH_GAIN = tuned("SFX_VANISH_GAIN", 0.78, 0, 1);
+export const SFX_REAPPEAR_GAIN = tuned("SFX_REAPPEAR_GAIN", 0.74, 0, 1);
+/** Countdown tick playbackRate + fallback pitch (Hz) for HUD ceil 3 / 2 / 1. */
+export const TICK_RATE: readonly number[] = [0.9, 1.0, 1.12].map((r, i) => tuned(`TICK_RATE[${i}]`, r, 0.75, 1.35));
+export const TICK_FREQ: readonly number[] = [560, 700, 860].map((f, i) => tuned(`TICK_FREQ[${i}]`, f, 300, 1400));
+/** Spawn countdown tick gains for ceil 3 / 2 / 1, and the softer player-vanish clock. */
+export const TICK_GAIN: readonly number[] = [0.42, 0.54, 0.68].map((g, i) => tuned(`TICK_GAIN[${i}]`, g, 0.1, 1));
+export const VANISH_TICK_GAIN: readonly number[] = [0.26, 0.32, 0.4].map((g, i) =>
+  tuned(`VANISH_TICK_GAIN[${i}]`, g, 0.05, 1),
+);
 
 export const BASE = { stamina: 3, struggle: 3, tickle: 3 };
 export const K_STAMINA = 28;

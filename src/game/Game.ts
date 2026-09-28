@@ -16,7 +16,13 @@ import {
   REGEN_PS,
   REAPPEAR_FLASH,
   REAPPEAR_IGNORE,
+  REAPPEAR_RIM,
   REAPPEAR_TELL,
+  TICK_GAIN,
+  TICKLE_CONTRAST_POW,
+  TICKLE_PACK_BOOST,
+  TICKLE_PACK_BOOST_CAP,
+  VANISH_TICK_GAIN,
   RESPAWN_IGNORE,
   SPEED,
   TAP_CD,
@@ -299,8 +305,8 @@ export class Game {
       const ceil = Math.ceil(this.countdown);
       if (ceil <= 3 && ceil >= 1 && ceil !== this.countdownTickCeil) {
         this.countdownTickCeil = ceil;
-        // Louder + higher pitch toward 1 (past #96).
-        const gain = ceil === 1 ? 1.52 : ceil === 2 ? 1.0 : 0.035;
+        // One tick per second on the last 3s; slightly louder + higher toward 1 (all <= 1).
+        const gain = TICK_GAIN[3 - ceil];
         stingCountdownTick(gain, ceil);
       }
     }
@@ -310,7 +316,7 @@ export class Game {
       if (vCeil <= 3 && vCeil >= 1 && vCeil !== this.vanishTickCeil) {
         this.vanishTickCeil = vCeil;
         // Quieter + soft-mode pitch so vanish clock stays a tell, not an alarm.
-        const gain = vCeil === 1 ? 0.14 : vCeil === 2 ? 0.06 : 0.025;
+        const gain = VANISH_TICK_GAIN[3 - vCeil];
         stingCountdownTick(gain, vCeil, true);
       }
     } else {
@@ -967,8 +973,8 @@ export class Game {
     }
     this.updateVisibility();
     for (const f of this.fighters) {
-      // Intensity for tickle frame windows: low victim stamina → harder f3/f4.
-      // Stronger contrast stretch than #99 so soft/hard ends map clearer; pack size nudges ladder.
+      // Intensity for tickle frame windows (vanish-recal): victim drain 0..1 through a gentle
+      // S-curve, plus a small additive pack-size boost. Full stamina → f0/f1, drained → f4.
       if (
         (f.occupancy === "tickler" || (f.occupancy === "nudge" && f.joinOn >= 0)) &&
         f.joinOn >= 0
@@ -977,11 +983,13 @@ export class Game {
         if (v && v.maxStamina > 0) {
           const raw = Math.max(0, Math.min(100, 100 - (100 * v.stamina) / v.maxStamina)) / 100;
           const contrasted =
-            raw < 0.5 ? 0.5 * Math.pow(raw * 2, 7.15) : 1 - 0.5 * Math.pow((1 - raw) * 2, 7.15);
-          // Clearer pack-size boost past #173 so 1→5 ticklers climb the five-frame ladder with drain.
+            raw < 0.5
+              ? 0.5 * Math.pow(raw * 2, TICKLE_CONTRAST_POW)
+              : 1 - 0.5 * Math.pow((1 - raw) * 2, TICKLE_CONTRAST_POW);
           const packN = (this.joinList.get(v.id) ?? []).length;
-          const packBoost = Math.min(1.0, Math.max(0, packN - 1) * 0.29);
-          f.tickleIntensity = Math.min(100, (contrasted + packBoost) * 100);
+          const packBoost = Math.min(TICKLE_PACK_BOOST_CAP, Math.max(0, packN - 1) * TICKLE_PACK_BOOST);
+          // Floor at 0.01 so a fresh (full-stamina) victim reads as light, not as "unstamped".
+          f.tickleIntensity = Math.max(0.01, Math.min(100, (contrasted + packBoost) * 100));
         } else {
           f.tickleIntensity = 0;
         }
@@ -1049,6 +1057,7 @@ export class Game {
         rising: !!(bait && p && this.risingBlocked(p, bait)),
         pairCd: bait && p ? +(this.pairCd.get(pairKey(p.id, bait.id)) ?? 0).toFixed(2) : 0,
         reappearFlash: p ? +p.reappearFlash.toFixed(2) : 0,
+        tickle: p ? p.tickleDebug() : null,
         vanishHud: p?.occupancy === "vanished",
         bait: bait
           ? {
@@ -1785,7 +1794,7 @@ export class Game {
       if (f.reappearFlash > 0) {
         f.reappearFlash = Math.max(0, f.reappearFlash - dt);
         f.rim.color.set(0xffffff);
-        f.rim.intensity = 32.0;
+        f.rim.intensity = REAPPEAR_RIM;
       }
       if (f.occupancy === "vanished") {
         f.vanishLeft = Math.max(0, f.vanishLeft - dt);
