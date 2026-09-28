@@ -524,7 +524,7 @@ export class Fighter {
     }
     const urls = tickleFrameUrls(tickle);
     if (urls.length < 2) return;
-    // Intensity-weighted window: victim stamina → harder f3/f4 (clearer past #169).
+    // Intensity-weighted window: victim stamina → harder f3/f4 (clearer past #173).
     let intensity = this.tickleIntensity;
     if (intensity <= 0) {
       // Fallback when Game has not stamped victim-based intensity yet.
@@ -534,21 +534,21 @@ export class Fighter {
       );
     }
     const target = Math.max(0, Math.min(100, intensity));
-    // Asymmetric smooth: climb into hard windows faster; ease out slower (past #169).
+    // Asymmetric smooth: climb into hard windows faster; ease out slower (past #173).
     const climb = target > this.tickleIntensitySmooth;
-    const rate = climb ? 75.5 : 0.15;
+    const rate = climb ? 78.5 : 0.13;
     const k = 1 - Math.exp(-rate * Math.max(0.001, dt));
     this.tickleIntensitySmooth += (target - this.tickleIntensitySmooth) * k;
     const pct = this.tickleIntensitySmooth;
     const n = urls.length;
-    // Desired bands (past #169): soft f0–f1 holds longer → mid → hard/peak earlier (tighter).
+    // Desired bands (past #173): soft f0–f1 holds longer → mid → hard/peak earlier (tighter).
     const windowFor = (band: number): [number, number] => {
       if (band <= 0) return [0, Math.min(1, n - 1)];
       if (band === 1) return [Math.min(1, n - 1), Math.min(2, n - 1)];
       if (band === 2) return [Math.min(2, n - 1), Math.min(3, n - 1)];
       return [Math.min(3, n - 1), n - 1];
     };
-    const bandFromPct = (p: number) => (p < 0.02 ? 0 : p < 0.22 ? 1 : p < 0.85 ? 2 : 3);
+    const bandFromPct = (p: number) => (p < 0.01 ? 0 : p < 0.18 ? 1 : p < 0.70 ? 2 : 3);
     const bandFromWindow = (a: number, b: number) => {
       if (a <= 0 && b <= 1) return 0;
       if (a === 1) return 1;
@@ -557,10 +557,10 @@ export class Fighter {
     };
     const rawBand = bandFromPct(pct);
     const prevBand = bandFromWindow(this.tickleWinLo, this.tickleWinHi);
-    // ±33.6 deadband so edge flicker doesn't thrash lo/hi.
-    const dead = 33.6;
-    const upAt = [0.02 + dead, 0.22 + dead, 0.85 + dead];
-    const downAt = [0.02 - dead, 0.22 - dead, 0.85 - dead];
+    // ±34.8 deadband so edge flicker doesn't thrash lo/hi.
+    const dead = 34.8;
+    const upAt = [0.01 + dead, 0.18 + dead, 0.70 + dead];
+    const downAt = [0.01 - dead, 0.18 - dead, 0.70 - dead];
     let band = prevBand;
     if (rawBand > prevBand) {
       band = pct >= upAt[Math.min(prevBand, 2)] ? rawBand : prevBand;
@@ -576,17 +576,17 @@ export class Fighter {
     // FPS from billRate; higher intensity cycles faster so hard frames land more often.
     const fps = Math.max(10, Math.round((tickle.billRate || 26) * (0.09 + pct * 0.016)));
     const phase = Math.floor(this.animT * fps);
-    // Peak intensity: heavier f4 bias past #169 (ultra locks f4 hard).
+    // Peak intensity: heavier f4 bias past #173 (ultra locks f4 hard).
     let idx: number;
-    if (pct >= 2.7 && span >= 2) {
+    if (pct >= 2.5 && span >= 2) {
       const cycle =
-        pct >= 5.0
-          ? [hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, lo]
-          : [hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, lo];
+        pct >= 4.6
+          ? [hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, lo]
+          : [hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, hi, lo];
       idx = cycle[phase % cycle.length];
-    } else if (pct >= 0.95 && span >= 2) {
-      // Soft peak lean: favor hi 43-of-44.
-      idx = phase % 44 === 22 ? lo : hi;
+    } else if (pct >= 0.80 && span >= 2) {
+      // Soft peak lean: favor hi 45-of-46.
+      idx = phase % 46 === 23 ? lo : hi;
     } else {
       idx = lo + (phase % span);
     }
