@@ -100,7 +100,7 @@ export function tickBot(
   if (bot.role === "ambusher" || bot.role === "flanker") {
     behind.add(new THREE.Vector3(-target.forward().z, 0, target.forward().x).multiplyScalar(1.4));
   }
-  steerTo(bot, map, map.laneRoute(bot.pos, behind), dt);
+  steerTo(bot, map, passClearOfPlayer(bot, player, map.laneRoute(bot.pos, behind), liveT), dt);
 
   if (touching(bot, target)) {
     if (target.occupancy === "ticklee") {
@@ -112,6 +112,49 @@ export function tickBot(
   void TAP_CD;
   void PILE_CD;
   void now;
+}
+
+/** Teammates pass the player's camera at least this far away while leaving spawn. */
+const PASS_CLEAR = 2.5;
+/** Window after the spawn lock releases in which teammates route around the player. */
+const PASS_CLEAR_T = 6;
+
+/**
+ * Post-lock clearance: teammates start in a wedge behind the player (#184) and run for
+ * the lane on release. If the straight leg to their next goal would pass within
+ * PASS_CLEAR of the player, aim at a detour point beside the player instead, on the
+ * side the bot is already on, so nobody runs through or brushes the camera.
+ */
+function passClearOfPlayer(
+  bot: Fighter,
+  player: Fighter | undefined,
+  dest: THREE.Vector3,
+  liveT: number,
+): THREE.Vector3 {
+  if (!player || player.team !== bot.team || liveT > PASS_CLEAR_T) return dest;
+  const ax = bot.pos.x;
+  const az = bot.pos.z;
+  const dx = dest.x - ax;
+  const dz = dest.z - az;
+  const len2 = dx * dx + dz * dz;
+  if (len2 < 1e-4) return dest;
+  const px = player.pos.x - ax;
+  const pz = player.pos.z - az;
+  const t = (px * dx + pz * dz) / len2;
+  if (t <= 0 || t >= 1) return dest;
+  const cx = ax + dx * t - player.pos.x;
+  const cz = az + dz * t - player.pos.z;
+  if (Math.hypot(cx, cz) >= PASS_CLEAR) return dest;
+  // Perpendicular to the leg, toward the bot's current side of the player.
+  const len = Math.sqrt(len2);
+  let nx = -dz / len;
+  let nz = dx / len;
+  if (nx * -px + nz * -pz < 0) {
+    nx = -nx;
+    nz = -nz;
+  }
+  const off = PASS_CLEAR + 1;
+  return new THREE.Vector3(player.pos.x + nx * off, dest.y, player.pos.z + nz * off);
 }
 
 function parkBait(bot: Fighter, map: MapWorld, dt: number) {
