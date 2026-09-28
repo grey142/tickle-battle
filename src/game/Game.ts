@@ -354,6 +354,7 @@ export class Game {
 
   /** Clear countdown/combat maps so Leave → plaza never leaks match state into hub. */
   private resetMatchEphemeral() {
+    this.lastPlayerCancel = { id: -1, t: -99 };
     this.countdownTickCeil = -1;
     this.vanishTickCeil = -1;
     this.combatAnnounced = false;
@@ -596,6 +597,7 @@ export class Game {
     this.countdownTickCeil = -1;
     this.vanishTickCeil = -1;
     this.liveT = 0;
+    this.lastPlayerCancel = { id: -1, t: -99 };
     this.wallPrev = performance.now();
     this.clearFighters();
     this.lockMatchLoadout();
@@ -1507,7 +1509,7 @@ export class Game {
     const dest = this.map.findNudge(b.pos, 0.95);
     if (!dest) {
       this.pairCd.set(pairKey(a.id, b.id), CANCEL_CD);
-      if (a.isPlayer) this.say("No clear space — tickle cancelled");
+      if (a.isPlayer) this.sayCancel(b);
       blip(90, 0.1, "sawtooth", 0.04);
       return false;
     }
@@ -2387,9 +2389,25 @@ export class Game {
     }
   }
 
-  private say(t: string) {
+  private say(t: string, dur = 2.2) {
     this.toast = t;
-    this.toastT = 2.2;
+    this.toastT = dur;
+  }
+
+  /** Last no-space cancel of the player's own tickle (target id + liveT) — dedupes auto-start retries. */
+  private lastPlayerCancel = { id: -1, t: -99 };
+
+  /**
+   * Player-only "no clear space" toast, 1.5 s. Auto-start re-tries the same target every
+   * CANCEL_CD while contact holds (e.g. a rival inside the spawn pocket, where findNudge
+   * never finds space), which used to re-arm the toast forever. Toast once per streak.
+   */
+  private sayCancel(target: Fighter) {
+    const last = this.lastPlayerCancel;
+    const streak = last.id === target.id && this.liveT - last.t < 1.5;
+    this.lastPlayerCancel = { id: target.id, t: this.liveT };
+    if (streak) return;
+    this.say("No clear space — tickle cancelled", 1.5);
   }
 
   private resize() {
