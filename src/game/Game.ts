@@ -769,6 +769,8 @@ export class Game {
     return lookId === 0 ? 0 : ((lookId - 1) % Math.max(1, LOOKS.length - 1)) + 1;
   }
 
+  private plazaWasInPlaza?: boolean;
+
   private syncPlazaPreview() {
     const def = lookById(this.save.look);
     const palette = this.lookPalette(def.id);
@@ -816,8 +818,12 @@ export class Game {
       this.plazaPoseTarget.set(0, 0, 1.35);
       this.plazaYawTarget = Math.PI * 0.92;
     }
-    // First spawn / huge jumps snap; otherwise ease in tickPlazaMannequinContinuity.
-    if (this.plazaPreview.pos.distanceToSquared(this.plazaPoseTarget) > 36) {
+    // First spawn / huge jumps / plaza<->hall room change snap; otherwise ease in
+    // tickPlazaMannequinContinuity. Easing across a room change dragged the billboard
+    // through the third-person camera, so it filled the screen for a frame after Back.
+    const roomFlip = this.plazaWasInPlaza !== undefined && this.plazaWasInPlaza !== inPlaza;
+    this.plazaWasInPlaza = inPlaza;
+    if (roomFlip || this.plazaPreview.pos.distanceToSquared(this.plazaPoseTarget) > 36) {
       this.plazaPreview.pos.copy(this.plazaPoseTarget);
       this.plazaPreview.yaw = this.plazaYawTarget;
       this.plazaPreview.settle();
