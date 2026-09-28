@@ -233,4 +233,24 @@ function clearAssistGoal(
   const r = Math.max(ASSIST_CLEAR, dtp + 1.15);
   goal.x = player.pos.x + (ux / ul) * r;
   goal.z = player.pos.z + (uz / ul) * r;
+  // Coming from the other side: don't cut through the player to reach it; go around.
+  const dx = goal.x - bot.pos.x;
+  const dz = goal.z - bot.pos.z;
+  const len2 = dx * dx + dz * dz;
+  if (len2 < 1e-4) return;
+  const px = player.pos.x - bot.pos.x;
+  const pz = player.pos.z - bot.pos.z;
+  const t = (px * dx + pz * dz) / len2;
+  if (t <= 0 || t >= 1) return;
+  if (Math.hypot(bot.pos.x + dx * t - player.pos.x, bot.pos.z + dz * t - player.pos.z) >= ASSIST_CLEAR) return;
+  const len = Math.sqrt(len2);
+  let nx = -dz / len;
+  let nz = dx / len;
+  const side = nx * -px + nz * -pz;
+  if (side < 0 || (side === 0 && bot.id % 2 === 1)) {
+    nx = -nx;
+    nz = -nz;
+  }
+  goal.x = player.pos.x + nx * (ASSIST_CLEAR + 1);
+  goal.z = player.pos.z + nz * (ASSIST_CLEAR + 1);
 }
