@@ -97,8 +97,10 @@ export function tickBot(
   }
 
   const behind = target.pos.clone().add(target.forward().multiplyScalar(-1.15));
+  clearAssistGoal(bot, player, target, behind);
   if (bot.role === "ambusher" || bot.role === "flanker") {
     behind.add(new THREE.Vector3(-target.forward().z, 0, target.forward().x).multiplyScalar(1.4));
+    clearAssistGoal(bot, player, target, behind);
   }
   steerTo(bot, map, map.laneRoute(bot.pos, behind), dt);
 
@@ -200,4 +202,35 @@ function millSpawn(bot: Fighter, map: MapWorld, dt: number) {
     return;
   }
   bot.pos.y = map.groundY(bot.pos.x, bot.pos.z);
+}
+
+/** A teammate's assist goal never sits closer than this to the player (camera). */
+const ASSIST_CLEAR = 2.5;
+
+/**
+ * Teammate assist vs a rival next to the player: "behind the rival" often resolves onto
+ * the player's own spot (e.g. an amber hunter standing behind the player, facing away),
+ * so the teammate parks inside the camera. Move such a goal to the far side of the rival
+ * from the player, at least ASSIST_CLEAR from the player along the player→rival ray.
+ */
+function clearAssistGoal(
+  bot: Fighter,
+  player: Fighter | undefined,
+  target: Fighter,
+  goal: THREE.Vector3,
+) {
+  if (!player || player.team !== bot.team || target.isPlayer) return;
+  if (Math.hypot(goal.x - player.pos.x, goal.z - player.pos.z) >= ASSIST_CLEAR) return;
+  let ux = target.pos.x - player.pos.x;
+  let uz = target.pos.z - player.pos.z;
+  const dtp = Math.hypot(ux, uz);
+  if (dtp < 1e-3) {
+    // Rival on the player's exact spot: step out to the bot's own side.
+    ux = bot.pos.x - player.pos.x;
+    uz = bot.pos.z - player.pos.z;
+  }
+  const ul = Math.hypot(ux, uz) || 1;
+  const r = Math.max(ASSIST_CLEAR, dtp + 1.15);
+  goal.x = player.pos.x + (ux / ul) * r;
+  goal.z = player.pos.z + (uz / ul) * r;
 }
