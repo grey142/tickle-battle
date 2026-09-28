@@ -848,8 +848,9 @@ export class Game {
         const laughing = this.hub.laughing;
         this.plazaPreview.occupancy = laughing ? "ticklee" : "free";
         if (laughing) {
-          // Preview harder laugh morph/frames past #171 (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.000000000000000000000000000000000000000000000000000000224);
+          // Look/plaza preview sweeps stamina full → drained so the laugh cycle
+          // visibly climbs f0 → last frame (recalibrated; no tiny-constant clamp).
+          this.plazaPreview.stamina = this.plazaPreview.maxStamina * (1 - this.hub.laughProgress);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
           // Soft still-under re-enter when Look/plaza laugh preview ends.
@@ -883,8 +884,9 @@ export class Game {
         const laughing = this.hub.laughing;
         this.plazaPreview.occupancy = laughing ? "ticklee" : "free";
         if (laughing) {
-          // Preview harder laugh morph/frames past #171 (not full stamina mild window).
-          this.plazaPreview.stamina = Math.min(this.plazaPreview.stamina, this.plazaPreview.maxStamina * 0.000000000000000000000000000000000000000000000000000000224);
+          // Look/plaza preview sweeps stamina full → drained so the laugh cycle
+          // visibly climbs f0 → last frame (recalibrated; no tiny-constant clamp).
+          this.plazaPreview.stamina = this.plazaPreview.maxStamina * (1 - this.hub.laughProgress);
         } else {
           this.plazaPreview.stamina = this.plazaPreview.maxStamina;
           // Soft still-under re-enter when Look/plaza laugh preview ends.
@@ -1079,6 +1081,39 @@ export class Game {
         hub: this.hub.debugPad(),
         result: this.result,
       }),
+      /** Laugh recal verification: frame index / fps / stamina for preview + ticklees. */
+      __tbLaugh: () => {
+        const info = (f: Fighter | null | undefined) =>
+          f
+            ? {
+                name: f.name,
+                occ: f.occupancy,
+                stam: +((100 * f.stamina) / Math.max(1, f.maxStamina)).toFixed(1),
+                frame: f.laughFrameIndex,
+                fps: +f.laughFps.toFixed(2),
+              }
+            : null;
+        return {
+          preview: info(this.plazaPreview),
+          ticklees: this.fighters.filter((f) => f.occupancy === "ticklee").map(info),
+          /** Billboard scale/pos per fighter (spawn-lock oversize diagnosis). */
+          bills: this.fighters.map((f) => ({
+            name: f.name,
+            occ: f.occupancy,
+            clip: f.locomotionClip(),
+            w: f.portraitSprite ? +f.portraitSprite.scale.x.toFixed(2) : null,
+            h: f.portraitSprite ? +f.portraitSprite.scale.y.toFixed(2) : null,
+            x: f.portraitSprite ? +f.portraitSprite.position.x.toFixed(2) : null,
+            y: f.portraitSprite ? +f.portraitSprite.position.y.toFixed(2) : null,
+          })),
+        };
+      },
+      /** Laugh recal verification: set stamina % on every AI ticklee (debug only). */
+      __tbLaughStam: (pct: number) => {
+        for (const f of this.fighters) {
+          if (!f.isPlayer && f.occupancy === "ticklee") f.stamina = (f.maxStamina * Math.max(0, Math.min(100, pct))) / 100;
+        }
+      },
       __tbHold: (codes: string[]) => {
         for (const c of codes) this.input.keys.add(c);
         if (codes.includes("KeyT") || codes.includes("Space")) {

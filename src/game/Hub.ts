@@ -61,6 +61,7 @@ export class Hub {
   private shopTab: ShopTab = "weapons";
   private laughTimer = 0;
   private laughUntil = 0;
+  private laughMs = 0;
   private focus = 0;
   private arenaFocus = 0;
   private loadoutItems: { kind: "weapon" | "armor"; id: number }[] = [];
@@ -154,6 +155,13 @@ export class Hub {
 
   get laughing(): boolean {
     return performance.now() < this.laughUntil;
+  }
+
+  /** Look/plaza laugh preview progress 0 → 1 (drives a full stamina sweep). */
+  get laughProgress(): number {
+    if (!this.laughMs) return 0;
+    const left = this.laughUntil - performance.now();
+    return Math.max(0, Math.min(1, 1 - left / this.laughMs));
   }
 
   debugPad(): {
@@ -480,6 +488,7 @@ export class Hub {
     const ms = bind.hubPreviewMs ?? 2000;
     el.classList.add("laughing");
     this.laughUntil = performance.now() + ms;
+    this.laughMs = ms;
     window.clearTimeout(this.laughTimer);
     this.laughTimer = window.setTimeout(() => el.classList.remove("laughing"), ms);
   }
