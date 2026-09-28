@@ -699,9 +699,15 @@ export class Fighter {
         this.runFramePortrait = raw;
       });
   }
-  tickAnim(dt: number) {
+  /**
+   * @param dt     animation clock step (capped per frame by the caller)
+   * @param moveDt sim time the position actually moved over since the last sample. The match loop
+   *               integrates the full wallDt (up to 0.35 s in 0.05 s substeps), so dividing that
+   *               displacement by the capped 0.05 s dt inflated speed up to 7x on slow frames.
+   */
+  tickAnim(dt: number, moveDt = dt) {
     const dist = this.pos.distanceTo(this.prevPos);
-    this.speed = dt > 1e-4 ? dist / dt : 0;
+    this.speed = moveDt > 1e-4 ? dist / moveDt : 0;
     this.prevPos.copy(this.pos);
     this.animT += dt;
     const clip = this.humanoid.clipFor(this.occupancy, this.speed, this.joinOn);
@@ -837,8 +843,10 @@ export class Fighter {
     mat.rotation = rot;
   }
 
+  /** Reset the motion sample after a direct position set (teleport) so it never reads as speed. */
   settle() {
     this.prevPos.copy(this.pos);
+    this.speed = 0;
   }
 
   syncMesh() {
