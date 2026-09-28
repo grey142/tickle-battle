@@ -1610,22 +1610,22 @@ export class Game {
     if (v) this.dropTickler(v, t);
   }
 
+  /**
+   * Pack socket around the ticklee (floor plane; attachSockets sets y from the ground).
+   * Six slots on a ring at the opener's distance, 60° apart, so ticklers never overlap
+   * each other (chord 0.85 m > 2 × CAPSULE_R) or sink into the ticklee. Slot 0 (opener)
+   * is unchanged; joiners alternate right/left, then fill behind.
+   */
   private socketWorld(ticklee: Fighter, index: number): THREE.Vector3 {
-    const s = [
-      [0, 0.2, 0.85],
-      [0.75, 0.15, 0.15],
-      [0.6, 0.35, 0.2],
-      [0.2, -0.55, 0.7],
-      [0, 0.55, -0.55],
-      [0.5, -0.35, 0.25],
-    ][Math.min(index, 5)];
+    const SLOT_DEG = [0, 60, -60, 180, 120, -120];
+    const a = (SLOT_DEG[Math.min(index, 5)] * Math.PI) / 180;
+    const R = 0.85;
     const f = ticklee.forward();
     const r = new THREE.Vector3(f.z, 0, -f.x);
     return ticklee.pos
       .clone()
-      .add(f.multiplyScalar(s[2]))
-      .add(r.multiplyScalar(s[0]))
-      .add(new THREE.Vector3(0, s[1], 0));
+      .add(f.multiplyScalar(Math.cos(a) * R))
+      .add(r.multiplyScalar(Math.sin(a) * R));
   }
 
   private attachSockets(ticklee: Fighter) {
