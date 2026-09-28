@@ -1046,7 +1046,8 @@ export class Game {
       } else {
         f.tickleIntensity = 0;
       }
-      f.tickAnim(Math.min(0.05, wallDt));
+      // Speed sample spans the whole wallDt the sim loop just integrated, not the capped anim dt.
+      f.tickAnim(Math.min(0.05, wallDt), wallDt);
       f.syncMesh();
     }
     this.updateCamera();
@@ -1566,6 +1567,7 @@ export class Game {
       if (!n) return false;
       a.pos.copy(n);
     } else a.pos.copy(socketPos);
+    a.settle(); // socket snap is a teleport — don't sample it as speed
     list.push(a.id);
     this.joinList.set(b.id, list);
     a.occupancy = "tickler";
