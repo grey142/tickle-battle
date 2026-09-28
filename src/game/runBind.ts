@@ -27,23 +27,83 @@ const mods = import.meta.glob("../../assets/binds/run/*.run.json", {
   import: "default",
 }) as Record<string, RunBind>;
 
-const bySlug: Record<string, RunBind> = {};
-for (const [path, bind] of Object.entries(mods)) {
-  const file = path.split("/").pop()?.replace(/\.run\.json$/i, "");
-  if (!file || !bind) continue;
-  bySlug[file] = bind;
-  if (bind.slug) bySlug[bind.slug] = bind;
-}
-
+/*
+ * Units (see Humanoid.pose walk/run + Fighter billboard/frame code):
+ *   rate     — rig stride phase speed in rad/s (phase = t * rate), so
+ *              cycles/sec = rate / (2π). 15.7 ≈ 2.5 strides/s (sprint).
+ *   amp      — hip swing amplitude in radians (±amp about the hip).
+ *   lean     — forward spine lean in radians.
+ *   billBob  — AI billboard bob scale in scene metres; vertical bounce
+ *              peaks at billBob * 2.8 (0.02 → ~5.6 cm), tilt at billBob * 1.58 rad.
+ *   billRate — run-frame sprite FPS (4 frames f0–f3 = one stride), so
+ *              cycles/sec = billRate / 4. Keep billRate ≈ rate * 2/π so the
+ *              sprite cycle matches the rig stride.
+ */
 const FALLBACK: RunBind = {
   clip: "run",
   slug: "default",
   display: "Default",
-  walk: { rate: 17.031, amp: 1.146, lean: 0.148, billBob: 0.083, billRate: 20.55 },
-  run: { rate: 36.572, amp: 2.424, lean: 0.599, billBob: 0.263, billRate: 44.078 },
+  // Jog ≈ 1.7 strides/s, sprint ≈ 2.5 strides/s.
+  walk: { rate: 10.7, amp: 0.45, lean: 0.06, billBob: 0.012, billRate: 6.81 },
+  run: { rate: 15.7, amp: 0.7, lean: 0.12, billBob: 0.02, billRate: 9.99 },
   runSpeed: 4.4,
   walkSpeed: 0.4,
 };
+
+type Range = readonly [min: number, max: number];
+
+/**
+ * Load-time guard: every bind is clamped into natural ranges so compounded
+ * "deepen" bumps can never push the stride back into flicker territory.
+ */
+export const RUN_PARAM_RANGES: Record<keyof RunLocoParams, Range> = {
+  rate: [3, 19], // 0.48–3.0 strides/s
+  amp: [0.1, 0.9], // rad hip swing
+  lean: [0, 0.2], // rad forward lean
+  billBob: [0, 0.04], // ≤ ~11 cm billboard bounce
+  billRate: [2, 12.5], // sprite FPS → ≤ ~3.1 strides/s with 4 frames
+};
+const SPEED_RANGE: Range = [0.05, 12];
+
+function clampNum(v: unknown, [lo, hi]: Range, fallback: number, label: string): number {
+  const n = typeof v === "number" && Number.isFinite(v) ? v : fallback;
+  const out = Math.min(hi, Math.max(lo, n));
+  if (import.meta.env.DEV && out !== v) {
+    console.warn(`[runBind] ${label}=${String(v)} out of range [${lo}, ${hi}] → ${out}`);
+  }
+  return out;
+}
+
+function sanitizeLoco(p: Partial<RunLocoParams> | undefined, fb: RunLocoParams, label: string): RunLocoParams {
+  const out = {} as RunLocoParams;
+  for (const key of Object.keys(RUN_PARAM_RANGES) as (keyof RunLocoParams)[]) {
+    out[key] = clampNum(p?.[key], RUN_PARAM_RANGES[key], fb[key], `${label}.${key}`);
+  }
+  return out;
+}
+
+/** Return a clamped copy of a bind (never mutates the imported JSON). */
+export function sanitizeRunBind(bind: RunBind, label = bind.slug || "bind"): RunBind {
+  const runSpeed = clampNum(bind.runSpeed, SPEED_RANGE, FALLBACK.runSpeed, `${label}.runSpeed`);
+  let walkSpeed = clampNum(bind.walkSpeed, SPEED_RANGE, FALLBACK.walkSpeed, `${label}.walkSpeed`);
+  if (walkSpeed >= runSpeed) walkSpeed = Math.min(FALLBACK.walkSpeed, runSpeed * 0.5);
+  return {
+    ...bind,
+    walk: sanitizeLoco(bind.walk, FALLBACK.walk, `${label}.walk`),
+    run: sanitizeLoco(bind.run, FALLBACK.run, `${label}.run`),
+    runSpeed,
+    walkSpeed,
+  };
+}
+
+const bySlug: Record<string, RunBind> = {};
+for (const [path, raw] of Object.entries(mods)) {
+  const file = path.split("/").pop()?.replace(/\.run\.json$/i, "");
+  if (!file || !raw) continue;
+  const bind = sanitizeRunBind(raw, file);
+  bySlug[file] = bind;
+  if (bind.slug) bySlug[bind.slug] = bind;
+}
 
 export function runBindForSlug(slug?: string): RunBind {
   if (!slug) return FALLBACK;
