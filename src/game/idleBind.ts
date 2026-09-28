@@ -32,12 +32,42 @@ const sheetMods = import.meta.glob("../../assets/binds/idle/sheets/*.png", {
   import: "default",
 }) as Record<string, string>;
 
+/**
+ * Range guard: idle params are small fractions of billboard size. Clamp on load so
+ * compounded tuning can't silently blow the idle billboard up again.
+ */
+const IDLE_RANGES = {
+  breatheRate: [0.5, 4],
+  breatheAmp: [0, 0.06],
+  sway: [0, 0.04],
+  scalePulse: [0, 0.04],
+  weightShift: [0, 0.05],
+  headNod: [0, 0.04],
+  fps: [4, 12],
+} as const;
+
+const clampN = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+
+export function sanitizeIdleBind(bind: IdleBind): IdleBind {
+  const out: IdleBind = { ...bind };
+  for (const [k, [lo, hi]] of Object.entries(IDLE_RANGES)) {
+    const key = k as keyof typeof IDLE_RANGES;
+    const v = out[key];
+    if (typeof v !== "number" || !Number.isFinite(v)) continue;
+    const c = clampN(v, lo, hi);
+    if (c !== v && import.meta.env.DEV) console.warn(`[idle] ${bind.slug}.${key}=${v} out of range, clamped to ${c}`);
+    out[key] = c;
+  }
+  return out;
+}
+
 const bySlug: Record<string, IdleBind> = {};
 for (const [path, bind] of Object.entries(mods)) {
   const file = path.split("/").pop()?.replace(/\.idle\.json$/i, "");
   if (!file || !bind) continue;
-  bySlug[file] = bind;
-  if (bind.slug) bySlug[bind.slug] = bind;
+  const safe = sanitizeIdleBind(bind);
+  bySlug[file] = safe;
+  if (safe.slug) bySlug[safe.slug] = safe;
 }
 
 const sheetBySlug: Record<string, string> = {};
