@@ -100,7 +100,8 @@ export function tickBot(
   if (bot.role === "ambusher" || bot.role === "flanker") {
     behind.add(new THREE.Vector3(-target.forward().z, 0, target.forward().x).multiplyScalar(1.4));
   }
-  steerTo(bot, map, map.laneRoute(bot.pos, behind), dt);
+  steerTo(bot, map, passClearOfPlayer(bot, player, map.laneRoute(bot.pos, behind), liveT, behind), dt);
+  keepClearOfPlayer(bot, player, map, liveT);
 
   if (touching(bot, target)) {
     if (target.occupancy === "ticklee") {
@@ -112,6 +113,60 @@ export function tickBot(
   void TAP_CD;
   void PILE_CD;
   void now;
+}
+
+/** Teammates pass the player's camera at least this far away while leaving spawn. */
+const PASS_CLEAR = 2.5;
+/** Window after the spawn lock releases in which teammates route around the player. */
+const PASS_CLEAR_T = 6;
+
+/**
+ * Post-lock clearance: teammates start in a wedge behind the player (#184) and the lane
+ * router first snaps them onto the lane line (z ≈ player z) and then runs them along
+ * it, i.e. straight through the player camera. For PASS_CLEAR_T s after release, a
+ * teammate still behind the player whose goal is ahead passes via two gates on its own
+ * side, PASS_CLEAR + 1 m out: level with the player, then PASS_CLEAR + 0.5 m ahead.
+ */
+function passClearOfPlayer(
+  bot: Fighter,
+  player: Fighter | undefined,
+  dest: THREE.Vector3,
+  liveT: number,
+  goal: THREE.Vector3,
+): THREE.Vector3 {
+  if (!player || player.team !== bot.team || liveT > PASS_CLEAR_T) return dest;
+  const fwd = Math.sign(goal.x - player.pos.x);
+  if (fwd === 0) return dest;
+  const ahead = (bot.pos.x - player.pos.x) * fwd;
+  if (ahead >= PASS_CLEAR + 0.3) return dest;
+  if (bot.pos.distanceTo(player.pos) > 8) return dest;
+  let side = passSide.get(bot);
+  if (side === undefined) {
+    const dz = bot.pos.z - player.pos.z;
+    side = Math.abs(dz) > 0.3 ? Math.sign(dz) : bot.id % 2 === 0 ? 1 : -1;
+    passSide.set(bot, side);
+  }
+  const gz = player.pos.z + side * (PASS_CLEAR + 1);
+  const gx = ahead < -0.5 ? player.pos.x : player.pos.x + fwd * (PASS_CLEAR + 0.5);
+  return new THREE.Vector3(gx, dest.y, gz);
+}
+
+const passSide = new WeakMap<Fighter, number>();
+
+/** Hard floor for the same window: slide a teammate out to PASS_CLEAR around the player. */
+function keepClearOfPlayer(bot: Fighter, player: Fighter | undefined, map: MapWorld, liveT: number) {
+  if (!player || player.team !== bot.team || liveT > PASS_CLEAR_T) return;
+  const dx = bot.pos.x - player.pos.x;
+  const dz = bot.pos.z - player.pos.z;
+  const d = Math.hypot(dx, dz);
+  if (d >= PASS_CLEAR) return;
+  const side = passSide.get(bot) ?? 1;
+  const ux = d > 1e-3 ? dx / d : 0;
+  const uz = d > 1e-3 ? dz / d : side;
+  const r = map.resolve(player.pos.x + ux * PASS_CLEAR, player.pos.z + uz * PASS_CLEAR, bot.pos.y);
+  bot.pos.x = r.x;
+  bot.pos.z = r.z;
+  bot.pos.y = map.groundY(bot.pos.x, bot.pos.z);
 }
 
 function parkBait(bot: Fighter, map: MapWorld, dt: number) {
