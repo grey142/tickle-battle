@@ -70,6 +70,20 @@ import {
 const SAVE_KEY = "tb-amateur-save";
 const HUB_CONFIRM_GRACE = 2.35;
 
+/** Min spawn distance (m) from the player camera to any teammate billboard during spawn lock. */
+const SPAWN_CLEAR = 2.5;
+/**
+ * Cyan teammates wedge behind the player at spawnA (player faces +X toward the lane),
+ * all >= ~4 m from the camera and outside its forward view during the spawn lock.
+ */
+const CYAN_WEDGE: THREE.Vector3[] = [
+  new THREE.Vector3(-3, 0, -3),
+  new THREE.Vector3(-3, 0, 3),
+  new THREE.Vector3(-4.5, 0, 0),
+  new THREE.Vector3(-5.5, 0, -2.8),
+  new THREE.Vector3(-5.5, 0, 2.8),
+];
+
 export class Game {
   renderer: THREE.WebGLRenderer;
   scene = new THREE.Scene();
@@ -674,7 +688,7 @@ export class Game {
         weapon: kit.weapon,
         armor: kit.armor,
       });
-      this.place(f, this.map.spawnA.clone().add(new THREE.Vector3(-1 + i * 0.4, 0, -2 + i * 0.8)));
+      this.place(f, this.spawnClear(this.map.spawnA.clone().add(CYAN_WEDGE[i]), 0));
       f.yaw = -Math.PI / 2;
       this.fighters.push(f);
       this.scene.add(f.group);
@@ -706,6 +720,36 @@ export class Game {
       this.fighters.push(f);
       this.scene.add(f.group);
     }
+  }
+
+  /**
+   * Spawn clearance: nudge a spawn point so it sits >= SPAWN_CLEAR m from the player
+   * (camera) and from fighters already placed, staying inside the team's spawn pocket.
+   */
+  private spawnClear(p: THREE.Vector3, team: number): THREE.Vector3 {
+    const out = p.clone();
+    for (let iter = 0; iter < 8; iter++) {
+      let moved = false;
+      for (const o of this.fighters) {
+        const min = o.isPlayer ? SPAWN_CLEAR : SPAWN_CLEAR * 0.5;
+        const dx = out.x - o.pos.x;
+        const dz = out.z - o.pos.z;
+        const d = Math.hypot(dx, dz);
+        if (d >= min) continue;
+        // Push straight back (away from the lane) when stacked exactly on top.
+        const ux = d > 1e-3 ? dx / d : team === 0 ? -1 : 1;
+        const uz = d > 1e-3 ? dz / d : 0;
+        out.x = o.pos.x + ux * min;
+        out.z = o.pos.z + uz * min;
+        moved = true;
+      }
+      const c = this.map.clampSpawnPocket(out.x, out.z, team);
+      // Stay off the back wall of the pocket (inner face at |x| = 24.9).
+      out.x = team === 0 ? Math.max(c.x, -24.3) : Math.min(c.x, 24.3);
+      out.z = THREE.MathUtils.clamp(c.z, -6.8, 6.8);
+      if (!moved) break;
+    }
+    return out;
   }
 
   private place(f: Fighter, p: THREE.Vector3) {
