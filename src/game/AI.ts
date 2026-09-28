@@ -97,8 +97,10 @@ export function tickBot(
   }
 
   const behind = target.pos.clone().add(target.forward().multiplyScalar(-1.15));
+  clearAssistGoal(bot, player, target, behind);
   if (bot.role === "ambusher" || bot.role === "flanker") {
     behind.add(new THREE.Vector3(-target.forward().z, 0, target.forward().x).multiplyScalar(1.4));
+    clearAssistGoal(bot, player, target, behind);
   }
   steerTo(bot, map, map.laneRoute(bot.pos, behind), dt);
 
@@ -200,4 +202,55 @@ function millSpawn(bot: Fighter, map: MapWorld, dt: number) {
     return;
   }
   bot.pos.y = map.groundY(bot.pos.x, bot.pos.z);
+}
+
+/** A teammate's assist goal never sits closer than this to the player (camera). */
+const ASSIST_CLEAR = 2.5;
+
+/**
+ * Teammate assist vs a rival next to the player: "behind the rival" often resolves onto
+ * the player's own spot (e.g. an amber hunter standing behind the player, facing away),
+ * so the teammate parks inside the camera. Move such a goal to the far side of the rival
+ * from the player, at least ASSIST_CLEAR from the player along the player→rival ray.
+ */
+function clearAssistGoal(
+  bot: Fighter,
+  player: Fighter | undefined,
+  target: Fighter,
+  goal: THREE.Vector3,
+) {
+  if (!player || player.team !== bot.team || target.isPlayer) return;
+  if (Math.hypot(goal.x - player.pos.x, goal.z - player.pos.z) >= ASSIST_CLEAR) return;
+  let ux = target.pos.x - player.pos.x;
+  let uz = target.pos.z - player.pos.z;
+  const dtp = Math.hypot(ux, uz);
+  if (dtp < 1e-3) {
+    // Rival on the player's exact spot: step out to the bot's own side.
+    ux = bot.pos.x - player.pos.x;
+    uz = bot.pos.z - player.pos.z;
+  }
+  const ul = Math.hypot(ux, uz) || 1;
+  const r = Math.max(ASSIST_CLEAR, dtp + 1.15);
+  goal.x = player.pos.x + (ux / ul) * r;
+  goal.z = player.pos.z + (uz / ul) * r;
+  // Coming from the other side: don't cut through the player to reach it; go around.
+  const dx = goal.x - bot.pos.x;
+  const dz = goal.z - bot.pos.z;
+  const len2 = dx * dx + dz * dz;
+  if (len2 < 1e-4) return;
+  const px = player.pos.x - bot.pos.x;
+  const pz = player.pos.z - bot.pos.z;
+  const t = (px * dx + pz * dz) / len2;
+  if (t <= 0 || t >= 1) return;
+  if (Math.hypot(bot.pos.x + dx * t - player.pos.x, bot.pos.z + dz * t - player.pos.z) >= ASSIST_CLEAR) return;
+  const len = Math.sqrt(len2);
+  let nx = -dz / len;
+  let nz = dx / len;
+  const side = nx * -px + nz * -pz;
+  if (side < 0 || (side === 0 && bot.id % 2 === 1)) {
+    nx = -nx;
+    nz = -nz;
+  }
+  goal.x = player.pos.x + nx * (ASSIST_CLEAR + 1);
+  goal.z = player.pos.z + nz * (ASSIST_CLEAR + 1);
 }
