@@ -113,7 +113,10 @@ export class Fighter {
   /** Active laugh multi-frame index on billboard / FP portrait (-1 = base still). */
   private laughFrameApplied = -1;
   private laughFrameLoadToken = 0;
-  private laughFrameKeyed: string[] = [];
+  /** Keyed laugh-frame URL per raw frame URL (raw URL is per character + frame). */
+  private laughFrameKeyed = new Map<string, string>();
+  /** Raw frame URL currently shown (per character + frame, not just the index). */
+  private laughFrameAppliedUrl = "";
   private laughFrameTex = new Map<string, { tex: THREE.Texture | null; ready: boolean }>();
   private laughFrameWant = "";
   /** Keyed (or raw) URL for current laugh frame — FP portrait / HUD. */
@@ -218,6 +221,7 @@ export class Fighter {
   }
 
   applyLookSlug(slug: string, lookIdx: number) {
+    if (slug !== this.slug) this.resetLaughFrameCache();
     this.slug = slug;
     this.look = lookIdx;
     const url = stillUrlFor(slug);
@@ -469,6 +473,21 @@ export class Fighter {
     this.body.visible = false;
   }
 
+  /**
+   * Look swap: drop the previous character's keyed laugh frames and textures
+   * (no leak) and cancel in-flight loads so the next laugh re-keys this character.
+   */
+  private resetLaughFrameCache() {
+    ++this.laughFrameLoadToken;
+    this.laughFrameKeyed.clear();
+    for (const rec of this.laughFrameTex.values()) rec.tex?.dispose();
+    this.laughFrameTex.clear();
+    this.laughFrameWant = "";
+    this.laughFrameApplied = -1;
+    this.laughFrameAppliedUrl = "";
+    this.laughFramePortrait = undefined;
+  }
+
   private syncLaughFrameBillboard(
     clip: string,
     bind?: LaughBind,
@@ -484,6 +503,7 @@ export class Fighter {
       if (this.laughFrameApplied !== -1) {
         if (!this.isPlayer && this.keyedPortrait) this.ensureStillBillboard(this.keyedPortrait);
         this.laughFrameApplied = -1;
+        this.laughFrameAppliedUrl = "";
         this.laughFramePortrait = undefined;
       }
       return false;
@@ -498,28 +518,33 @@ export class Fighter {
     const fps = laughFrameFps(stageParams?.billRate, pct / 100);
     this.laughFps = fps;
     const idx = lo + (Math.floor(this.animT * fps) % span);
-    if (idx === this.laughFrameApplied && this.laughFramePortrait) return true;
     const want = idx;
-    const token = ++this.laughFrameLoadToken;
     const raw = urls[want];
-    const cached = this.laughFrameKeyed[want];
+    // Compare the raw URL (character + frame), not just the index, so a Look swap
+    // never keeps showing the previous character's frame at the same index.
+    if (raw === this.laughFrameAppliedUrl && this.laughFramePortrait) return true;
+    const token = ++this.laughFrameLoadToken;
+    const cached = this.laughFrameKeyed.get(raw);
     if (cached) {
       if (!this.isPlayer) this.showLaughFrameTex(cached);
       this.laughFrameApplied = want;
+      this.laughFrameAppliedUrl = raw;
       this.laughFramePortrait = cached;
       return true;
     }
     lookFromStill(raw)
       .then((kit) => {
         if (token !== this.laughFrameLoadToken) return;
-        this.laughFrameKeyed[want] = kit.keyedUrl;
+        this.laughFrameKeyed.set(raw, kit.keyedUrl);
         if (!this.isPlayer) this.showLaughFrameTex(kit.keyedUrl);
         this.laughFrameApplied = want;
+        this.laughFrameAppliedUrl = raw;
         this.laughFramePortrait = kit.keyedUrl;
       })
       .catch(() => {
         if (token !== this.laughFrameLoadToken) return;
         this.laughFrameApplied = want;
+        this.laughFrameAppliedUrl = raw;
         this.laughFramePortrait = raw;
       });
     return true;
